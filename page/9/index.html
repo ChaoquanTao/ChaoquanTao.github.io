@@ -312,178 +312,17 @@
       
         
           
-            <h3 id="h5"><a href="#h5" class="headerlink" title="h5"></a>h5</h3><ul>
-<li><p>表单</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;form  method&#x3D;&quot;get&quot;&gt;</span><br><span class="line">        用户名： &lt;input type&#x3D;&quot;text&quot; name&#x3D;&quot;phone&quot;&gt;&lt;br&#x2F;&gt;</span><br><span class="line">        密码： &lt;input type&#x3D;&quot;password&quot; name&#x3D;&quot;pwd&quot;&gt;&lt;br&#x2F;&gt;</span><br><span class="line">        性别： &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;sex&quot; value&#x3D;&quot;female&quot;&gt;女 &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;sex&quot; value&#x3D;&quot;male&quot;&gt;男&lt;br&#x2F;&gt;</span><br><span class="line">        上传文件：&lt;input type&#x3D;&quot;file&quot;&gt;&lt;br&#x2F;&gt;</span><br><span class="line">        爱好： &lt;input type&#x3D;&quot;checkbox&quot; name&#x3D;&quot;hobby&quot; value&#x3D;&quot;badmiton&quot;&gt;羽毛球</span><br><span class="line">               &lt;input type&#x3D;&quot;checkbox&quot; name &#x3D; &quot;hobby&quot; value&#x3D;&quot;basketball&quot;&gt;篮球</span><br><span class="line">               &lt;input type&#x3D;&quot;checkbox&quot; name&#x3D;&quot;hobby&quot; value&#x3D;&quot;football&quot;&gt;足球&lt;br&#x2F;&gt;</span><br><span class="line">        生日： &lt;select name&#x3D;&quot;birth&quot;&gt;</span><br><span class="line">                    &lt;option value&#x3D;&quot;1999&quot;&gt;1999&lt;&#x2F;option&gt;</span><br><span class="line">                    &lt;option &gt;1991&lt;&#x2F;option&gt;</span><br><span class="line">                    &lt;option &gt;1992&lt;&#x2F;option&gt;</span><br><span class="line">                &lt;&#x2F;select&gt;年</span><br><span class="line">                &lt;select name&#x3D;&quot;month&quot;&gt;</span><br><span class="line">                        &lt;option &gt;1&lt;&#x2F;option&gt;</span><br><span class="line">                        &lt;option &gt;2&lt;&#x2F;option&gt;</span><br><span class="line">                        &lt;option &gt;3&lt;&#x2F;option&gt;</span><br><span class="line">                    &lt;&#x2F;select&gt;月</span><br><span class="line">                    &lt;select &gt;</span><br><span class="line">                            &lt;option&gt;1&lt;&#x2F;option&gt;</span><br><span class="line">                            &lt;option &gt;2&lt;&#x2F;option&gt;</span><br><span class="line">                            &lt;option &gt;3&lt;&#x2F;option&gt;</span><br><span class="line">                        &lt;&#x2F;select&gt;日</span><br><span class="line">                &lt;br&#x2F;&gt;</span><br><span class="line">            隐藏项    &lt;input type&#x3D;&quot;hidden&quot;&gt;&lt;br&#x2F;&gt;</span><br><span class="line">        自我描述： &lt;textarea cols&#x3D;&quot;10&quot; rows&#x3D;&quot;10&quot;&gt;&lt;&#x2F;textarea&gt;&lt;br&#x2F;&gt;</span><br><span class="line">        &lt;input type&#x3D;&quot;submit&quot;&gt;&lt;br&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
-
-<p>表单里面一般由一些输入项构成，输入项的一般格式<code>&lt;input type=&quot;输入项类型&quot; name=&quot;&quot; value=&quot;&quot;&gt;</code></p>
-<p>输入项分类：</p>
-<ul>
-<li>普通输入项 <code>&lt;input type=&quot;text&quot; name=&quot;nomalInput&quot;</code></li>
-<li>密码输入项</li>
-<li>单选输入项</li>
-<li>复选输入项</li>
-<li>文件输入项</li>
-<li>下拉框</li>
-</ul>
-<p>无论对于哪种输入项，<code>name</code>属性是必须的，因为在get方法下将以<code>name</code>作为键来传送数据，</p>
-<p>对于单选输入项和复选输入项，其应当具有相同的<code>name</code>,不同的<code>value</code></p>
-<ul>
-<li><p>表单的提交方式</p>
-<p>可以通过<code>submit</code>,也可通过普通<code>button</code>,设置<code>onclick</code>事件，在里面调用form的<code>submit</code>方法</p>
-<p>​</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p>头标签</p>
-<p><code>&lt;title&gt;..&lt;/title&gt;</code></p>
-<p><code>&lt;meta/&gt;</code></p>
-<p><code>&lt;base target=&quot;_blank&quot;/&gt;</code> 统一设置超链接的打开方式</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-<h3 id="css"><a href="#css" class="headerlink" title="css"></a>css</h3><ul>
-<li><p>选择器</p>
-<ul>
-<li>class选择器     .class{}</li>
-<li>id选择器    #id{}</li>
-<li>标签选择器      标签{}</li>
-</ul>
-</li>
-<li><p>扩展选择器</p>
-<ul>
-<li><p>关联选择器</p>
-<p>标签嵌套标签，用来设置里面标签的样式</p>
-<p>​<br><code>div p{...}</code><br><code>&lt;div&gt;&lt;p&gt;关联选择器&lt;/p&gt;&lt;/div&gt;</code></p>
-<p>​</p>
-</li>
-<li><p>组合选择器</p>
-<p>把不同标签设置成相同样式</p>
-<p><code>div,p{}</code></p>
-<p><code>&lt;div&gt;ddd&lt;/div&gt;</code></p>
-<p><code>&lt;p&gt;tttt&lt;/p&gt;</code></p>
-</li>
-<li><p>伪元素选择器</p>
-<p>一些定义好的样式</p>
-<p>如超链接</p>
-<p><code>:link 原始状态 :hover鼠标悬停</code></p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-<li><p>css盒子模型</p>
-<ul>
-<li><p>边框 <code>border: 粗细 样式  颜色</code></p>
-<p> <code>border-top</code></p>
-<p> <code>border-botom</code></p>
-<p> <code>border-left</code></p>
-<p> <code>border-right</code></p>
-</li>
-<li><p>内边距<code>padding: length</code></p>
-<ul>
-<li>也分上下左右</li>
-</ul>
-</li>
-<li><p>外边距 <code>margin: auto|length</code></p>
-<ul>
-<li>也分上下左右</li>
-</ul>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-<li><p>css的布局的漂浮</p>
-<p><code>float: none|left|right</code></p>
-<p>left: 文本流向对象的右边</p>
-<p>right:文本流向对象的左边</p>
-</li>
-<li><p>css布局的定位</p>
-<ul>
-<li><p>position</p>
-<ul>
-<li><p>absolute: 将对象从文档流中拖出</p>
-<p>​        可以使用top,bottom等进行绝对定位</p>
-</li>
-<li><p>relative: 不会把对象从文档流中拖出</p>
-<p>​        可以使用top,bottom等进行定位</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="XML"><a href="#XML" class="headerlink" title="XML"></a>XML</h3><ul>
-<li><p>简介</p>
-<p>extensible markup language 可扩展标记型语言</p>
-</li>
-</ul>
-<p>​      标签可以自定义</p>
-<p>​    html是为了显示数据，xml是为了存储数据</p>
-<ul>
-<li><p>应用</p>
-<p>不同系统之间传输数据</p>
-<p>用来表示生活中有关系的数据</p>
-<p>经常用在配置文件</p>
-</li>
-<li><p>语法</p>
-<ul>
-<li><p>xml文档声明</p>
-<ul>
-<li><p>创建一个后缀名为.xml的文件</p>
-</li>
-<li><p>如果要写xml，第一步必须要有一个文档声明</p>
-<p><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;gbk&quot;&gt;</code></p>
-<p>要放在第一行第一列</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-<li><p>定义元素</p>
-<ul>
-<li>标签定义<ul>
-<li>标签定义有开始必须有结束<code>&lt;person&gt;&lt;/person&gt;</code></li>
-<li>标签没有内容，可以在标签内结束<code>&lt;person/&gt;</code></li>
-<li>只能有一个根标签</li>
-<li>会将所有的空格和换行都当成内容来解析</li>
-</ul>
-</li>
-<li>命名规则<ul>
-<li>区分大小写</li>
-<li>标签不能以xml开头</li>
-</ul>
-</li>
-<li>​</li>
-</ul>
-</li>
-<li><p>定义属性</p>
-</li>
-<li><p>注释</p>
-</li>
-<li><p>特殊字符</p>
-</li>
-<li><p>CDATA区</p>
-</li>
-<li><p>PI指令</p>
-</li>
-</ul>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-
-          
+          h5
+表单
+12345678910111213141516171819202122232425262728&lt;form  method&#x3D;&quot;get&quot;&gt;        用户名： &lt;input type&#x3D;&quot;text&quot; name&#
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/03/%E5%89%8D%E7%AB%AF/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -613,11 +452,18 @@
       
         
           
-            <p>alt+Enter 纠错提示</p>
-<p>ctrl+q 显示函数注释</p>
-<p>ctrl+h 显示类继承结构</p>
+          alt+Enter 纠错提示
+ctrl+q 显示函数注释
+ctrl+h 显示类继承结构
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/29/Intellij%E5%BF%AB%E6%8D%B7%E9%94%AE/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -747,25 +593,21 @@
       
         
           
-            <h3 id="数据导入"><a href="#数据导入" class="headerlink" title="数据导入"></a>数据导入</h3><ul>
-<li><p>之前的数据是在Oracle里面，所以这里需要将oracle中的表导入<code>Mongodb</code>中、</p>
-<ul>
-<li><p>先将Oracle中数据表导出为<code>tsv</code>格式</p>
-</li>
-<li><p>Mongo提供<code>mongoimport</code>命令进行导入</p>
-<p><code>mongoimport --db busi_run --type tsv --headerline --ignoreBlanks --file G:\毕设\data\busi100.tsv</code></p>
-<p>这里<code>headerline</code>选项会将文件第一行作为字段名</p>
-<p>​</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-<li><p>​</p>
-</li>
-</ul>
+          数据导入
+之前的数据是在Oracle里面，所以这里需要将oracle中的表导入Mongodb中、
 
-          
+先将Oracle中数据表导出为tsv格式
+
+Mongo提供mongoimport命令进行导入
+mongoimport --db busi_run --type tsv --headerline --i
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/19/java-mongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -917,266 +759,17 @@
       
         
           
-            <h3 id="继承与覆盖"><a href="#继承与覆盖" class="headerlink" title="继承与覆盖"></a>继承与覆盖</h3><ul>
-<li><p>当通过一个父类的引用指向一个子类的对象后，将只能通过这个父类的引用访问那些父类中定义了的属性和方法。Java平台的执行规则是： <strong>在编译的时候，可以调用哪些方法，访问哪些属性，是引用类型决定的；在程序运行的时候，具体访问哪个属性，执行哪个方法，是对象的类型决定的。</strong></p>
-<p>也就是说，如果子类中有这个方法f1而父类中没有，那么指向子类的父类引用是不能调用子类的这个方法f1的,只有当子类和父类拥有一样的方法（继承或者覆盖得到）时，指向子类的父类引用才可以调用这个方法，并且调用的是子类的方法。</p>
-</li>
-<li><p>使用覆盖的几条规则</p>
-<ul>
-<li>子类必须把这个方法从父类中继承过来，这个与方法的访问控制符有关系；</li>
-<li>子类方法的访问控制符的访问权限应比父类中的更宽松或者相同</li>
-<li>子类方法返回值类型必须能赋值给父类方法返回值类型</li>
-</ul>
-</li>
-<li><p>当继承被引入到重载的参数中时，决定函数重载的哪个方法被调用的是实参。这里的实参指的是引用的类型，而不是引用指向的对象的类型</p>
-</li>
-<li><p>对于静态方法，Java会根据引用的类型而非引用指向的对象的类型来决定调用哪个静态方法</p>
-</li>
-<li><p>变量的覆盖，变量的值取决于引用类型而不是引用指向的对象类型</p>
-</li>
-</ul>
-<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>所谓多态，指的是同一行为在不同环境下有不同表现。</p>
-<p>为什么会有多态呢？主要由三个原因造成：</p>
-<ul>
-<li>继承</li>
-<li>覆盖</li>
-<li>父类引用指向子类对象</li>
-</ul>
-<h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><h4 id="什么是接口"><a href="#什么是接口" class="headerlink" title="什么是接口"></a>什么是接口</h4><h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="如何定义接口"><a href="#如何定义接口" class="headerlink" title="如何定义接口"></a>如何定义接口</h4><ul>
-<li>程序使用接口可以很好的避免对外部类的依赖性，因为对外只需要一个接口，任何实现了该接口的对象都可以作为参数传递过去。</li>
-</ul>
-<ul>
-<li><p>保存接口的文件名也要和接口名相同</p>
-</li>
-<li><pre><code>public abstract insterface 接口名{
-    public static final int r =1;
-    public abstract 返回值 方法名();
-}
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">也可以简单写为</span><br></pre></td></tr></table></figure>
-interface 接口名{
-    int r =1 ;
-    返回值 方法名()
-}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#### 怎么使用接口</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 为什么要用接口</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 抽象类</span><br><span class="line"></span><br><span class="line">+ 接口是抽象的，必须通过类实现它才能用，除了抽象的接口之外，还有抽象的类，其声明方法类似</span><br></pre></td></tr></table></figure>
-public abstract class Person{
-    private String name ;
-    public Person(String name){
-        this.name = name ;
-    }
-    ...
-    public abstract void introduceSelf();
-}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  + 抽象类首先是一个类</span><br><span class="line">  + 抽象类中可以没有抽象方法</span><br><span class="line">  + 一个类如果继承了抽象类，要么自己实现父类中的抽象方法，要么将自己也声明为抽象类</span><br><span class="line">  + 类也可以通过接口来获得抽象方法</span><br><span class="line"></span><br><span class="line">+ 为什么要有抽象类</span><br><span class="line"></span><br><span class="line">  + 从语法上讲，是为了让子类强制覆盖父类中的某些类（有点像c++中的虚函数？）</span><br><span class="line">  + 从业务上讲，如果有一个父类的方法不应该被调用（因为调用它没有实际意义的情况），此时应该用抽象类。</span><br><span class="line"></span><br><span class="line">### 内部类</span><br><span class="line"></span><br><span class="line">#### 成员内部类</span><br><span class="line"></span><br><span class="line">定义在类中的类，与类中其他成员是同一重量级</span><br><span class="line"></span><br><span class="line">+ 内部类可以访问外部类的所有属性和方法，因为它们本来就是同一级别的</span><br><span class="line">+ 内部类中定义了一个指向外部类的引用</span><br><span class="line">+ 外部类的代码要想访问内部类的对象中的变量，需要先创建要给内部成员类的对象</span><br><span class="line"></span><br><span class="line">#### 局部内部类</span><br><span class="line"></span><br><span class="line">定义在类中一个方法或者一个作用域中的类，与方法中的局部变量是同一级别的。</span><br><span class="line"></span><br><span class="line">可以使用其所在方法中的final变量</span><br><span class="line"></span><br><span class="line">不能包含静态成员</span><br><span class="line"></span><br><span class="line">+ 静态方法中的局部内部类</span><br><span class="line">  + 受静态方法限制，只能访问静态变量和方法中的&#96;final&#96;变量</span><br><span class="line">+ 非静态方法中的局部内部类</span><br><span class="line">  + 隐含有指向外部类的引用</span><br><span class="line"></span><br><span class="line">#### 匿名内部类</span><br><span class="line"></span><br><span class="line">+ 没有名字</span><br><span class="line"></span><br><span class="line">+ 不能添加构造方法</span><br><span class="line"></span><br><span class="line">+ 没有修饰符</span><br><span class="line"></span><br><span class="line">+ 通过接口来使用匿名类</span><br><span class="line"></span><br><span class="line">+ 通过抽象类来使用匿名类</span><br><span class="line"></span><br><span class="line">#### 静态内部类</span><br><span class="line"></span><br><span class="line">+  是类范畴中的元素，其中不含指向外部类对象的元素，所以不能在静态成员内部类中使用外部类中的非静态 成员</span><br><span class="line">+ 静态成员只能访问静态成员</span><br><span class="line"></span><br><span class="line">### Java异常</span><br><span class="line"></span><br><span class="line">+ 异常抛出</span><br><span class="line"></span><br><span class="line">+ 异常传递</span><br><span class="line"></span><br><span class="line">  + 从某个方法中的某个&#96;throw&#96;语句传递到调用这个方法的地方，一直到&#96;main&#96;方法</span><br><span class="line">  + 异常必须被传递出去或者处理掉</span><br><span class="line">  + 抛出异常位置后面的代码不会被执行</span><br><span class="line"></span><br><span class="line">+ 异常处理</span><br></pre></td></tr></table></figure>
-try{
-    //可能会抛出异常的代码
-}catch(异常类型1 异常引用1){ //如果抛出的异常与此处的异常类型匹配，用异常引用指向try中的异常实例
-    //处理异常
-}catch(异常类型2 异常引用2){
-
-}finally{
-    /*`finally`语句中的代码无论如何都会被执行，无论上面的catch过程是匹配到异常处理掉了还是将异常
-       抛出，都会执行finally块，如果异常被处理掉了，那么接下来执行finally,如果异常没有被匹配，那么
-       先执行finally,再抛出异常 */
-    /*finally语句通常不被遇到，一种典型使用情况是用来释放资源*/
-}
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-try{
-}finally{
-
-}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  关于异常的捕获，我们可以做的不仅仅是将其打印输出，也可以在&#96;catch&#96;语句里对异常进行修改</span><br><span class="line"></span><br><span class="line">### Java多线程</span><br><span class="line"></span><br><span class="line">+ 多线程</span><br></pre></td></tr></table></figure>
-public class UseRunnable {
-    public static void main(String args[]) throws InterruptedException {
-        //显示主线程的名字
-        System.out.println(&quot;current thread name is: &quot;+Thread.currentThread().getName());
-
-        System.out.println(&quot;program will be executed after 5000 ms&quot;);
-        //这里的Thread方法和currentThread方法一样，都是静态方法
-        Thread.sleep(5000);
-
-        MyRunnable runnable = new MyRunnable();
-        Thread thread = new Thread(runnable);
-        //这里也可以通过匿名类的方式实现Runnable
-        /*
-        * Thread thread = new Thread(new Runnable(){
-        *       public void run(){
-        *           System.out.println(&quot;this is my runnable in anther way&quot;)
-        *       }
-        * })
-        * */
-
-        thread.start();
-
-        MyThread mythread = new MyThread();
-        mythread.start();
-    }
-}
-
-/*methond 1*/
-class MyRunnable implements Runnable{   //通过继承接口的方式来实现线程
-    @Override
-    public void run() {
-        System.out.println(&quot;this is my runnable&quot;);
-    }
-}
-
-/*其实我们也可以通过继承Thread类来实现
-*这样做有个显著的不好，java中类是单继承的，如果为了使用线程而去继承Thread类，
-* 那将不能继承其他类，所以还是实现接口的方式好一些*/
-
-/*method 2*/
-class MyThread extends  Thread{ //Thread类有一个参数为空的构造方法
-    public void run(){
-        System.out.println(&quot;this is my thread&quot;);
-    }
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">+ synchronized关键字</span><br><span class="line"></span><br><span class="line">  当某个方法只允许同一时间只被一个线程访问时，可以用synchronized关键字来修饰这个方法</span><br><span class="line"></span><br><span class="line">  + &#96;public synchronized static void func()&#96;</span><br><span class="line"></span><br><span class="line">    当synchronized修饰静态方法时，是类范畴内的同步。也就是说，加入某类有多个静态同步方法，那么当其中一个方法被第一个线程访问时，当第二个线程试图访问这个类中的任意一个静态同步方法时，它都会被挂起。但是不同类中的静态方法互不影响。</span><br><span class="line"></span><br><span class="line">  + &#96;public synchronized void func()&#96;</span><br><span class="line"></span><br><span class="line">    对象范畴的同步。也就是说，当某个线程访问该对象中的非静态同步方法时，如果另一线程试图访问同一个对象中的任意非静态同步方法时，它将被挂起</span><br><span class="line"></span><br><span class="line">  + </span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">+ wait()和notify()</span><br></pre></td></tr></table></figure>
-package top.iamnewbie;
-
-public class UseWaitAndNotify {
-    public static void main(String[] args) {
-        Object obj = new Object();
-        Waiting waiting = new Waiting(obj);
-        Notifier notifier = new Notifier(obj); //注意,这里使用同一对象初始化Waiting和Notifier
-
-        //因为Waiting和Notifier都实现了Runnable接口，所以可以用他们来初始化Thread类
-        Thread thread1 = new Thread(waiting,&quot;线程1&quot;);
-        Thread thread2 = new Thread(notifier,&quot;线程2&quot;);
-
-        //通过start函数来触发Runnable的run函数
-        thread1.start();
-        thread2.start();
-    }
-}
-
-//它实现了Runnable接口，在Thread中将这个类的实例作为参数就可以创建线程
-class Waiting implements Runnable{
-    private Object waitObj ;
-
-    public Waiting(Object obj) {
-        this.waitObj = obj;
-    }
-
-    @Override
-    public void run() {
-        System.out.println(Thread.currentThread().getName()+&quot;将被挂起&quot;);
-        synchronized (waitObj){
-            try {
-                waitObj.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-        System.out.println(Thread.currentThread().getName()+&quot;被唤醒&quot;);
-    }
-}
-
-class  Notifier implements Runnable{
-    private Object notifyObj ;
-
-    public Notifier(Object notifyObj) {
-        this.notifyObj = notifyObj;
-    }
-
-    @Override
-    public void run() {
-        System.out.println(&quot;开始notify线程&quot;);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        synchronized (notifyObj){
-            notifyObj.notify();
-        }
-        System.out.println(&quot;notify线程结束&quot;);
-
-    }
-}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">同步代码块，语法如下</span><br></pre></td></tr></table></figure>
-synchronized(对象引用){
-    同步代码
-}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  如果有多个线程同时访问同步代码块，而且同步代码块中对象的引用指向的是同一对象，那么就只有一个线程能进入代码块执行。上面的例子中，两个类中都写了同步代码块，在执行的时候，可以发现，用的是同一个对象实例来初始化&#96;Waiting&#96;和&#96;Notifier&#96;,也就是说虽然同步代码块是在两个对象中，但是同步代码块中对象的引用指向的是同一个实例（这也是将两个线程联系起来的关键）。进入代码块时，给对象加锁，执行wait()方法时，去掉锁，此时线程1被挂起，同时&#96;obj&#96;对象也没有被加锁，这时候线程2就可以访问这个代码块了，使用过synchronized先加锁，执行notify后解锁</span><br><span class="line"></span><br><span class="line">  通篇来看，正是因为初始化两个对象用了同一对象，这才让两个线程建立了关联。</span><br><span class="line"></span><br><span class="line">### IO</span><br><span class="line"></span><br><span class="line">来一张输入流和输出流的类层次图</span><br><span class="line"></span><br><span class="line">![](https:&#x2F;&#x2F;ws1.sinaimg.cn&#x2F;large&#x2F;005UcYzagy1ftkxcjom5ij30n50nd45y.jpg)</span><br><span class="line"></span><br><span class="line">+ 关于几个类</span><br><span class="line"></span><br><span class="line">  + File类</span><br><span class="line"></span><br><span class="line">    文件和文件夹都用File类来表示</span><br><span class="line"></span><br><span class="line">  + &#96;InputStream&#96;和&#96;OutputStream&#96;</span><br><span class="line"></span><br><span class="line">    Java中的输入流和输出流</span><br><span class="line"></span><br><span class="line">  + &#96;Writer&#96;</span><br><span class="line"></span><br><span class="line">    Abstract class for writing to character streams. The only methods that a subclass must implement are write(char[], int, int), flush(), and close(). Most subclasses, however, will override some of the methods defined here in order to provide higher efficiency, additional functionality, or both.</span><br><span class="line"></span><br><span class="line">  + &#96;PrintWriter&#96;</span><br><span class="line"></span><br><span class="line">    &#96;Writer&#96;的子类，将对象格式化打印到文件中</span><br><span class="line"></span><br><span class="line">  + </span><br><span class="line"></span><br><span class="line">+ 读写数据</span><br><span class="line"></span><br><span class="line">  + 向文件中写数据（假设文件已存在）</span><br><span class="line"></span><br><span class="line">    + &#96;PrintWriter&#96;</span><br></pre></td></tr></table></figure>
-  PrintWriter printWriter = new PrintWriter(new FileOutputStream(filename));
-  printWriter.write(&quot;write something&quot;);
-  printWriter.close();
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">	&#96;PrintWriter()&#96;接受的参数类型主要有</span><br><span class="line"></span><br><span class="line">![](https:&#x2F;&#x2F;ws1.sinaimg.cn&#x2F;large&#x2F;005UcYzagy1fpvrurtcrcj30qf0gg0ts.jpg)</span><br><span class="line"></span><br><span class="line">这里看上去不关输出流什么事，但其实它已经蕴含在&#96;PrintWriter&#96;类里面了.</span><br><span class="line"></span><br><span class="line">+ &#96;BufferdWriter&#96;</span><br></pre></td></tr></table></figure>
-    BufferedWriter out=new BufferedWriter(new FileWriter(fileName));
-    out.write(&quot;Hello BufferWriter&quot;);
-    out.close();
-    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  &#96;BufferdWriter()&#96;接受的参数类型</span><br><span class="line"></span><br><span class="line">  ![](https:&#x2F;&#x2F;ws1.sinaimg.cn&#x2F;large&#x2F;005UcYzagy1fpvrwofyqzj30nr054t8t.jpg)</span><br><span class="line"></span><br><span class="line">+ &#96;FileWriter&#96;</span><br></pre></td></tr></table></figure>
-    FileWriter writer=new FileWriter(fileName,true);
-    writer.write(&quot;write something&quot;);
-    writer.close();
-    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    &#96;FileWriter()&#96;接受的参数类型</span><br><span class="line"></span><br><span class="line">    ![](https:&#x2F;&#x2F;ws1.sinaimg.cn&#x2F;large&#x2F;005UcYzagy1fpvryi3ajmj30un0a8gm4.jpg)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    总结一下，写文件的话一般用的就是Writer的子类，</span><br><span class="line"></span><br><span class="line">+ 读文件</span><br></pre></td></tr></table></figure>
-   fileReader = new FileReader(file1);
-   bufferedReader1 = new BufferedReader(fileReader);
-   while((content1=bufferedReader1.readLine()) != null){
-          System.out.println(content1);
-   }
-   fileReader.close();
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">### Swing</span><br><span class="line"></span><br><span class="line">+ 基本流程</span><br><span class="line"></span><br><span class="line">  创建一个窗口&#96;JFrame&#96;,进行基础设置，获得Container对象，向里面添加其他组件·</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### Java Collection Framework</span><br><span class="line"></span><br><span class="line">![](https:&#x2F;&#x2F;ws1.sinaimg.cn&#x2F;large&#x2F;005UcYzagy1fv5utslrw5j30lr0ijjui.jpg)</span><br><span class="line"></span><br><span class="line">#### 相互区别</span><br><span class="line"></span><br><span class="line">&#96;ArrayList&#96;底层实现是数组，可以存储null, 没有进行同步措施，不是线程安全的，当数组容量不够时，需要扩容。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#96;LinkedList&#96;同时实现了List和Deque接口，所以它既可以看作一个顺序容器，又可以看作队列，又可以看作栈。（我对Deque的理解就是双端队列Double end queue）,它的底层实现是一个双向链表。为了效率&#96;LinkedList&#96;同样没有实现同步，如果多个线程并发访问，可以用&#96;Collection.synchronizedList()&#96;方法对其进行包装。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Stack 类继承自Vector, Java已不推荐使用Stack, 而是推荐使用&#96;ArrayDeque&#96;（继承自Deque）,&#96;ArrayDeque&#96;不是线程安全的，需要手动同步，其中不允许放入null. &#96;ArrayDeque&#96;底层也是数组实现，作为双端队列，肯定需要判断队列是否满了，如果满了要进行扩容操作，虽然这个工作API内部就完成了，但是在看它的实现时，我的表情是这样的，![](https:&#x2F;&#x2F;ws1.sinaimg.cn&#x2F;large&#x2F;005UcYzagy1fv5x4qelgdj305n064dfs.jpg)</span><br><span class="line"></span><br><span class="line">数据结构书上讲的判断队列满的方法是取模，这里它是这么实现的</span><br></pre></td></tr></table></figure>
-public void addFirst(E e) {
-  if (e == null)//不允许放入null
-      throw new NullPointerException();
-  elements[head = (head - 1) &amp; (elements.length - 1)] = e;//2.下标是否越界
-  if (head == tail)//1.空间是否够用
-      doubleCapacity();//扩容
-}
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">通过位运算来实现的，因为Array每次扩容都是按倍数增长，所以它的容量是2的次幂，那么用head-1来和length-1进行与运算，就可以求模了，想想通过位运算来求模肯定会节省很多时间啊。真的是![](https:&#x2F;&#x2F;ws1.sinaimg.cn&#x2F;large&#x2F;005UcYzagy1fv5x90s09xj308o08c3yk.jpg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### Vector 和 &#96;ArrayList&#96;</span><br><span class="line"></span><br><span class="line">1. vector 是线程同步的，所以它也是线程安全的，而 &#96;ArrayList&#96; 是线程异步的，是不安全的。如果不考虑到线程的安全因素，一般用 &#96;ArrayList&#96; 效率比较高。</span><br><span class="line"></span><br><span class="line">2. 如果集合中的元素的数目大于目前集合数组的长度时，vector 增长率为目前数组长度的100%,而 arraylist 增长率为目前数组长度的50%.如过在集合中使用数据量比较大的数据，用 vector 有一定的优势。</span><br><span class="line"></span><br><span class="line">3. 如果查找一个指定位置的数据，vector 和 arraylist 使用的时间是相同的，都是0(1),这个时候使用 vector 和 arraylist 都可以。而如果移动一个指定位置的数据花费的时间为 0(n-i)n 为总长度，这个时候就应该考虑到使用 linklist,因为它移动一个指定位置的数据所花费的时间为 0(1),而查询一个指定位置的数据时花费的时间为 0(i)。</span><br><span class="line"></span><br><span class="line">ArrayList 和 Vector 是采用数组方式存储数据，此数组元素数大于实际存储的数据以便增加和插入元素，都允许直接序号索引元素，但是插入数据要设计到数组元素移动 等内存操作，所以索引数据快插入数据慢，Vector 由于使用了 synchronized 方法（线程安全）所以性能上比ArrayList 要差，LinkedList 使用双向链表实现存储，按序号索引数据需要进行向前或向后遍历，但是插入数据时只需要记录本项的前后项即可，所以插入数度较快！</span><br><span class="line"></span><br><span class="line">##### arraylist 和 linkedlist</span><br><span class="line"></span><br><span class="line">1. ArrayList 是实现了基于动态数组的数据结构，LinkedList 基于链表的数据结构。 2.对于随机访问 get 和 set，ArrayList 觉得优于 LinkedList，因为 LinkedList 要移动指针。 3.对于新增和删除操作 add 和 remove，LinedList 比较占优势，因为 ArrayList 要移动数据。 这一点要看实际情况的。若只对单条数据插入或删除，ArrayList 的速度反而优于 LinkedList。但若是批量随机的插入删除数据，LinkedList 的速度大大优于 ArrayList. 因为 ArrayList 每插入一条数据，要移动插入点及之后的所有数据。</span><br><span class="line"></span><br><span class="line">#### HashMap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### Java自动拆装箱</span><br><span class="line"></span><br><span class="line">&#x3D;&#x3D;比较的是对象应用，equals比较的是值</span><br><span class="line"></span><br><span class="line">在Java 5中，在Integer的操作上引入了一个新功能来节省内存和提高性能。整型对象通过使用相同的对象引用实现了缓存和重用。</span><br><span class="line"></span><br><span class="line">&gt; 适用于整数值区间-128 至 +127。</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br><span class="line">&gt; 只适用于自动装箱。使用构造函数创建对象不适用。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### Java中的String</span><br><span class="line"></span><br><span class="line">#### 关于字符串常量池</span><br><span class="line"></span><br><span class="line">考虑以下代码</span><br></pre></td></tr></table></figure>
-String s1 = &quot;taochq&quot; ; （1）
-String s2 = new String(&quot;taochq&quot;) ; （2）
-String s3 = new String(&quot;taochq&quot;).intern() ; （3）
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">JVM为了提高性能和减少内存开销，在实例化字符串常量的时候进行了一些优化，字符串类维护了一个字符串常量池。</span><br><span class="line"></span><br><span class="line">执行代码（1）的时候，jvm会检查常量池中有没有“taochq”这个字符串，没有则创建并返回引用（注意这个引用是指向字符串常量池的），有的话则直接返回它的引用。</span><br><span class="line"></span><br><span class="line">执行（2）的时候，s2是在栈上，堆上会创建一个String对象，它指向字符串常量池中的&quot;taochq&quot;,所以s2指向的是堆上的一个地址。</span><br><span class="line"></span><br><span class="line">执行（3）的时候，因为调用了intern()方法，JVM会检查常量池中是否有相同的的字符串，如果有则直接返回引用（注意这里的引用也是指向字符串常量池的），如果没有则将字符串放入常量池并返回它的引用。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">看到这里，你可能会觉得，代码（1）和代码（3）实现的效果差不多啊，为什么还要有&#96;intern()&#96;这个方法呢，其实是有区别的。要知道，常量池保存的是**已确定**的字符串，什么意思呢？就是说很多时候我们在程序中用到的字符串都是在编译器无法确定的，只有在运行时才知道这个字符串确切是啥，对于这种情况，使用intern进行定义，每次程序执行到这里的时候直接返回常量池中的字符串，可以减少堆上对象的创建。</span><br><span class="line"></span><br><span class="line">而对于那种在编译器就能确定的常量，我们当然可以使用双引号字符串进行定义。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### + 号拼接字符串</span><br><span class="line"></span><br><span class="line">在java中，&#96;+&#96;并不是运算符重载，java是不支持运算符重载的，这只是java的一个语法糖，它的底层仍然是&#96;stringbuilder&#96;的&#96;apend&#96;操作。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### concat</span><br><span class="line"></span><br><span class="line">借助字符数组，最终还是new了一个新的String对象</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### &#96;String&#96; &#96;StringBuffer&#96; &#96;StringBuilder&#96;</span><br><span class="line"></span><br><span class="line">它们内部都是通过数组来实现的，不同的是，String的内部数组是final修饰的，是不可改变的，&#96;StringBuffer&#96;和&#96;StringBuilder&#96;内部数组是可修改的。它俩有一个变量来指示数组中已经被占用的元素个数。它们的append方法是通过数组来实现的。</span><br><span class="line"></span><br><span class="line">&#96;StringBuffer&#96;和&#96;StringBuilder&#96;最大的区别是&#96;StringBuffer&#96;是线程安全的。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 总结</span><br><span class="line"></span><br><span class="line">如果在循环体内，使用&#96;+&#96;进行字符串拼接的话，会频繁的创建&#96;StringBuilder&#96;对象，不如直接用&#96;StringBuilder&#96;拼接来的快。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### String的比较</span><br><span class="line"></span><br><span class="line">&#96;&#x3D;&#x3D;&#96;比较的事两个对象的引用是否相同，即两个对象是否是同一个对象而只是引用不同而已。</span><br><span class="line"></span><br><span class="line">&#96;equals()&#96;方法比较的是字符串的值。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### &#96;foreach&#96;循环中的remove&#x2F;add操作</span><br><span class="line"></span><br><span class="line">最近在项目中使用&#96;foreach&#96;并且在里面对元素进行remove时常常发生并发修改异常,特此记录。</span><br></pre></td></tr></table></figure>
-java.util.ConcurrentModificationException
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 问题场景</span><br></pre></td></tr></table></figure>
-List&lt;String&gt; list = new ArrayList&lt;String&gt;(){{
-    add("this is");
-    add("a foreach");
-    add("example");
-}}
-</code></pre></li>
-</ul>
-<p>for(String str: list){<br>    if(str.equals(“a foreach)){<br>        list.remove(str);<br>    }<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">执行以上代码时，就会产生上述异常。</span><br></pre></td></tr></table></figure>
-<p>Exception in thread “main” java.util.ConcurrentModificationException<br>    at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:937)<br>    at java.base/java.util.ArrayList$Itr.next(ArrayList.java:891)<br>    at Test.main(Test.java:12)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 问题分析</span><br><span class="line"></span><br><span class="line">&#96;foreach&#96;循环其实是java提供给我们的语法糖，其本质还是借助while循环和iterator来实现的（iterator使用迭代器模式实现）。</span><br><span class="line"></span><br><span class="line">之所以出现上述异常，是因为触发了java的fail-fast机制。fail-fast即快速失败机制，当多线程访问集合类并对其进行修改时，可能触发。其实单线程也是可以触发的，比如本例。</span><br><span class="line"></span><br><span class="line">其实产生并发修改异常的原因很简单,&#96;checkForComdification&#96;的代码如下：</span><br></pre></td></tr></table></figure>
-<p> final void checkForComodification() {<br>            if (modCount != expectedModCount)<br>                throw new ConcurrentModificationException();<br>        }</p>
-<pre><code>
-可以看出，抛出异常的原因是因为`modCount`和`expectedModCount`的值不一样，那这两个值代表着什么呢？
-
-+ `modCount`是`AbstractList`中的成员变量，代表list被修改的次数
-
-+ `expectedModCount` 是 `ArrayList`中的一个内部类——`Itr`中的成员变量。`expectedModCount`表示这个迭代器期望该集合被修改的次数。其值是在`ArrayList.iterator`方法被调用的时候初始化的。**只有通过迭代器对集合进行操作，该值才会改变**。
-
-看到这里，其实问题已经明了了，`foreach`是用while+iterator实现的，但是上述代码中remove操作却用的是集合类自己的remove方法而不是iterator的remove,这样造成的结果就是`modCount`得到了修改但是`expectedModCount`却没有被修改，从而抛出异常。
-
-### Java中的日志
-
-阿里巴巴开发手册中有一条：【强制】应用中不可直接使用日志系统（Log4j、`Logback`）中的API，而应依赖使用日志框架SLF4J中的API，使用门面模式的日志框架，有利于维护和各个类的日志处理方式统一。
-
-
-
-来看下Java中一些好的日志门面：
-
-**SLF4J**(Simple Logging Facade for Java)
-
-### Java中的引用
-
-在JVM的文章中有写到。
-
-+ 
-
-#### 弱引用
-
-
-</code></pre>
-          
+          继承与覆盖
+当通过一个父类的引用指向一个子类的对象后，将只能通过这个父类的引用访问那些父类中定义了的属性和方法。Java平台的执行规则是： 在编译的时候，可以调用哪些方法，访问哪些属性，是引用类型决定的；在程序运行的时候，具体访问哪个属性，执行哪个方法，是对象的类型决定的。
+也就是说，如果子类中有这
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/14/java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1306,11 +899,18 @@ List&lt;String&gt; list = new ArrayList&lt;String&gt;(){{
       
         
           
-            <ol>
-<li>在命令行下执行 node debug debug.js，将会启动调试工具： </li>
-</ol>
+          
+在命令行下执行 node debug debug.js，将会启动调试工具： 
+
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/13/node-js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1440,8 +1040,15 @@ List&lt;String&gt; list = new ArrayList&lt;String&gt;(){{
       
         
           
-            
           
+          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/08/vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1593,15 +1200,17 @@ List&lt;String&gt; list = new ArrayList&lt;String&gt;(){{
       
         
           
-            <p>使用dbca来创建数据库，这个过程选择了高级选项，需要留意用户名和密码，这个在后来用sql  developer连接时用得到</p>
-<p>在用sql developer连接时，应该是可以选择管理员账户的（不过我还没搞清楚），并且注意选择一般账户的话底下那个选项就不能用sysdba哦</p>
-<p>关于找不到模块的问题，貌似需要把js文件放到oracledb模块下编译</p>
-<p>在基于oracledb 用node 运行js文件时提示说用户名或密码无效，事实是我杠杆用这个用户名登陆了sqldeveloper,导致js文件代码连不上</p>
-<p>在用sqldeveloper连接oracle时出现了下面错误</p>
-<p><code>sql developer ORA-12505, TNS:listener does not currently know of SID given in connect descriptor</code></p>
-<p>大概意思就是 没有监听到这个SID,于是乎打开listener.ora文件，把这个SID相应的加进去就好了，</p>
-
-          
+          使用dbca来创建数据库，这个过程选择了高级选项，需要留意用户名和密码，这个在后来用sql  developer连接时用得到
+在用sql developer连接时，应该是可以选择管理员账户的（不过我还没搞清楚），并且注意选择一般账户的话底下那个选项就不能用sysdba哦
+关于找不到模块的问题，貌似需
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/10/oracle%E5%A1%AB%E5%9D%91/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1731,73 +1340,23 @@ List&lt;String&gt; list = new ArrayList&lt;String&gt;(){{
       
         
           
-            <h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul>
-<li>匿名函数是将函数值赋给变量<code>var abs = function(x){...}</code></li>
-</ul>
-<ul>
-<li><p>把自己的代码全部放入唯一的名字空间<code>MYAPP</code>中，会大大减少全局变量冲突的可能。</p>
-</li>
-<li><p>解构赋值</p>
-</li>
-<li><p>JavaScript的函数其实都指向某个变量。既然变量可以指向函数，函数的参数能接收变量，那么一个函数就可以接收另一个函数作为参数，这种函数就称之为高阶函数。</p>
-<p>​常用的有：map/reduce,filter,sort;</p>
-<p>​数组对象具有一个map函数，可以进行批量操作</p>
-</li>
-<li><p>返回闭包时牢记的一点就是：返回函数不要引用任何循环变量，或者后续会发生变化的变量。</p>
-</li>
-<li><p>JavaScript的原型链和Java的Class区别就在，它没有“Class”的概念，所有对象都是实例，所谓继承关系不过是把一个对象的原型指向另一个对象而已。</p>
-</li>
-<li><p>JavaScript的原型继承实现方式就是：</p>
-<ol>
-<li><p>定义新的构造函数，并在内部用<code>call()</code>调用希望“继承”的构造函数，并绑定<code>this</code>；</p>
-</li>
-<li><p>借助中间函数<code>F</code>实现原型链继承，最好通过封装的<code>inherits</code>函数完成；</p>
-</li>
-<li><p>继续在新的构造函数的原型上定义新方法。</p>
-</li>
-</ol>
-</li>
-</ul>
-<h3 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h3><ul>
-<li><code>document</code>对象表示当前页面。由于HTML在浏览器中以DOM形式表示为树形结构<code>document</code>对象就是整个DOM树的根节点.</li>
-<li>html文档被解析后就是一颗DOM树，在操作一个DOM节点前，首先要获得这个节点，方法有<code>document.getElementById()</code>和<code>document.getElementsByTagName()</code></li>
-</ul>
-<p>ORM技术：Object-Relational Mapping</p>
-<ul>
-<li><p>要DOM做什么？</p>
-<p>可以操作html文档</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-<h3 id="BOM对象"><a href="#BOM对象" class="headerlink" title="BOM对象"></a>BOM对象</h3><p>浏览器对象模型</p>
-<ul>
-<li><p>对象：</p>
-<ul>
-<li><p>Navigator:获取浏览器的信息</p>
-</li>
-<li><p>Screen: 获取屏幕信息</p>
-</li>
-<li><p>location: 请求的<code>url</code>地址</p>
-<p><code>href</code>属性: 获取当前请求地址，设置新的地址</p>
-</li>
-<li><p>History: 请求的<code>url</code>的历史记录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">histtory.back()</span><br><span class="line">history.go(-1)</span><br><span class="line">history.forward()</span><br><span class="line">histoty.go(1)</span><br></pre></td></tr></table></figure>
+          函数
+匿名函数是将函数值赋给变量var abs = function(x){...}
 
-<p>​</p>
-</li>
-<li><p>Window： 窗口对象，顶层对象，所有<code>bom</code>对象都是在Window里面操作的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">window.alert()</span><br><span class="line">window.confirm(&quot;...&quot;)  &#x2F;&#x2F;确认框，有返回值true false</span><br><span class="line">window.prompt(text,defalutText)   &#x2F;&#x2F;输入的对话框</span><br><span class="line">window.open(URL,name,feature,replace) &#x2F;&#x2F;打开一个窗口</span><br><span class="line">window.close()  &#x2F;&#x2F;关闭窗口</span><br></pre></td></tr></table></figure>
 
-<p>​</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-</li>
-</ul>
+把自己的代码全部放入唯一的名字空间MYAPP中，会大大减少全局变量冲突的可能。
 
-          
+解构赋值
+
+JavaScript的函数其实都指向某个变量。既然变量可以指向函数，函数的参数能接收变量，那么一个函数就可以接收另一
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/05/javascript/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1949,9 +1508,16 @@ List&lt;String&gt; list = new ArrayList&lt;String&gt;(){{
       
         
           
-            <p>在 执行<code>npm install electron</code>时，常常遇到错误，如ELIFECYCLE，这种多是网络问题，可以换位国内镜像尝试。</p>
+          在 执行npm install electron时，常常遇到错误，如ELIFECYCLE，这种多是网络问题，可以换位国内镜像尝试。
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/03/electron%E7%AC%94%E8%AE%B0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2103,67 +1669,52 @@ List&lt;String&gt; list = new ArrayList&lt;String&gt;(){{
       
         
           
-            <ol>
-<li>关系型数据库与MongoDB术语对比</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>关系型数据库</th>
-<th>MongoDB</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>表</td>
-<td>集合</td>
-</tr>
-<tr>
-<td>行</td>
-<td>文档</td>
-</tr>
-<tr>
-<td>列</td>
-<td>字段</td>
-</tr>
-<tr>
-<td>表join</td>
-<td>内嵌</td>
-</tr>
-<tr>
-<td>主键</td>
-<td>主键（由MongoDB提供默认的key_id）</td>
-</tr>
-</tbody></table>
-<ol start="2">
-<li><p>创建数据库</p>
-<p><code>use DATABASE_NAME</code></p>
-</li>
-<li><p>得到</p>
-</li>
-<li><p>记一次在<code>mapreduce</code>里填的坑</p>
-<p><code>mapreduce</code>最初是由谷歌提出的框架，但已在多种平台上实现。分为map和reduce两个阶段。</p>
-<p>map阶段通过emit函数对同一个key所对应的值进行映射，reduce阶段对每组映射结果进行化简。用官方文档的一张图来说明：</p>
-<p><img src="https://ws1.sinaimg.cn/large/005UcYzaly1fpn1zw63gvj30kg0hp75s.jpg" alt=""></p>
-<p>​</p>
-</li>
-<li><p>​</p>
-</li>
-<li><p>问题合集</p>
-</li>
-</ol>
-<ul>
-<li><p>在连接MongoDB的过程中，实际上应该用两次cmd,第一次是开启Mongo服务，第二次才是连接到数据库。先到安装目录下的bin文件夹下执行<code>mongod --dbpath &quot;F:\mongodb\data\db&quot;</code>启动服务器，然后重新打开命令行，输入<code>mongo</code>连接数据库</p>
-</li>
-<li><p>在<code>node.js</code>操作<code>mongodb</code>时遇到如下错误</p>
-<p><code>MongoNetworkError: connection destroyed, not possible to instantiate cursor</code></p>
-<p>最后发现应该把<code>db.close()</code>写到回掉函数里面</p>
-</li>
-<li><p><code>​mongodb</code>的在线调试端口默认28017</p>
-</li>
-</ul>
-<p>mongodb的访问控制问题： admin对于非系统集合其实是没有读权限的</p>
-
           
+关系型数据库与MongoDB术语对比
+
+
+
+
+关系型数据库
+MongoDB
+
+
+
+表
+集合
+
+
+行
+文档
+
+
+列
+字段
+
+
+表join
+内嵌
+
+
+主键
+主键（由MongoDB提供默认的key_id）
+
+
+
+创建数据库
+use DATABASE_NAME
+
+得到
+
+记一次在mapreduce里填的坑
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/02/mongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

@@ -334,62 +334,15 @@
       
         
           
-            <p>要谈Spring循环依赖，首先要知道Spring何时进行依赖注入。在以前的文章中我们有提到，IoC容器初始化时，要经历BeanDefinition的Resource定位，BeanDefinition的载入解析以及BeanDefinition在IoC容器中的注册，经过上述过程后，IoC容器的初始化就完成了，里面的BeanDefinition也有了，然后才发生依赖注入。而循环依赖就是在依赖注入过程中发生的A依赖于B而B有依赖于A的现象。</p>
-<p>接下来再说Spring中发生循环依赖会怎样。</p>
-<p>spring中的循环依赖有三种情况：</p>
-<ul>
-<li>构造器循环依赖：spring处理不了，抛出异常BeanCurrentlylnCreationException</li>
-<li>单例模式下的setter循环依赖：通过三级缓存处理。</li>
-<li>非单例循环依赖：无法处理。</li>
-</ul>
-<p><strong>构造器循环依赖：</strong></p>
-<p>将正在创建的bean记录在缓存中，如果一个bean在创建过程中发现自己已经被记录了，则抛出BeanCurrentlylnCreationException异常。</p>
-<p><strong>setter循环依赖：</strong></p>
-<p>Spring为了解决单例的循环依赖问题，使用了三级缓存。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;** Cache of singleton objects: bean name –&gt; bean instance *&#x2F;</span><br><span class="line">private final Map singletonObjects &#x3D; new ConcurrentHashMap(256);</span><br><span class="line">&#x2F;** Cache of singleton factories: bean name –&gt; ObjectFactory *&#x2F;</span><br><span class="line">private final Map&gt; singletonFactories &#x3D; new HashMap&gt;(16);</span><br><span class="line">&#x2F;** Cache of early singleton objects: bean name –&gt; bean instance *&#x2F;</span><br><span class="line">private final Map earlySingletonObjects &#x3D; new HashMap(16);</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
-
-<p>这三级缓存的作用分别是：</p>
-<p>singletonFactories ： 进入实例化阶段的单例对象工厂的cache （三级缓存）</p>
-<p>earlySingletonObjects ：完成实例化但是尚未初始化的，提前暴光的单例对象的Cache （二级缓存）</p>
-<p>singletonObjects：完成初始化的单例对象的cache（一级缓存）</p>
-<p>我们在创建bean的时候，会首先从cache中获取这个bean，这个缓存就是sigletonObjects。主要的调用方法是：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">getSingleton</span><span class="params">(String beanName, <span class="keyword">boolean</span> allowEarlyReference)</span> </span>&#123;</span><br><span class="line">    Object singletonObject = <span class="keyword">this</span>.singletonObjects.get(beanName);</span><br><span class="line">    <span class="comment">//isSingletonCurrentlyInCreation()判断当前单例bean是否正在创建中</span></span><br><span class="line">    <span class="keyword">if</span> (singletonObject == <span class="keyword">null</span> &amp;&amp; isSingletonCurrentlyInCreation(beanName)) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.singletonObjects) &#123;</span><br><span class="line">            singletonObject = <span class="keyword">this</span>.earlySingletonObjects.get(beanName);</span><br><span class="line">            <span class="comment">//allowEarlyReference 是否允许从singletonFactories中通过getObject拿到对象</span></span><br><span class="line">            <span class="keyword">if</span> (singletonObject == <span class="keyword">null</span> &amp;&amp; allowEarlyReference) &#123;</span><br><span class="line">                ObjectFactory&lt;?&gt; singletonFactory = <span class="keyword">this</span>.singletonFactories.get(beanName);</span><br><span class="line">                <span class="keyword">if</span> (singletonFactory != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    singletonObject = singletonFactory.getObject();</span><br><span class="line">                    <span class="comment">//从singletonFactories中移除，并放入earlySingletonObjects中。</span></span><br><span class="line">                    <span class="comment">//其实也就是从三级缓存移动到了二级缓存</span></span><br><span class="line">                    <span class="keyword">this</span>.earlySingletonObjects.put(beanName, singletonObject);</span><br><span class="line">                    <span class="keyword">this</span>.singletonFactories.remove(beanName);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (singletonObject != NULL_OBJECT ? singletonObject : <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
-
-<p>从上面三级缓存的分析，我们可以知道，Spring解决循环依赖的诀窍就在于singletonFactories这个三级cache。这个cache的类型是ObjectFactory，定义如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ObjectFactory</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">T <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
-
-<p>这个接口在AbstractBeanFactory里实现，并在核心方法doCreateBean（）引用下面的方法:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">addSingletonFactory</span><span class="params">(String beanName, ObjectFactory&lt;?&gt; singletonFactory)</span> </span>&#123;</span><br><span class="line">    Assert.notNull(singletonFactory, <span class="string">"Singleton factory must not be null"</span>);</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>.singletonObjects) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.singletonObjects.containsKey(beanName)) &#123;</span><br><span class="line">            <span class="keyword">this</span>.singletonFactories.put(beanName, singletonFactory);</span><br><span class="line">            <span class="keyword">this</span>.earlySingletonObjects.remove(beanName);</span><br><span class="line">            <span class="keyword">this</span>.registeredSingletons.add(beanName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
-
-<p>这段代码发生在createBeanInstance之后，populateBean（）之前，也就是说单例对象此时已经被创建出来(调用了构造器)。这个对象已经被生产出来了，此时将这个对象提前曝光出来，让大家使用。</p>
-<p>这样做有什么好处呢？让我们来分析一下“A的某个field或者setter依赖了B的实例对象，同时B的某个field或者setter依赖了A的实例对象”这种循环依赖的情况。A首先完成了初始化的第一步，并且将自己提前曝光到singletonFactories中，此时进行初始化的第二步，发现自己依赖对象B，此时就尝试去get(B)，发现B还没有被create，所以走create流程，B在初始化第一步的时候发现自己依赖了对象A，于是尝试get(A)，尝试一级缓存singletonObjects(肯定没有，因为A还没初始化完全)，尝试二级缓存earlySingletonObjects（也没有），尝试三级缓存singletonFactories，由于A通过ObjectFactory将自己提前曝光了，所以B能够通过ObjectFactory.getObject拿到A对象(虽然A还没有初始化完全，但是总比没有好呀)，B拿到A对象后顺利完成了初始化阶段1、2、3，完全初始化之后将自己放入到一级缓存singletonObjects中。此时返回A中，A此时能拿到B的对象顺利完成自己的初始化阶段2、3，最终A也完成了初始化，进去了一级缓存singletonObjects中，而且更加幸运的是，由于B拿到了A的对象引用，所以B现在hold住的A对象完成了初始化。</p>
-<p>检测循环依赖的过程如下：</p>
-<ul>
-<li><p>A 创建过程中需要 B，于是 <strong>A 将自己放到三级缓里面</strong> ，去实例化 B</p>
-</li>
-<li><p>B 实例化的时候发现需要 A，于是 B 先查一级缓存，没有，再查二级缓存，还是没有，再查三级缓存，找到了！</p>
-</li>
-<li><ul>
-<li><strong>然后把三级缓存里面的这个 A 放到二级缓存里面，并删除三级缓存里面的 A</strong></li>
-<li>B 顺利初始化完毕，<strong>将自己放到一级缓存里面</strong>（此时B里面的A依然是创建中状态）</li>
-</ul>
-</li>
-<li><p>然后回来接着创建 A，此时 B 已经创建结束，直接从一级缓存里面拿到 B ，然后完成创建，<strong>并将自己放到一级缓存里面</strong></p>
-</li>
-<li><p>如此一来便解决了循环依赖的问题</p>
-</li>
-</ul>
-<p>所以总结以下，解决setter循环依赖的方法就是在循环依赖之前给他设置了阶梯，或者说分了层，使得那种没有被完全初始化好的对象可以作为被依赖去完成依赖对象的初始化（也就是提前曝光）。</p>
-<p>spring单例对象初始化经过以下过程：</p>
-<ul>
-<li>createBeanInstance: 调用构造方法对对象进行实例化。</li>
-<li>populateBean: 属性填充</li>
-<li>initializeBean: 调用xml中的init方法</li>
-</ul>
-<p>所以循环依赖发生在第一二步。</p>
-<p>参考：链接：<a href="https://juejin.im/post/5c98a7b4f265da60ee12e9b2" target="_blank" rel="noopener">https://juejin.im/post/5c98a7b4f265da60ee12e9b2</a></p>
-
-          
+          要谈Spring循环依赖，首先要知道Spring何时进行依赖注入。在以前的文章中我们有提到，IoC容器初始化时，要经历BeanDefinition的Resource定位，BeanDefinition的载入解析以及BeanDefinition在IoC容器中的注册，经过上述过程后，IoC容器的初始化就完
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/18/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -541,22 +494,19 @@
       
         
           
-            <blockquote>
-<p>最近在看Spring中的AOP, 其实现主要是靠动态代理，所以打算先了解一下动态代理。</p>
-</blockquote>
-<p>要说动态代理，需要先知道什么是代理，既然是动态代理，那么有没有静态代理，区别又在哪里。</p>
-<p>何为代理，最直观的，我们fq时会用到小飞机或者其他的正向代理，说白了就是让代理代替我们去做某件事，在设计模式中专门有一个代理模式，我们可以先来看下代理模式的类图。</p>
-<p><img src="https://s2.ax1x.com/2020/02/16/3po3FJ.png" alt="3po3FJ.png"></p>
-<p>其中ProxyImage就是代理对象，代理了RealImage, 它们实现了共同的接口，同时ProxyImage聚合了RealImage, 通过在ProxyImage的display方法中调用RealImage的display,达到代理的作用。</p>
-<p>这样的代理我们也可以称之为静态代理，为什么这么说呢？因为这种代理关系是代码被编译成字节码时就存在的，而动态代理则不一样，它的代理关系是运行期动态创建的。说到运行期、动态，你想到了什么？反射。没错，其实动态代理就是用到了反射。</p>
-<p>Java中常用的动态代理技术有JDK动态代理以及CGLIB动态代理。</p>
-<p>基于JDK的动态代理核心有两个方法需要掌握：</p>
-<p>首先要实现动态代理，代理需要继承<code>InvacationHandler</code>类，在代理类中实现代理对象和被代理对象的绑定，用的是<code>Proxy.newProxyInstance()</code>方法，然后需要重写一个<code>invoke()</code>方法，举一个廖雪峰大佬网站的例子</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        InvocationHandler handler = <span class="keyword">new</span> InvocationHandler() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                System.out.println(method);</span><br><span class="line">                <span class="keyword">if</span> (method.getName().equals(<span class="string">"morning"</span>)) &#123;</span><br><span class="line">                    System.out.println(<span class="string">"Good morning, "</span> + args[<span class="number">0</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;mornin</span><br><span class="line">        Hello hello = (Hello) Proxy.newProxyInstance(</span><br><span class="line">            Hello<span class="class">.<span class="keyword">class</span>.<span class="title">getClassLoader</span>(), // 传入<span class="title">ClassLoader</span></span></span><br><span class="line">            new Class[] &#123; Hello.class &#125;, // 传入要实现的接口</span><br><span class="line">            handler); <span class="comment">// 传入处理调用方法的InvocationHandler</span></span><br><span class="line">        hello.morning(<span class="string">"Bob"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">morning</span><span class="params">(String name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>代码中生成了代理hello, 可以看到它和被代理对象是同一类型的，当执行代理对象的<code>morning()</code>方法时，就会调用<code>handler</code>的<code>invoke</code>方法，当然了，在<code>invoke</code>方法里我们一方面调用了被代理对象的morning方法，一方面加入我们自己的逻辑。</p>
-
           
+最近在看Spring中的AOP, 其实现主要是靠动态代理，所以打算先了解一下动态代理。
+
+要说动态代理，需要先知道什么是代理，既然是动态代理，那么有没有静态代理，区别又在哪里。
+何为代理，最直观的，我们fq时会用到小飞机或者其他的正向代理，说白了就是让代理代替我们去做某件事，在设计模式中专门有一个
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/16/Java%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -708,342 +658,16 @@
       
         
           
-            <blockquote>
-<p>最近阿里各部门已经陆续开始春招，自己也写完了项目最后的一部分，简历也刚刚完成了1.0版本，但是仍旧按捺不住躁动的内心。对于简历投递与面试，我是既期望又紧张，害怕它来又怕他不来。与其临渊羡鱼，不如退而结网，有躁动的功夫，不如温习一下知识点，正好最近一直在写项目, 知识点也快忘的差不多了。接下来打算结合自己的简历，从面试官的角度，对自己进行提问。</p>
-</blockquote>
-<h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><ol>
-<li><p>集合类是否了解？</p>
-<p>Set List Map</p>
-</li>
-<li><p>Set 和 List 区别</p>
-</li>
-<li><p>HashMap是否了解</p>
-<p>初始容量，负载因子，扩容？</p>
-<p>容量为什么是2的因子</p>
-<p>插入：头插尾插？ 1.7是头插，</p>
-<p>如何计算hash, 计算hash的时候为什么要取模 </p>
-<p>hashCode和equals的重写， equals和==的区别</p>
-<p>HashMap有什么问题？</p>
-<blockquote>
-<p>做结构性修改的时候不安全，总结来说，头插涉及到好几个代码片段，他们不是原子操作，那么多线程时就会出事，比如形成环形链表。</p>
-</blockquote>
-<p>针对HashMap的这些弊端有解决措施吗？</p>
-<blockquote>
-<p>ConcurrentHashMap</p>
-</blockquote>
-<p>讲一讲ConcurrentHashMap</p>
-<blockquote>
-<p>1.7中使用分段锁， 1.8中使用CAS+synchronized, 1.8中引入了红黑树，1.7和1.8中size()方法也不一样，1.7中多次计算，然后决定是否加锁，1.8中使用baseCount+CounterCell</p>
-</blockquote>
-<p>为什么从1.7的分段锁变成了1.8的CAS+synchronized</p>
-</li>
-<li><p>谈谈你对synchronized关键字的理解</p>
-<blockquote>
-<p>是一种Java内置的锁，修饰方法或者代码块，修饰代码块时，底层是moniterenter和monitorexit指令实现的，也就是加锁的意思。</p>
-<p>内存语义：可见性，原子性，有序性</p>
-</blockquote>
-</li>
-<li><p>synchronized和lock的区别</p>
-<blockquote>
-<p>synchronized是内置的，lock是基于AQS的</p>
-<p>synchronized等待中的线程不能响应中断，lock等待队列中的线程是可以相应中断的。</p>
-<p>synchronized是非公平锁，ReentrantLock默认非公平锁，可以设置为公平锁。</p>
-<p>synchronized发生异常时会自动释放，lock需要手动释放</p>
-<p>synchronized是获取锁还是进入等待队列我们是不知道的，但是通过Lock的tryLock可以得知有没有获取锁成功。</p>
-</blockquote>
-</li>
-<li><p>Monitor机制是否了解</p>
-</li>
-<li><p>volatile关键字是否了解</p>
-</li>
-<li><p>对Java中锁的了解</p>
-</li>
-<li><p>CAS是什么</p>
-</li>
-<li><p>聊聊你熟悉的设计模式</p>
-</li>
-<li><p>Java内存模型， JVM内存模型，类加载，垃圾回收，OOM</p>
-</li>
-<li><p>fail-fast 和 fail-safe</p>
-</li>
-<li><p>HashMap 和HashTable区别</p>
-<blockquote>
-<ul>
-<li>继承不同：一个实现map接口，一个来自Dictionary</li>
-<li>线程安全不同</li>
-<li>允不允许null值：HashMap允许键或者值为null, 且只允许有一个键为null的值（因为如果有多个键为null时，我怎么知道我get的null是哪个null），但是可以有一个或者多个键的值为null, 且当hashmap中没有某个键时，get方法会返回null, 所以说，我们不能用get方法来判断hashmap中是否有某个键(因为get方法返回null的时候，可能是值为null, 也可能是key不存在)，而应该用containsKey()</li>
-</ul>
-</blockquote>
-</li>
-<li><p>线程池拒绝策略</p>
-<blockquote>
-<p>直接丢弃</p>
-<p>丢弃队列中最老的</p>
-<p>抛出异常</p>
-<p>CallerRunsPolicy: 将任务分给调用线程去执行</p>
-</blockquote>
-</li>
-<li><p>线程安全的list</p>
-<blockquote>
-<p>Vector 很古老</p>
-<p>CopyOnWriteArrayList juc包中的，锁住了整个对象</p>
-<p>synchronizedList  Collections工具类中的</p>
-</blockquote>
-</li>
-<li><p>Spring为什么要用动态代理而不是静态代理？</p>
-<blockquote>
-<p>静态代理的代理关系是在编译期就生成的，比较死板，而且是需要从class文件转成运行时的类的，而动态代理比较灵活，直接在运行期生成字节码并加载到JVM中去，Spring中代理应该很多，用静态代理，不灵活，而且会生成很多不必要的class文件。</p>
-</blockquote>
-</li>
-<li><p>了解一手JUC包的整体结构</p>
-<p><img src="https://s2.ax1x.com/2020/02/23/31DNdA.png" alt="31DNdA.png"></p>
-</li>
-</ol>
-<h3 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h3><ol>
-<li><p>如何实现自定义的类加载器</p>
-<blockquote>
-<p>继承ClassLoader, 重写findClass方法。</p>
-</blockquote>
-</li>
-<li><p>垃圾收集器</p>
-<blockquote>
-<p>serial ：采用复制算法的新生代收集器，单线程，需要stop the word</p>
-<p>ParNew: Serial的多线程版本。</p>
-<p>Parallel Scavenge: 并行的多线程新生代收集器，使用复制算法</p>
-<p>Serial Old: Serial的老年代版本，使用标记-清楚算法</p>
-<p>Parallel Old: Parallel Scavenge老年代本，使用标记整理。</p>
-<p>CMS收集器：Concurrent Mark-Sweep, 并发标记清除，分为：</p>
-<ul>
-<li>初始标记：</li>
-<li>并发标记：</li>
-<li>重新标记</li>
-<li>并发清除</li>
-</ul>
-<p>它有什么问题呢？</p>
-<ul>
-<li>无法处理浮动垃圾</li>
-<li>内存碎片</li>
-</ul>
-<p>G1收集器：Garbage-First, 特点</p>
-<ul>
-<li>并行与并发</li>
-<li>分代收集</li>
-<li>空间整合：标记整理</li>
-<li>可预测的停顿</li>
-<li>避免全堆扫描 Remembered Set: G1收集器把堆分成若干个region, 当程序对引用类型进行操作时，会检查其引用的对象是否在不同的regon中，如果在，就把引用信息记录在remenbered set中。</li>
-</ul>
-</blockquote>
-</li>
-<li><p>JVM命令</p>
-<blockquote>
-<p>jmap: 生成堆转储快照。</p>
-<p>jhat: 堆转储快照分析工具。</p>
-</blockquote>
-</li>
-<li><p>自己定义的类能被最顶级的类加载器加载吗？</p>
-<blockquote>
-<p>不能。Bootstrap类加载器只加载指定路径上的类，而且是按照名字识别的。</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><ol>
-<li><p>MySQL存储引擎，底层实现，索引，聚簇索引，非聚簇索引，最左前缀匹配，事务隔离级别，MVCC</p>
-<blockquote>
-<ul>
-<li><p>事务的四个特性：ACID</p>
-</li>
-<li><p>事务隔离：</p>
-<ul>
-<li><p>read uncommitted:一个事务未提交的内容可以被另一个事务读到，会导致脏读问题（指读到的东西不对）。</p>
-</li>
-<li><p>read committed: 一个事务只有提交了其他事务才能读到，大多数数据库默认的隔离级别。会导致不可重复读问题，也就是一个事务前后两次读到的内容可能会不一样。</p>
-</li>
-<li><p>repeatable read:  一个事务前后两次读到的内容是一样的。这是MySQL默认的隔离级别。</p>
-</li>
-<li><p>serializable: 事务之间串行执行。</p>
-<p>在实现上，数据库里面会创建一个视图，访问的时候以视图的逻辑结果为准。在“可重复读”隔离级别下，这个视图是在事务启动时创建的，整个事务存在期间都用这个视图。在“读提交”隔离级别下，这个视图是在每个 SQL 语句开始执行的时候创建的。这里需要注意的是，“读未提交”隔离级别下直接返回记录上的最新值，没有视图概念；而“串行化”隔离级别下直接用加锁的方式来避免并行访问。</p>
-</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-</li>
-<li><p>redis是否了解，和memcached区别？</p>
-<blockquote>
-<ul>
-<li><p>redis支持的数据类型更为丰富：有string, list, set, hash, sorted set, 而memcached支持的数据类型比较简单，对于复杂类型需要自己在客户端进行支持。</p>
-</li>
-<li><p>redis支持主从复制模式，而memcached的服务器之间是没有关系的，需要客户端去做一致性hash处理，这样做的一个后果是集群扩展时可能导致大量缓存失效。</p>
-</li>
-<li><p>redis是单线程的，memached是多线程的。</p>
-</li>
-<li><p>redis中可以通过multi，exec等命令开启事务，2.6以后还支持lua脚本，而memcached除了一些像increment/decrement这样的原子操作，是不支持事务的。</p>
-</li>
-<li><p>redis支持RDB和AOF两种持久化方式，而memcached本身是不支持持久化的，但是有一些基于memcached协议的项目支持持久化。</p>
-</li>
-</ul>
-<p>总结，从数据类型的角度考虑，从事务的角度考虑，从持久化的角度考虑。参考：<a href="https://www.jianshu.com/p/e94fa7340923" target="_blank" rel="noopener">https://www.jianshu.com/p/e94fa7340923</a></p>
-</blockquote>
-</li>
-<li><p>redis分布式锁</p>
-<blockquote>
-<p>redis做分布式锁主要是实现作为锁的一种互斥的功能，也就是说给A加了就不能给B加，就像一个开关一样，要么朝开那边，要么朝关那边。实现这一功能的命令是<code>setnx</code>, 意思是<code>set if not exist</code>, <code>setnx key value</code>，当key不存在的时候设置value成功，key存在的时候不做动作。利用这个setnx就可以很生动的给多个服务加锁，还需要再加上一个<code>expire</code>命令，防止redis突然掉电导致锁不释放。但这么做也有个问题，万一redis在执行了<code>setnx</code>之后但是在执行<code>expire</code>之前掉电怎么办？其实是可以把这两条命令合成一条的。</p>
-</blockquote>
-</li>
-<li><p>redis KEYS命令和SCAN命令的区别</p>
-<blockquote>
-<p>scan支持增量式迭代， 它们每次执行都只会返回少量元素， 所以这些命令可以用于生产环境， 而不会出现像 <a href="http://doc.redisfans.com/key/keys.html#keys" target="_blank" rel="noopener"><em>KEYS</em></a> 命令、 <a href="http://doc.redisfans.com/set/smembers.html#smembers" target="_blank" rel="noopener"><em>SMEMBERS</em></a> 命令带来的问题 —— 当 <a href="http://doc.redisfans.com/key/keys.html#keys" target="_blank" rel="noopener"><em>KEYS</em></a> 命令被用于处理一个大的数据库时， 又或者 <a href="http://doc.redisfans.com/set/smembers.html#smembers" target="_blank" rel="noopener"><em>SMEMBERS</em></a> 命令被用于处理一个大的集合键时， 它们可能会阻塞服务器达数秒之久。</p>
-<p>不过， 增量式迭代命令也不是没有缺点的： 举个例子， 使用 <a href="http://doc.redisfans.com/set/smembers.html#smembers" target="_blank" rel="noopener"><em>SMEMBERS</em></a> 命令可以返回集合键当前包含的所有元素， 但是对于 <a href="http://doc.redisfans.com/key/scan.html#scan" target="_blank" rel="noopener"><em>SCAN</em></a> 这类增量式迭代命令来说， 因为在对键进行增量式迭代的过程中， 键可能会被修改， 所以增量式迭代命令只能对被返回的元素提供有限的保证 </p>
-</blockquote>
-</li>
-<li><p>redis做队列？生产一次消费多次？延时队列？</p>
-</li>
-<li><p>redis持久化原理？</p>
-<blockquote>
-<p>RDB全量持久化，AOF做增量持久化。</p>
-</blockquote>
-</li>
-<li><p>RDB原理</p>
-</li>
-<li><p>pipelined好处</p>
-<blockquote>
-<p>使得多次IO时间折合成一次。</p>
-</blockquote>
-</li>
-<li><p>redis主从同步</p>
-<blockquote>
-<p>​    一主多从，主写从读。主节点做一次bgsave, 然后后续操作存在buffer中，bgsave完成后将RDB文件发给从节点，从节点将其加载进内存。加载完成后再通知主节点把期间buffer内容发过来进行同步，此后主节点的每次写操作都会同步给从节点。</p>
-</blockquote>
-</li>
-<li><p>redis哨兵？</p>
-<blockquote>
-<p>通过一个独立的进程运行哨兵，对主从节点进行监视，当主节点down掉之后会主动将从节点升为主节点，然后通过发布订阅模式同时其他从节点修改配置。</p>
-</blockquote>
-</li>
-<li><p>redis缓存雪崩？缓存穿透？缓存击穿？如何解决？</p>
-<blockquote>
-<p>缓存雪崩：指的是缓存大面积失效，所有请求一下子都打到数据库的情况。</p>
-<p>解决：可以给失效时间加个随机数。</p>
-<p>缓存穿透：指的是缓存没有，数据库也没有，直接打穿</p>
-<p>解决：对请求进行校验；布隆过滤（用于验证一个数是否在一个集合中）。</p>
-<p>缓存击穿：所有的请求都集中在一个热点key上，而这个key恰好刚刚失效。</p>
-<p>解决：设置热点key永不过期</p>
-</blockquote>
-</li>
-<li><p>手写LRU</p>
-<blockquote>
-<p>继承LinkedHashMap, 重写它的<code>removeEldestEntry()</code>方法</p>
-</blockquote>
-</li>
-<li><p>mysql redo log 和 bin log</p>
-<blockquote>
-<p>redo log是innodb引擎所有。binlog是server层的。</p>
-<p>redo log是物理日志，记录物理操作。 binlog是逻辑日志，记录逻辑操作。</p>
-<p>redo log循环写。 binlog追加写。</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><ol>
-<li><p>使用场景</p>
-<blockquote>
-<p>销峰，异步，解耦</p>
-<p>销峰只得是，巨大流量涌进来的时候，先让它走消息队列，而不是直接打在服务器上。</p>
-</blockquote>
-</li>
-<li><p>异步可不可以用线程池做？</p>
-<blockquote>
-<p>线程池是基于内存的，掉电就没了，而且耦合度较高</p>
-</blockquote>
-</li>
-<li><p>消息队列会导致什么问题吗？</p>
-<blockquote>
-<p>数据的一致性问题：采用分布式事务解决。</p>
-<p>可用性：万一MQ突然挂掉咋整</p>
-<p>重复消费：幂等。进行校验</p>
-<p>顺序消费：</p>
-</blockquote>
-</li>
-<li><p>分布式事务是否了解</p>
-</li>
-<li><p>RocketMQ的架构？</p>
-<blockquote>
-<p>NameServer: 管理元数据，包括对topic和路由信息的管理。</p>
-<p>每个 Broker 在启动的时候会到 NameServer 注册，Producer 在发送消息前会根据 Topic 到 <strong>NameServer</strong> 获取到 Broker 的路由信息，Consumer 也会定时获取 Topic 的路由信息。</p>
-<p>producer: 生产者</p>
-<p>broker:消息中转，负责存储消息。</p>
-</blockquote>
-</li>
-<li><p>为什么阿里要自研RocketMQ，或者说相比于kafka, RocketMQ有什么优势？</p>
-<blockquote>
-<p>首先宏观上讲，定制的肯定要比开源的好，主要的优势可以体现在：</p>
-<ul>
-<li><p>可靠性：RocketMQ支持异步/同步刷盘;异步/同步Replication；</p>
-<p>​                Kafka使用异步刷盘方式，异步Replication。</p>
-<p>​                RocketMQ所支持的同步方式提升了数据的可靠性，这对于金融IT很重要。</p>
-</li>
-<li><p>单机支持的队列：RocketMQ单机支持的队列更多，意味着可以有更多的topic</p>
-</li>
-<li><p>消费失败重试机制：RocketMQ支持消费失败重试。</p>
-</li>
-<li><p>消息顺序性：一台broker宕机后，RocketMQ消息不会乱序。</p>
-</li>
-<li><p>定时消息：kafka不支持</p>
-</li>
-<li><p>分布式事务消息：kafka不支持。</p>
-</li>
-<li><p>消息查询：kafka不支持。</p>
-</li>
-<li><p>消息回溯：kafka按照offset回溯，RocketMQ可以按照时间回溯。</p>
-</li>
-</ul>
-<p>所以阿里为什么要自研？</p>
-<ul>
-<li>金融业务对消息的可靠性，队列个数等很有要求。</li>
-<li>当业务增长到一定规模，采用开源方案的技术成本会变高。</li>
-</ul>
-<p>参考：<a href="http://jm.taobao.org/2016/03/24/rmq-vs-kafka/" target="_blank" rel="noopener">http://jm.taobao.org/2016/03/24/rmq-vs-kafka/</a></p>
-</blockquote>
-</li>
-<li></li>
-</ol>
-<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><ol>
-<li><p>Http get post区别，常见错误码</p>
-<blockquote>
-<p>先说结论：没有本质区别，大部分所谓的区别其实都是浏览器或者服务器的一些限制。</p>
-<p>get: 参数在url中； post:参数在请求体中。 （这个是Http协议用法的约定）</p>
-<p>get提交的数据长度有限制，post则可以无限大。（这个是服务器或者浏览器的区别）</p>
-<p>post会稍微安全一点，因为它的数据在请求体中。</p>
-<p>get是幂等的，post不是，所以在网页回退或者刷新时，post的数据会被重新提交。</p>
-<p>3**:页面重定向</p>
-<p>4**：客户端错误</p>
-<p>5**:服务器错误</p>
-<p>301：资源永久移动。302：资源临时移动</p>
-</blockquote>
-</li>
-<li><p>共享session如何解决</p>
-</li>
-<li><p>cookie, session, token</p>
-<blockquote>
-<p>为什么会有cookie, session? 因为http是个无状态的协议，通过cookie和session的操作可以让服务端知道请求是谁发来的。</p>
-<p>那么cookie session有什么问题呢？在分布式场景下，每个服务器都要保存一份session, 很麻烦，但是如果把这些session集中放在一个服务器的话，又担心这个服务器崩了整个session就没了。</p>
-<p>而token呢，整个用户信息都在里面，而且是经过加密的，每次客户端访问的时候只要带着这个token, 服务端解密一下就知道来者何人了。相比之下，用户信息既没有存在客户端也没有存在服务端。</p>
-</blockquote>
-</li>
-<li><p>输入一个url的完整过程</p>
-</li>
-<li><p>TCP三次握手四次挥手</p>
-</li>
-<li><p>HTTP与HTTPS</p>
-</li>
-<li><p>Http1.0 和 Http2.0区别</p>
-<blockquote>
-<p>多路复用，一个连接可以处理多个请求</p>
-<p>服务端推送</p>
-</blockquote>
-</li>
-</ol>
-
           
+最近阿里各部门已经陆续开始春招，自己也写完了项目最后的一部分，简历也刚刚完成了1.0版本，但是仍旧按捺不住躁动的内心。对于简历投递与面试，我是既期望又紧张，害怕它来又怕他不来。与其临渊羡鱼，不如退而结网，有躁动的功夫，不如温习一下知识点，正好最近一直在写项目, 知识点也快忘的差不多了。接下来打算结
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/14/%E5%81%87%E5%A6%82%E6%88%91%E6%98%AF%E9%9D%A2%E8%AF%95%E5%AE%98/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1195,39 +819,21 @@
       
         
           
-            <p>之前已经装好anoconda，这里安装tensorflow</p>
-<p>准备工作：Python3.5 或者Python3.6</p>
-<p>很多操作指令<a href="https://tensorflow.google.cn/install/install_windows?hl=zh-cn" target="_blank" rel="noopener">官方文档</a>已经给出 </p>
-<ol>
-<li><p>打开cmd，输入</p>
-<p><code>conda create -n tensorflow python=3.5</code></p>
-<p>创建一个名为tensorflow的环境，（这里我第一次尝试并没有成功，将目录切换到Python底下才成功，估计是环境变量的问题），可能会显示要安装新的文件，点y即可。</p>
-</li>
-<li><p>激活环境</p>
-<p><code>activate tensorflow</code></p>
-<p>这时你会发现命令行最开始会有(tensorflow)，说明已经激活</p>
-</li>
-<li><p>安装tensorflow, 因为我安装的是cpu版本，所以命令如下：</p>
-<p><code>pip install --ignore-installed --upgrade tensorflow</code></p>
-</li>
-<li><p>至此安装已经完成，如需检验是否安装成功，输入python,如果import tensorflow不报错，基本说明安装成功</p>
-</li>
-</ol>
-<hr>
-<p> 至此tensorflow的安装工作已经完成，那如何在anconda navigator中导入呢？</p>
-<ul>
-<li><p>方法一  UI界面中导入</p>
-<p> <img src="https://ws1.sinaimg.cn/large/005UcYzaly1flnnyibtzcj30it02tglg.jpg" alt=""><br> ​</p>
-<p>   个人觉得这种方法很容易卡死，推荐第二种</p>
-</li>
-<li><p>方法二 命令行下载</p>
-<p>首先activate 某环境，然后conda install xxx  (如spyder)</p>
-</li>
-</ul>
-<p>如果之前安装了别的python版本，因为anaconda里面自己带了python,如何给指定版本安装numpy?这里有两种方式：</p>
-<pre><code>1. activate conda环境，然后conda install numpy,这样会安装许多其他的包，很麻烦,不推荐
-2. py -3 -m pip install python </code></pre>
-          
+          之前已经装好anoconda，这里安装tensorflow
+准备工作：Python3.5 或者Python3.6
+很多操作指令官方文档已经给出 
+
+打开cmd，输入
+conda create -n tensorflow python=3.5
+创建一个名为tensorflow的环境，（这里我第一次尝试
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/05/windows%E4%B8%8Btensorflow%20anoconda%E5%AE%89%E8%A3%85/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1379,150 +985,27 @@
       
         
           
-            <h1 id="python学习笔记"><a href="#python学习笔记" class="headerlink" title="python学习笔记"></a>python学习笔记</h1><h3 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h3><ul>
-<li><p>while循环，for循环，if语句 不需要括号，后面需要加冒号</p>
-</li>
-<li><p>定义函数语句 ： </p>
-</li>
-</ul>
-<p><code>def fun(a,b):</code><br>   ​    注：参数可以设置为默认值</p>
-<ul>
-<li>定义全局变量： 定义在函数外部或者用内部global修饰</li>
-</ul>
-<h3 id="模块安装"><a href="#模块安装" class="headerlink" title="模块安装"></a>模块安装</h3><p> sd</p>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul>
-<li><p>默认参数  函数可以有默认参数，但是默认参数必须指向不变对象</p>
-</li>
-<li><p>可变参数  </p>
-<p>意味着可以传入任意多个参数，在调用时自动组装成一个tuple,在参数前面加个*号，在一个list或者tuple前面加个 *号，意味着将list或tuple元素拆解成多个可变参数传入</p>
-</li>
-<li><p>关键字参数</p>
-<p>关键字参数允许传入任意个含参数名的参数，这些关键字参数在函数内部自动组装成一个dict</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def person(name,age,**kw):</span><br><span class="line">	print(&#39;name&#39;,name,&#39;age&#39;,age,&#39;other&#39;,kw)</span><br><span class="line">person(&#39;Jack&#39;,24,**&#123;&#39;city&#39;:&#39;Beijing&#39;,&#39;job&#39;:&#39;Engineer&#39;&#125;)</span><br><span class="line">&gt;&gt;&gt; name Jack age 24 other &#123;&#39;job&#39;: &#39;Engineer&#39;, &#39;city&#39;: &#39;Beijing&#39;&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>命名关键字参数</p>
-<p>顾名思义，限制关键字参数的名字，比如说我只允许传入city和job关键字，那么</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">person(name,age,*,city,job)</span><br></pre></td></tr></table></figure>
+          python学习笔记语句
+while循环，for循环，if语句 不需要括号，后面需要加冒号
 
-<p>果函数定义中已经有了一个可变参数，后面跟着的命名关键字参数就不再需要一个特殊分隔符<code>*</code>了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">person(name,age,*args,city,job)</span><br></pre></td></tr></table></figure>
-<h3 id="高级特性"><a href="#高级特性" class="headerlink" title="高级特性"></a>高级特性</h3></li>
-<li><p>切片</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">l&#x3D;list(range(0,100,1))</span><br><span class="line">L[0:3]表示取出索引0到索引2的所有元素</span><br><span class="line">l[:10] &#x2F;&#x2F;取出前十个元素</span><br><span class="line">l[-10:] &#x2F;&#x2F;取出后十个元素</span><br><span class="line">l[:10:2] &#x2F;&#x2F;前十个数每两个取一个</span><br></pre></td></tr></table></figure>
-
-<p>​</p>
-</li>
-<li><p>列表生成式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[x*x for x in range(1,11)]</span><br><span class="line">d &#x3D; &#123;&#39;x&#39;:&#39;A&#39;,&#39;y&#39;:&#39;B&#39;,&#39;z&#39;:&#39;C&#39;&#125;</span><br><span class="line">[k+&#39;&#x3D;&#39;+v for k,v in d.items()]</span><br></pre></td></tr></table></figure>
-
-<p>​</p>
-</li>
-<li><p>生成器</p>
-<p>一边循环一遍计算的机制</p>
-<ul>
-<li>定义方法一</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; l &#x3D; [x*x for x in range(1,11)]</span><br><span class="line">&gt;&gt;&gt; l</span><br><span class="line">[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span><br><span class="line">&gt;&gt;&gt; g &#x3D; (x*x for x in range(1,11))</span><br><span class="line">&gt;&gt;&gt; g</span><br><span class="line">&lt;generator object &lt;genexpr&gt; at 0x000001EF9005A5C8&gt;</span><br></pre></td></tr></table></figure>
-
-<p>相比于列表生成器，唯一的不同就是()</p>
-<ul>
-<li><p>定义方法二</p>
-<p>yield关键字，以斐波那契数列为例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def fib(max):</span><br><span class="line">	n,a,b &#x3D; 0,0,1</span><br><span class="line">	while n&lt;max:</span><br><span class="line">		yield b</span><br><span class="line">		a,b &#x3D; b,a+b</span><br><span class="line">		n&#x3D;n+1</span><br><span class="line">	return &#39;done&#39;</span><br><span class="line">&gt;&gt;&gt; for i in fib(6):</span><br><span class="line">	print(i)</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">8</span><br></pre></td></tr></table></figure>
-
-<p>如果把这里的yield换成print，那fib()就是个函数，这里yield关键字的作用是，生成器每次执行到这里返回，下次执行时接着这里执行</p>
-</li>
-</ul>
-</li>
-<li><p><code>Interable</code>   <code>Interator</code></p>
-<p>可以作用于for循环的成为<code>Interable</code></p>
-<p>可以被<code>next()</code>函数调用并不断返回下一个值的叫做<code>Interator</code></p>
-<p>可以用<code>isInstance()</code>判断一个对象是否是<code>Interator</code>对象</p>
-<p><code>Interator</code>的计算是惰性的，只有需要下一个值时它才会计算</p>
-</li>
-<li><p>​</p>
-</li>
-</ul>
-<h3 id="函数式编程"><a href="#函数式编程" class="headerlink" title="函数式编程"></a>函数式编程</h3><p>允许将函数作为一个参数传给函数</p>
-<h4 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h4><ul>
-<li><p>map/reduce</p>
-<ul>
-<li><p>map </p>
-<p> <code>map(function,Interator)</code>,map将function作用于<code>Interator</code>的每个元素，生成一个新的<code>Interator</code></p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; map(abs,[-1,-2,-3,-4])</span><br><span class="line">&lt;map object at 0x000001EF9006C518&gt;</span><br><span class="line">&gt;&gt;&gt; r &#x3D; map(abs,[-1,-2,-3,-4])</span><br><span class="line">&gt;&gt;&gt; r</span><br><span class="line">&lt;map object at 0x000001EF9006C278&gt;</span><br><span class="line">&gt;&gt;&gt; list(r)</span><br><span class="line">[1, 2, 3, 4]</span><br></pre></td></tr></table></figure>
-
-<p>也就是一种映射</p>
-<ul>
-<li><p>reduce</p>
-<p><code>reduce(function,Interator)</code>，reduce可以认为是一种归纳或者迭代</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from functools import reduce</span><br><span class="line">&gt;&gt;&gt; reduce(add,[1,2,3,4])</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
-
-<p>​</p>
-</li>
-</ul>
-</li>
-<li><p>filter</p>
-<p>同样接收两个参数</p>
-</li>
-<li><p>sorted</p>
-<p><code>sorted([...],key=function)</code>先按照key所指的函数对list处理，对处理后的结果排序，然后把排序好的结果映射到原来的list并返回</p>
-</li>
-</ul>
-<h3 id="文件读写"><a href="#文件读写" class="headerlink" title="文件读写"></a>文件读写</h3><p> 写文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">file &#x3D; open(&quot;filename&quot;,&quot;openMethod&quot;)</span><br><span class="line">file.write()</span><br><span class="line">file.close()</span><br></pre></td></tr></table></figure>
-
-<p> 读文件：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">file &#x3D; open()</span><br><span class="line">context &#x3D; file.read()</span><br><span class="line">&#x2F;&#x2F;其他形式file.readline()或file.readlines()</span><br><span class="line">file.close()</span><br></pre></td></tr></table></figure></p>
-<h3 id="class-类"><a href="#class-类" class="headerlink" title="class 类"></a>class 类</h3><p> 定义：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Calculator :</span><br><span class="line">	name &#x3D; &#39;Good Calculator&#39;</span><br><span class="line">	price &#x3D; 18</span><br><span class="line">	def __init__(self,name,price)</span><br><span class="line">	def add(self,x,y):</span><br><span class="line">		return x+y</span><br></pre></td></tr></table></figure><br> 声明：<br>    <code>calcu = Calculator();</code></p>
-<p> 注：</p>
-<ul>
-<li>与java不同的是python定义方法时必然有一个self参数，相当于java中的this,且在方法中使用属性时需要用 self.name</li>
-<li>函数init()相当于构造函数，用于初始化属性，也是最先执行的方法，比较奇怪的是它这里并没有像java中那样和类名同名</li>
-<li>属性必须初始值，不然会报错</li>
-</ul>
-<h3 id="元组，列表，字典，集合"><a href="#元组，列表，字典，集合" class="headerlink" title="元组，列表，字典，集合"></a>元组，列表，字典，集合</h3><ul>
-<li>元组   tuple = (…)     圆括号,相比于列表，元组一旦初始化就不可改变</li>
-<li>列表   list= […]  方括号<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">list.append(element) #追加</span><br><span class="line">list.insert(index,element)	#插入</span><br><span class="line">list.remove(element)	#删除第一次出现的该元素</span><br><span class="line">list[-1] #表示最后一个元素</span><br><span class="line">list[0:3]	#从第0个元素到第三个元素（不包括第三个）</span><br><span class="line">list.index(element)	#返回第一次出现该元素的索引</span><br><span class="line">list.count(element)	#返回list中该元素的个数</span><br><span class="line">list.sort()	#对list进行升序排序并覆盖原来的list</span><br><span class="line">list.sort(reverse&#x3D;True)	#对list降序排序</span><br></pre></td></tr></table></figure></li>
-<li><ul>
-<li>多维列表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">multi_dim_list &#x3D; [[1,2,3],[4,5,6],[7,8,9]]</span><br><span class="line">print(multi_dim_list[0])</span><br><span class="line">print(multi_dim_list[0][2])</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li>字典</li>
-</ul>
-<p>无序的容器，可存储任意类型对象，每个元素分别又由键：值构成，键必须唯一，值可不唯一，且类型可多样，键类型也可多样。无论是添加还是删除元素，都是通过键来索引值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">d &#x3D; &#123;1:&#39;a&#39;,2:&#39;b&#39;&#125;</span><br><span class="line">print(d)</span><br><span class="line">print(d[1])</span><br><span class="line">del d[1]</span><br><span class="line">print(d)</span><br><span class="line">d[3]&#x3D;&#39;c&#39;</span><br><span class="line">print(d)</span><br><span class="line">d[4] &#x3D; &#123;1:3,2:4&#125;</span><br><span class="line">d[5] &#x3D; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]</span><br><span class="line">print(d)</span><br><span class="line">d[&#39;a&#39;]&#x3D; 1</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>集合</p>
-<p>set可以看成数学意义上的无序和无重复元素的集合，set里存放的是不可重复的键</p>
-</li>
-</ul>
-<h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><pre><code>1. import模块
-+ import time
-+ import time as t  自己重新定义模块名
-+ from time import time,localtime  只import自己想要的功能
-+ from time import *  import该模块所有功能</code></pre><h3 id="try语句"><a href="#try语句" class="headerlink" title="try语句"></a>try语句</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">	.....</span><br><span class="line">except Exception as e:</span><br><span class="line">	....</span><br><span class="line">else:</span><br><span class="line">	....</span><br></pre></td></tr></table></figure>
-<h3 id="map-zip-lambda"><a href="#map-zip-lambda" class="headerlink" title="map zip lambda"></a>map zip lambda</h3><ul>
-<li><p>zip</p>
-<p>将两个list用于纵向的合并,如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a&#x3D;[1,2,3] , b&#x3D;[4,5,6]</span><br><span class="line">print(list(zip(a,b)))</span><br></pre></td></tr></table></figure>
-<p>输出：<br><code>[(1, 4), (2, 5), (3, 6)]</code></p>
-</li>
-<li><p>lambda</p>
-<p>lambda用于定义一个简单的函数，简化代码,如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res &#x3D; lambda x,y : x+y</span><br><span class="line">print(res(2,5))</span><br></pre></td></tr></table></figure>
-<p>输出：<br><code>7</code></p>
-</li>
-<li><p>map</p>
-<p>用于绑定函数与参数，如：<br><code>list(map(fun,1,2))</code><br>注：参数须为列表形式</p>
-</li>
-</ul>
-<h3 id="copy-amp-deepcopy"><a href="#copy-amp-deepcopy" class="headerlink" title="copy &amp; deepcopy"></a>copy &amp; deepcopy</h3><p> a = list[1,2,3] , 如果 b = a , 则a和b指向的是同一内存空间，这时候如果用 b = copy.copy(a)  (因为copy是一个模块，所以需要先引入这个模块import copy), 则会开辟新的内存空间，如果输出 id(a) == id(b) ,则是false.但是需要注意这里的copy是浅复制(shallow copy),也就是说只会复制list中的一层到新的内存空间，如果list是这种形式：a = list[1,2,[3,4]],那么执行copy后前两个元素 会被复制到新的内存空间，而第三个元素则被共享，这时候就需要deepcopy发挥作用了，使用它则是完完全全的复制</p>
-<h3 id="冒号的用法"><a href="#冒号的用法" class="headerlink" title="冒号的用法"></a>冒号的用法</h3><p>把冒号放在数组中，主要起到分片的作用，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a &#x3D; &#39;hello&#39;</span><br><span class="line">&gt;&gt;&gt; a[1:3]</span><br><span class="line">&#39;el&#39;</span><br><span class="line">&gt;&gt;&gt; a[::]</span><br><span class="line">&#39;hello&#39;</span><br><span class="line">&gt;&gt;&gt; a[:]</span><br><span class="line">&#39;hello&#39;</span><br><span class="line">&gt;&gt;&gt; a[:1]</span><br><span class="line">&#39;h&#39;</span><br><span class="line">&gt;&gt;&gt; a[1:]</span><br><span class="line">&#39;ello&#39;</span><br><span class="line">&gt;&gt;&gt; a[-1]</span><br><span class="line">&#39;o&#39;</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+定义函数语句 ： 
 
 
-          
+def fun(a,b):   ​    注：参数可以设置为默认值
+
+定义全局变量： 定义在函数外部或者用内部global修饰
+
+模块安装 sd
+函数
+默认参数  函数可以有默认参数
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/05/python%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1674,8 +1157,15 @@
       
         
           
-            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;pcap.h&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">pcap_if_t *alldevs;</span><br><span class="line">pcap_if_t *d;</span><br><span class="line">int inum;</span><br><span class="line">int i&#x3D;0;</span><br><span class="line">pcap_t *adhandle;</span><br><span class="line">int res;</span><br><span class="line">char errbuf[PCAP_ERRBUF_SIZE];</span><br><span class="line">struct tm *ltime;</span><br><span class="line">char timestr[16];</span><br><span class="line">struct pcap_pkthdr *header;</span><br><span class="line">const u_char *pkt_data;</span><br><span class="line">time_t local_tv_sec;</span><br><span class="line">​    </span><br><span class="line">​    </span><br><span class="line">    &#x2F;* 获取本机设备列表 *&#x2F;</span><br><span class="line">    if (pcap_findalldevs_ex(PCAP_SRC_IF_STRING, NULL, &amp;alldevs, errbuf) &#x3D;&#x3D; -1)</span><br><span class="line">    &#123;</span><br><span class="line">        fprintf(stderr,&quot;Error in pcap_findalldevs: %s\n&quot;, errbuf);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    &#x2F;* 打印列表 *&#x2F;</span><br><span class="line">    for(d&#x3D;alldevs; d; d&#x3D;d-&gt;next)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;%d. %s&quot;, ++i, d-&gt;name);</span><br><span class="line">        if (d-&gt;description)</span><br><span class="line">            printf(&quot; (%s)\n&quot;, d-&gt;description);</span><br><span class="line">        else</span><br><span class="line">            printf(&quot; (No description available)\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if(i&#x3D;&#x3D;0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;\nNo interfaces found! Make sure WinPcap is installed.\n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    printf(&quot;Enter the interface number (1-%d):&quot;,i);</span><br><span class="line">    scanf(&quot;%d&quot;, &amp;inum);</span><br><span class="line">    </span><br><span class="line">    if(inum &lt; 1 || inum &gt; i)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;\nInterface number out of range.\n&quot;);</span><br><span class="line">        &#x2F;* 释放设备列表 *&#x2F;</span><br><span class="line">        pcap_freealldevs(alldevs);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    &#x2F;* 跳转到已选中的适配器 *&#x2F;</span><br><span class="line">    for(d&#x3D;alldevs, i&#x3D;0; i&lt; inum-1 ;d&#x3D;d-&gt;next, i++);</span><br><span class="line">    </span><br><span class="line">    &#x2F;* 打开设备 *&#x2F;</span><br><span class="line">    if ( (adhandle&#x3D; pcap_open(d-&gt;name,          &#x2F;&#x2F; 设备名</span><br><span class="line">                              65536,            &#x2F;&#x2F; 要捕捉的数据包的部分 </span><br><span class="line">                                                &#x2F;&#x2F; 65535保证能捕获到不同数据链路层上的每个数据包的全部内容</span><br><span class="line">                              PCAP_OPENFLAG_PROMISCUOUS,    &#x2F;&#x2F; 混杂模式</span><br><span class="line">                              1000,             &#x2F;&#x2F; 读取超时时间</span><br><span class="line">                              NULL,             &#x2F;&#x2F; 远程机器验证</span><br><span class="line">                              errbuf            &#x2F;&#x2F; 错误缓冲池</span><br><span class="line">                              ) ) &#x3D;&#x3D; NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        fprintf(stderr,&quot;\nUnable to open the adapter. %s is not supported by WinPcap\n&quot;, d-&gt;name);</span><br><span class="line">        &#x2F;* 释放设列表 *&#x2F;</span><br><span class="line">        pcap_freealldevs(alldevs);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    printf(&quot;\nlistening on %s...\n&quot;, d-&gt;description);</span><br><span class="line">    </span><br><span class="line">    &#x2F;* 释放设备列表 *&#x2F;</span><br><span class="line">    pcap_freealldevs(alldevs);</span><br><span class="line">    </span><br><span class="line">    &#x2F;* 获取数据包 *&#x2F;</span><br><span class="line">    while((res &#x3D; pcap_next_ex( adhandle, &amp;header, &amp;pkt_data)) &gt;&#x3D; 0)&#123;</span><br><span class="line">        </span><br><span class="line">        if(res &#x3D;&#x3D; 0)</span><br><span class="line">            &#x2F;* 超时时间到 *&#x2F;</span><br><span class="line">            continue;</span><br><span class="line">        </span><br><span class="line">        &#x2F;* 将时间戳转换成可识别的格式 *&#x2F;</span><br><span class="line">        local_tv_sec &#x3D; header-&gt;ts.tv_sec;</span><br><span class="line">        ltime&#x3D;localtime(&amp;local_tv_sec);</span><br><span class="line">        strftime( timestr, sizeof timestr, &quot;%H:%M:%S&quot;, ltime);</span><br><span class="line">        </span><br><span class="line">        printf(&quot;%s,%.6d len:%d\n&quot;, timestr, header-&gt;ts.tv_usec, header-&gt;len);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if(res &#x3D;&#x3D; -1)&#123;</span><br><span class="line">        printf(&quot;Error reading the packets: %s\n&quot;, pcap_geterr(adhandle));</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
+          123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/05/Linux%E4%B8%8B%E5%AE%9E%E7%8E%B0Scanner/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1827,13 +1317,18 @@
       
         
           
-            <p>最近自己做的项目中用到了redis, 特此记录一下redis的持久化相关内容。</p>
-<p>redis虽说是内存数据库，但其实自己是有持久化的，它的持久化有两种方式：RDB持久化和AOF持久化。</p>
-<p>RDB持久化会在一个特定的时间间隔进行一个快照文件的保存。</p>
-<p>AOF持久化会记录每一个服务器收到的写操作。当服务重启时，这些操作记录会被重新执行从而重建数据。</p>
-<p>从上面的描述可以发现一点，RDB的快照持久化方式并不是很可靠，因为它是每隔一段时间进行一次全面的快照，但是如果在这个时间段中间服务器崩了，那么距离上次保存快照以后的数据就会丢失。相比之下，AOF持久化方式更为可靠，只要有对数据库的写操作，他就记录，而不是隔一段时间一保存。</p>
-
-          
+          最近自己做的项目中用到了redis, 特此记录一下redis的持久化相关内容。
+redis虽说是内存数据库，但其实自己是有持久化的，它的持久化有两种方式：RDB持久化和AOF持久化。
+RDB持久化会在一个特定的时间间隔进行一个快照文件的保存。
+AOF持久化会记录每一个服务器收到的写操作。当服务重启时
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/05/Redis%E6%8C%81%E4%B9%85%E5%8C%96/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1985,36 +1480,31 @@
       
         
           
-            <p>先看锁的分类：</p>
-<p>按照是否共享，可以分为：</p>
-<ul>
-<li>共享锁（读锁）</li>
-<li>排他锁（写锁）</li>
-</ul>
-<p>按照锁的粒度，可以分为：</p>
-<ul>
-<li>表锁</li>
-<li>行锁</li>
-</ul>
-<p>要谈锁，我认为是要结合事务隔离级别一起谈的，MySQL的事务隔离级别有：</p>
-<ul>
-<li>Read Uncommitted</li>
-<li>Read Committed</li>
-<li>Repeatable Read</li>
-<li>Serializable</li>
-</ul>
-<p><code>InnoDB</code>默认的是行锁，而且行锁是加给索引的，所以如果没有索引，那也就只能被迫全表扫描了。</p>
-<p>单纯的说“要给什么语句加什么锁”，这句话本身是靠不住的，因为要给某个语句是否加锁，加什么锁，取决于很多因素，如：</p>
-<ul>
-<li>上下文，即事务的隔离级别</li>
-<li>这条语句本身的特性：这条语句是单纯的select,还是select for update, select lock in share mode，还是insert, update 或者delete，带有修改意味的语句一般会被加X锁，普通的语句加S锁或者不加</li>
-<li>执行时有没有用到索引，使用二级索引可能会需要回表，这时候对一级索引也要加锁，使用一级索引进行修改二级索引则二级索引也要加锁。</li>
-</ul>
-<p>同一语句在不同的隔离级别下加锁情况也不一样。</p>
-<p>在READ UNCOMMITTED 和 READ COMMITTED隔离级别下，因为不需要防止幻读的问题，所以加锁也都是一条记录一条记录的加，不存在范围锁（gap锁或者next-key lock）</p>
-<p>但是在 REPEATABLE READ 下则不一样，因为需要防止幻读，加锁的时候不仅需要加锁自身，还要锁定一个范围。</p>
+          先看锁的分类：
+按照是否共享，可以分为：
 
-          
+共享锁（读锁）
+排他锁（写锁）
+
+按照锁的粒度，可以分为：
+
+表锁
+行锁
+
+要谈锁，我认为是要结合事务隔离级别一起谈的，MySQL的事务隔离级别有：
+
+Read Uncommitted
+Read Committed
+Repeatable Read
+Seri
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/06/MySQL%E7%9A%84%E9%94%81/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2166,45 +1656,19 @@
       
         
           
-            <p>讨论MySQL的MVCC的同时还应该讨论MySQL中的锁，不过本文先就MVCC进行讨论。</p>
-<p>MVCC叫做多版本并发控制，它主要是为了实现多个事务之间的隔离性而提出的一种更高效的方法，为什么说更高效呢，因为锁也可以实现，只不过相比之下比较低效。</p>
-<p>MVCC的核心有三：</p>
-<ul>
-<li>MySQL每一行记录的隐藏列之<code>DATA_TRX_ID</code></li>
-<li>MySQL每一行记录的隐藏列之``DATA_ROLL_PTR`</li>
-<li>READ VIEW</li>
-</ul>
-<p>我们下面一一进行解释。</p>
-<p>MySQL的每一行记录都有两个隐藏列，<code>DATA_TRX_ID</code>和``DATA_ROLL_PTR<code>。其中</code>DATA_TRX_ID<code>表示修改该行的事务ID,而</code>DATA_ROLL_PTR`则指向该行的历史修改，它把所有的历史修改连成一个链表，像这样</p>
-<p><img src="http://ww1.sinaimg.cn/large/005UcYzagy1galzmi3v8gj30qv0fb0sq.jpg" alt="undefined"></p>
-<p>而Read View是什么呢？它也是一种数据结构，m_ids上面我们讲到不同的事务对同一行的操作形成了一个链表，那么我们在执行一条SQL时到底应该选择链表中的哪一条作为结果呢？Read View正是为了解决这个事情的。</p>
-<p>Read View里存放了我们当前活跃的事务的集合，当在不同的隔离级别下执行SQL时，通过检查版本链中的事务ID和Read View中的事务ID大小就可以决定要选择版本链中的哪个节点作为执行结果了。</p>
-<p>具体是这样的：</p>
-<ul>
-<li>如果被访问版本的<code>trx_id</code>属性值小于<code>m_ids</code>列表中最小的事务id，表明生成该版本的事务在生成<code>ReadView</code>前已经提交，所以该版本可以被当前事务访问。</li>
-</ul>
-<ul>
-<li>如果被访问版本的<code>trx_id</code>属性值大于<code>m_ids</code>列表中最大的事务id，表明生成该版本的事务在生成<code>ReadView</code>后才生成，所以该版本不可以被当前事务访问。</li>
-</ul>
-<ul>
-<li>如果被访问版本的<code>trx_id</code>属性值在<code>m_ids</code>列表中最大的事务id和最小事务id之间，那就需要判断一下<code>trx_id</code>属性值是不是在<code>m_ids</code>列表中，如果在，说明创建<code>ReadView</code>时生成该版本的事务还是活跃的，该版本不可以被访问；如果不在，说明创建<code>ReadView</code>时生成该版本的事务已经被提交，该版本可以被访问。</li>
-</ul>
-<p>还有两点需要注意的是：</p>
-<ul>
-<li><p>Read View是与SQL绑定的，而并不是事务</p>
-</li>
-<li><p>对于使用<code>READ UNCOMMITTED</code>隔离级别的事务来说，直接读取记录的最新版本就好了，对于使用<code>SERIALIZABLE</code>隔离级别的事务来说，使用加锁的方式来访问记录。所以MVCC只在可重复读和读已提交这两个隔离级别下工作。</p>
-</li>
-</ul>
-<blockquote>
-<p>本文转自公众号：我们都是小青蛙，作者小孩子4919</p>
-</blockquote>
-<blockquote>
-</blockquote>
-<p>参考：</p>
-<p><a href="https://mp.weixin.qq.com/s/SCW_3AypO-rSolMcjCxVtA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/SCW_3AypO-rSolMcjCxVtA</a></p>
+          讨论MySQL的MVCC的同时还应该讨论MySQL中的锁，不过本文先就MVCC进行讨论。
+MVCC叫做多版本并发控制，它主要是为了实现多个事务之间的隔离性而提出的一种更高效的方法，为什么说更高效呢，因为锁也可以实现，只不过相比之下比较低效。
+MVCC的核心有三：
 
-          
+MySQL每一行记录的隐藏列之DA
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/05/MySQL%E4%B9%8BMVCC/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2356,20 +1820,17 @@
       
         
           
-            <p> 这里谈一下我对KMP算法的理解。</p>
-<p>字符串匹配中，暴力方法是这样的：用模式串和文本串挨个比对，这一过程其实是有很多重复的，而KMP算法的核心正是跳过这些重复比对的字符，那么就需要一定的空间来记录比对过的历史了，这也就是next数组的意义所在。</p>
-<p>当文本串的第i个字符和模式串的第j个字符失配时，我们真的要把模式串统一向文本串右移一位对齐然后继续比较吗，答案是不必的。当此处失配时，我们应该考虑失配的地方的前几位和模式串的开头几位有没有一样的，如果有，那就是可以直接将模式串移动过来了，这就是所谓的最长前缀后缀了，</p>
-<p><img src="http://ww1.sinaimg.cn/large/005UcYzagy1gakw4sdwvoj30g103ma9x.jpg" alt="undefined"></p>
-<p>看，这里文本串的空格和模式串的D失配了，但是你会发现，失配之前，文本串的屁股AB和模式串的开头AB是匹配的，这意味着什么，我们可以直接把模式串移动到开头和失配之前文本串的屁股AB对齐的那里。</p>
-<p><img src="http://ww1.sinaimg.cn/large/005UcYzagy1gakw7atagbj30g503tdfp.jpg" alt="undefined"></p>
-<p>像这样，是不是一下子少走了好几步？所以这个KMP的关键问题就变成了如何构建next数组，即如何计算最大公共前缀后缀。</p>
-<p> 对于P的前j+1个序列字符：</p>
-<ul>
-<li>若p[k] == p[j]，则next[j + 1 ] = next [j] + 1 = k + 1；</li>
-<li>若p[k ] ≠ p[j]，如果此时p[ next[k] ] == p[j ]，则next[ j + 1 ] =  next[k] + 1，否则继续递归前缀索引k = next[k]，而后重复此过程。 相当于在字符p[j+1]之前不存在长度为k+1的前缀”p0 p1, …, pk-1 pk”跟后缀“pj-k pj-k+1, …, pj-1 pj”相等，那么是否可能存在另一个值t+1 &lt; k+1，使得长度更小的前缀 “p0 p1, …, pt-1 pt” 等于长度更小的后缀 “pj-t pj-t+1, …, pj-1 pj” 呢？如果存在，那么这个t+1 便是next[ j+1]的值，此相当于利用已经求得的next 数组（next [0, …, k, …, j]）进行P串前缀跟P串后缀的匹配。</li>
-</ul>
-
-          
+           这里谈一下我对KMP算法的理解。
+字符串匹配中，暴力方法是这样的：用模式串和文本串挨个比对，这一过程其实是有很多重复的，而KMP算法的核心正是跳过这些重复比对的字符，那么就需要一定的空间来记录比对过的历史了，这也就是next数组的意义所在。
+当文本串的第i个字符和模式串的第j个字符失配时，我们真的
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/04/KMP%E7%AE%97%E6%B3%95/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
