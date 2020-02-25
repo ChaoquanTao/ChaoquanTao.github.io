@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文开门见山，直接讨论Spring IoC容器的初始化过程。 关于Spring容器，有一个最基本的接口，叫做BeanFacotory, 它提供了容器最基本的一些特性。所有的容器都是基于它的。还有一个较为高级一点的容器接口，叫做ApplicationContext，它在BeanFactory的基础上，又提供了其他一些高级特性，比如访问资源。         本文以ApplicationContext">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring IoC 容器的实现(一)">
+<meta property="og:url" content="http://chaoquantao.github.io/2019/11/02/Spring-Ioc%E5%AE%B9%E5%99%A8%E7%9A%84%E5%AE%9E%E7%8E%B0-%E4%B8%80/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="本文开门见山，直接讨论Spring IoC容器的初始化过程。 关于Spring容器，有一个最基本的接口，叫做BeanFacotory, 它提供了容器最基本的一些特性。所有的容器都是基于它的。还有一个较为高级一点的容器接口，叫做ApplicationContext，它在BeanFactory的基础上，又提供了其他一些高级特性，比如访问资源。         本文以ApplicationContext">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KLBqzt.md.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KLRWQJ.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KLWxc4.md.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KLhRSS.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KL4ukt.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KL4v38.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KL52rQ.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KLIzwj.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/02/KLTpuD.png">
+<meta property="article:published_time" content="2019-11-02T12:04:31.000Z">
+<meta property="article:modified_time" content="2019-11-02T12:04:31.000Z">
+<meta property="article:author" content="Tau">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/02/KLBqzt.md.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2019/11/02/Spring-Ioc容器的实现-一/"/>
+
+
+
+
+
+  <title>Spring IoC 容器的实现(一) | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2019/11/02/Spring-Ioc%E5%AE%B9%E5%99%A8%E7%9A%84%E5%AE%9E%E7%8E%B0-%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring IoC 容器的实现(一)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-02T20:04:31+08:00">
+                2019-11-02
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2019-11-02T20:04:31+08:00">
+                2019-11-02
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">框架</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文开门见山，直接讨论Spring <code>IoC</code>容器的初始化过程。</p>
+<p>关于Spring容器，有一个最基本的接口，叫做<code>BeanFacotory</code>, 它提供了容器最基本的一些特性。所有的容器都是基于它的。还有一个较为高级一点的容器接口，叫做<code>ApplicationContext</code>，它在<code>BeanFactory</code>的基础上，又提供了其他一些高级特性，比如访问资源。        </p>
+<p>本文以<code>ApplicationContext</code>的一个具体实现类<code>FileSystemXmlApplicationContext</code>为例，探究spring容器的初始化过程。先来看下它的主要代码。</p>
+<p>显示构造函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileSystemXmlApplicationContext</span><span class="params">(String[] configLocations, <span class="keyword">boolean</span> refresh, ApplicationContext parent)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">super</span>(parent);</span><br><span class="line">		setConfigLocations(configLocations);</span><br><span class="line">		<span class="keyword">if</span> (refresh) &#123;</span><br><span class="line">			refresh();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>refresh()</code>方法标志着容器初始化的启动，也是我们后面分析的重点。</p>
+<p>还有一个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Resource <span class="title">getResourceByPath</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (path != <span class="keyword">null</span> &amp;&amp; path.startsWith(<span class="string">"/"</span>)) &#123;</span><br><span class="line">			path = path.substring(<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> FileSystemResource(path);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它会在启动容器的过程中调用。</p>
+<p>先看下<code>FileSystemXmlApplicationContext</code>的继承关系</p>
+<p><a href="https://imgchr.com/i/KLBqzt" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/11/02/KLBqzt.md.png" alt="KLBqzt.md.png"></a></p>
+<p>下面正式分析<code>BeanDefinition</code>的<code>Resource</code>定位</p>
+<p><code>refresh()</code>方法在<code>AbstractApplicationContext</code>中实现：</p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KLRWQJ.png" alt="KLRWQJ.png"></p>
+<p>代码虽长，其实只做了两件事：框出来的部分创建容器，剩余部分对创建好的容器进行一系列设置。继续来看创建容器的部分：</p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KLWxc4.md.png" alt="KLWxc4.md.png"></p>
+<p>这里的<code>refreshBeanFactory()</code>是个抽象方法，在<code>AbstractRefreshableApplicationContext</code>中实现。</p>
+<p><strong><code>AbstractRefreshableApplicationContext</code></strong></p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KLhRSS.png" alt="KLhRSS.png"></p>
+<p>继续来看<code>createBeanFactory()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> DefaultListableBeanFactory <span class="title">createBeanFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> DefaultListableBeanFactory(getInternalParentBeanFactory());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回一个<code>DefaultListableBeanFactory</code>容器</p>
+<p>再看<code>loadBeanDefinitions()</code>, 它同样是个抽象方法，它在<code>AbstractXmlApplicationContext</code>中实现</p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KL4ukt.png" alt="KL4ukt.png"></p>
+<p>它先创建一个reader，然后通过这个reader加载<code>BeanDefinition</code>,继续看它的重载方法</p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KL4v38.png" alt="KL4v38.png"></p>
+<p>对于xml的上下文来说，它走的应该是第二个if, 里面调用了<code>XmlBeanDefinitionReader</code> 的<code>loadBeanDefinitions()</code>方法，继续看</p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KL52rQ.png" alt="KL52rQ.png"></p>
+<p>继续看它的重载方法</p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KLIzwj.png" alt="KLIzwj.png"></p>
+<p>继续来看具体是如何获取资源的：</p>
+<p><code>ResourceLoader</code>是个接口，这里使用了<code>DefaultResourceLoader</code>类实现的方法</p>
+<p><img src="https://s2.ax1x.com/2019/11/02/KLTpuD.png" alt="KLTpuD.png"></p>
+<p>好，到此整个分析过程差不多结束了，重新梳理一下：</p>
+<p>在<code>BeanDefiniton</code>的<code>Resource</code>定位中，始于<code>FileSystemXmlApplicationContext</code>的<code>refresh()</code>方法，这里是容器初始化的开端，同时也是定位资源的开端。</p>
+<p>这里的<code>refresh()</code>方法来自父类<code>AbstractApplicationContext</code>, 这个方法里面获得了容器并对容器进行了一系列操作。</p>
+<p>这里获得容器的方<code>obtainFreshBeanFactory()</code>使用了模板方法模式，里面的模板方法<code>refreshBeanFactory()</code>交由具体子类实现，在这里是由子类<code>AbstractRefreshableApplicationContext</code>实现。</p>
+<p>在<code>AbstractRefreshableApplicationContext</code>的<code>refreshBeanFactory()</code>中，创建了容器，并进行<code>BeanDefinition</code>的加载。</p>
+<p>这个加载方法<code>loadBeanDefinitons()</code>同样是模板方法，涉及一系列的调用。具体它是通过一个<code>BeanDefinitonReader</code>来加载<code>BeanDefinition</code>的，加载的过程中就涉及到对各种形式location的解析。解析完之后差不多就真正完成了对resource的定位了。</p>
+<p>总的来说，做了两件事。目的是初始化容器，首先你得有个容器，比如桶，其次你得有水，那么就得找到水在哪，上面主要描述的就是一个找水的过程。</p>
+<p>起源于refresh,但是要找到水，还需要靠<code>Reader</code></p>
+<p>相当于下面这个过程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassPahtResource res = <span class="keyword">new</span> ClassPathResouce(<span class="string">"bean.xml"</span>) ;</span><br><span class="line">DefaultListableBeanFactory factory = <span class="keyword">new</span> DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader = <span class="keyword">new</span> XmlBeanDefinionReader(factory);</span><br><span class="line">reader.loadBeanDifinition(res) ;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用IoC容器时，需要以下几个步骤（即初始化容器的步骤）：</p>
+<ol>
+<li>创建抽象资源，包括Ioc配置文件，Beandefiniton</li>
+<li>创建BeanFactory</li>
+<li>创建reader,读取BeanDefinition并回传给BeanFactory,完成载入和注册。</li>
+</ol>
+<p>画一个调用的关系图就能更好的理解这个过程了。</p>
+<p>​    </p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>《Spring技术内幕》</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/02/Spring-Ioc%E5%AE%B9%E5%99%A8%E5%AE%9E%E7%8E%B0%E4%B9%8BBeanDefinition%E7%9A%84Resource%E5%AE%9A%E4%BD%8D/" rel="next" title="Spring Ioc容器实现之BeanDefinition的Resource定位">
+                <i class="fa fa-chevron-left"></i> Spring Ioc容器实现之BeanDefinition的Resource定位
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/06/MySQL%E7%B4%A2%E5%BC%95%E7%AF%87/" rel="prev" title="MySQL索引篇">
+                MySQL索引篇 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">1.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

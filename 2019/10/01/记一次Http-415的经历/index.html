@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="RequestBody," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="问题重现： 使用spring mvc实现一个简单的登录功能，前后端分离，使用nginx反向代理实现跨域请求  这个问题困扰了我一天多，从最开始检查nginx配置到检查表单提交再到查看http请求头再到检查后端spring相关配置以及注解的问题，最后终于找到问题。整个过程中除了415当然还蹦出了其他各种错误，如400，405，500，不过415错误一直断断续续贯穿始终。下面来复盘一下整个过程。 从实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次Http 415的经历">
+<meta property="og:url" content="http://chaoquantao.github.io/2019/10/01/%E8%AE%B0%E4%B8%80%E6%AC%A1Http-415%E7%9A%84%E7%BB%8F%E5%8E%86/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="问题重现： 使用spring mvc实现一个简单的登录功能，前后端分离，使用nginx反向代理实现跨域请求  这个问题困扰了我一天多，从最开始检查nginx配置到检查表单提交再到查看http请求头再到检查后端spring相关配置以及注解的问题，最后终于找到问题。整个过程中除了415当然还蹦出了其他各种错误，如400，405，500，不过415错误一直断断续续贯穿始终。下面来复盘一下整个过程。 从实">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/01/uUC8E9.png">
+<meta property="og:image" content="http://pyopearjz.bkt.clouddn.com/a247ec52bacd26c873563c09291fd29.png">
+<meta property="og:image" content="http://pyopearjz.bkt.clouddn.com/34f999b82782257c1d1530ec24207d8.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7isuun7myj30d507wjrh.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7itfg38eij30h9047wed.jpg">
+<meta property="article:published_time" content="2019-10-01T05:45:19.000Z">
+<meta property="article:modified_time" content="2019-10-01T05:45:19.000Z">
+<meta property="article:author" content="Tau">
+<meta property="article:tag" content="RequestBody">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/01/uUC8E9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2019/10/01/记一次Http-415的经历/"/>
+
+
+
+
+
+  <title>记一次Http 415的经历 | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2019/10/01/%E8%AE%B0%E4%B8%80%E6%AC%A1Http-415%E7%9A%84%E7%BB%8F%E5%8E%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">记一次Http 415的经历</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-01T13:45:19+08:00">
+                2019-10-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2019-10-01T13:45:19+08:00">
+                2019-10-01
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">后端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="问题重现："><a href="#问题重现：" class="headerlink" title="问题重现："></a>问题重现：</h3><blockquote>
+<p>使用<code>spring mvc</code>实现一个简单的登录功能，前后端分离，使用<code>nginx</code>反向代理实现跨域请求</p>
+</blockquote>
+<p>这个问题困扰了我一天多，从最开始检查<code>nginx</code>配置到检查表单提交再到查看http请求头再到检查后端spring相关配置以及注解的问题，最后终于找到问题。整个过程中除了415当然还蹦出了其他各种错误，如400，405，500，不过415错误一直断断续续贯穿始终。下面来复盘一下整个过程。</p>
+<p>从实际生产角度考虑，我需要实现一个前后端分离的系统，由于静态资源和后端服务可能不在同一个端口，甚至不在同一个服务器，所以必然存在跨域的问题，跨域是由于浏览器的<strong>同源策略</strong>导致的，为了保证其安全性，这里暂不去讨论同源策略是什么。解决跨域的方法很多，但大多数都是要修改前端代码或者后端代码，这是很不优雅的，所以我选择了使用<code>nginx</code>的反向代理功能来实现这一需求，将静态资源放在<code>nginx</code>上。</p>
+<h3 id="nginx排查"><a href="#nginx排查" class="headerlink" title="nginx排查"></a>nginx排查</h3><p>部分<code>nginx</code>配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">listen       8800;</span><br><span class="line">       server_name  localhost;</span><br><span class="line">       #charset koi8-r;</span><br><span class="line">       #access_log  logs&#x2F;host.access.log  main;</span><br><span class="line">	location &#x2F;api&#x2F; &#123;</span><br><span class="line">		proxy_pass http:&#x2F;&#x2F;localhost:8080&#x2F;;</span><br><span class="line">	&#125;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">           root   E:\SimpleMall-Admin-Web;</span><br><span class="line">           index  login.html;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+<p>静态资源<code>url</code>: localhost:8800</p>
+<p>后端服务：localhost:8080</p>
+<p>请求<code>url</code>: <code>/api/login</code> </p>
+<p>刚开始一直以为是<code>nginx</code>配置有问题，因为我看到请求的<code>url</code>一直都是<code>localhost:8800/api/login</code>，我当时以为发起请求后应该是<code>localhost:8080/login</code>，以为会有个跳转的动作，后来我发现是自己对反向代理理解有误，这个代理过程对用户透明，所以我们是看不到<code>url</code>的变化的。</p>
+<h3 id="ajax-表单提交"><a href="#ajax-表单提交" class="headerlink" title="ajax 表单提交"></a>ajax 表单提交</h3><p>然后检查ajax提交表单过程</p>
+<p>为什么使用ajax呢？因为这是个前后端分离的系统，所以页面应该跳到哪里这些事后端应该是不知道的，它只需要根据请求返回一些<code>json</code>就可以了。</p>
+<p>然后发现，表单提交这有我不知道的东西：</p>
+<p>关于提交按钮的两种写法：</p>
+<p>写法一：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">"commit"</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">onclick</span>=<span class="string">"login()"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>写法二：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">"commit"</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"login()"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当然还可以写成button标签的形式，不过提交作用和第一种写法是一样的。</p>
+<p>对于这两种写法，如果我们没有写这个<code>onclick</code>事件，</p>
+<p>对于写法一：我们点击这个按钮他会自动提交整个form,即使form里面action也没写它也会提交，方法默认为GET,且会刷新整个页面，除非把form的<code>onsubmit</code>事件设置成返回false.</p>
+<p>对于写法二：必须我们自己写这个<code>onclick</code>事件后它才会提交.</p>
+<p>但是如果我们都写了<code>onclick</code>事件，那么他俩在请求上是没有区别的。</p>
+<p>因为我们都自己实现了<code>onclick</code>事件，所以下面选其一，使用第二种方式。</p>
+<p>我们在<code>js</code>里面使用ajax来实现提交的动作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">login</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   <span class="keyword">var</span> usn = $(<span class="string">"#userName"</span>).val();</span><br><span class="line">   <span class="keyword">var</span> pwd = $(<span class="string">"#passWord"</span>).val();</span><br><span class="line">   <span class="keyword">var</span> datas = &#123;<span class="string">"userName"</span>:usn,<span class="string">"passWord"</span>:pwd&#125;</span><br><span class="line">   $.ajax(&#123;</span><br><span class="line">           <span class="comment">//几个参数需要注意一下</span></span><br><span class="line">               type: <span class="string">"POST"</span>,<span class="comment">//方法类型</span></span><br><span class="line">               dataType: <span class="string">"text"</span>,<span class="comment">//预期服务器返回的数据类型</span></span><br><span class="line">               url: <span class="string">"/api/login"</span> ,<span class="comment">//url</span></span><br><span class="line">               data: datas,</span><br><span class="line">               success: <span class="function"><span class="keyword">function</span> (<span class="params">result</span>) </span>&#123;</span><br><span class="line">                   alert(result)</span><br><span class="line">                   <span class="built_in">console</span>.log(result);<span class="comment">//打印服务端返回的数据(调试用)</span></span><br><span class="line">                   <span class="keyword">if</span> (result.resultCode == <span class="number">200</span>) &#123;</span><br><span class="line">                       alert(<span class="string">"SUCCESS"</span>);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;,</span><br><span class="line">               error : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                   alert(<span class="string">"异常！"</span>);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时在后端使用<code>@RequestBody</code>注解来解析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AdminController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(value = <span class="string">"/login"</span>,method = RequestMethod.POST,consumes = <span class="string">"application/json"</span>)</span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> <span class="function">String <span class="title">login</span><span class="params">(@RequestBody  Administrator  administrator)</span></span>&#123;</span><br><span class="line">        String userName = administrator.getUserName();</span><br><span class="line">        String passWord = administrator.getPassWord();</span><br><span class="line">        System.out.println(userName+<span class="string">"================"</span>+passWord);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"dddddd"</span> ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>data 为js对象，无<code>ContentType</code></li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">            <span class="comment">//几个参数需要注意一下</span></span><br><span class="line">                type: <span class="string">"POST"</span>,<span class="comment">//方法类型</span></span><br><span class="line">                dataType: <span class="string">"text"</span>,<span class="comment">//预期服务器返回的数据类型</span></span><br><span class="line">                url: <span class="string">"/api/login"</span> ,<span class="comment">//url</span></span><br><span class="line">                data: datas,</span><br><span class="line">                success: <span class="function"><span class="keyword">function</span> (<span class="params">result</span>) </span>&#123;</span><br><span class="line">                    alert(result)</span><br><span class="line">                    <span class="built_in">console</span>.log(result);<span class="comment">//打印服务端返回的数据(调试用)</span></span><br><span class="line">                    <span class="keyword">if</span> (result.resultCode == <span class="number">200</span>) &#123;</span><br><span class="line">                        alert(<span class="string">"SUCCESS"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                error : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                    alert(<span class="string">"异常！"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>报错415，请求头如下：</p>
+<p><img src="https://s2.ax1x.com/2019/10/01/uUC8E9.png" alt="uUC8E9.png"></p>
+<p>可以看到，请求头的Content-Type是默认的<code>application/x-www-form-urlencoded</code>形式，而<code>RequestBody</code>注解是按照Content-Type来寻找对应的转换器进行解析的，并且它无法解析这种形式（至于为什么不能我们后面再分析）。</p>
+<p>所以我们修改<code>ContentType</code></p>
+<ol start="2">
+<li>data为<code>js</code>对象，<code>ContentType</code>为<code>json</code></li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">            <span class="comment">//几个参数需要注意一下</span></span><br><span class="line">                type: <span class="string">"POST"</span>,<span class="comment">//方法类型</span></span><br><span class="line">                dataType: <span class="string">"text"</span>,<span class="comment">//预期服务器返回的数据类型</span></span><br><span class="line">                url: <span class="string">"/api/login"</span> ,<span class="comment">//url</span></span><br><span class="line">                data: datas,</span><br><span class="line">    			contentType: <span class="string">'application/json;charset=utf-8'</span>,</span><br><span class="line">                success: <span class="function"><span class="keyword">function</span> (<span class="params">result</span>) </span>&#123;</span><br><span class="line">                    alert(result)</span><br><span class="line">                    <span class="built_in">console</span>.log(result);<span class="comment">//打印服务端返回的数据(调试用)</span></span><br><span class="line">                    <span class="keyword">if</span> (result.resultCode == <span class="number">200</span>) &#123;</span><br><span class="line">                        alert(<span class="string">"SUCCESS"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                error : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                    alert(<span class="string">"异常！"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>报错400，请求头</p>
+<p><img src="http://pyopearjz.bkt.clouddn.com/a247ec52bacd26c873563c09291fd29.png" alt=""></p>
+<p>因缺思厅，<code>Content-Type</code>变成了<code>json</code>,而请求体变成了拼接形式，又发现报的是400错误，说明我们请求无效，这个无效通常有两种原因：</p>
+<ul>
+<li>前端提交数据的字段名称或者是字段类型和后台的实体类不一致，导致无法封装；</li>
+<li>前端提交的到后台的数据应该是json字符串类型，而前端没有将对象转化为字符串类型；</li>
+</ul>
+<p>很明显，后端是按照ContentType来解析的，且RequenstBody是可以解析json类型的，那么问题就只能是出现在了第二种。可以发现，前一次和这一次我们传给data的都是一个<code>jacascript</code>对象，而不是一个<code>json</code>字符串，所以我们将js对象转成json字符串再试试。</p>
+<ol start="3">
+<li>data 为json字符串，ContentType为json</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">           <span class="comment">//几个参数需要注意一下</span></span><br><span class="line">               type: <span class="string">"POST"</span>,<span class="comment">//方法类型</span></span><br><span class="line">               dataType: <span class="string">"text"</span>,<span class="comment">//预期服务器返回的数据类型</span></span><br><span class="line">               contentType: <span class="string">'application/json;charset=utf-8'</span>,</span><br><span class="line">               url: <span class="string">"/api/login"</span> ,<span class="comment">//url</span></span><br><span class="line">               data: <span class="built_in">JSON</span>.stringify(datas),</span><br><span class="line">               success: <span class="function"><span class="keyword">function</span> (<span class="params">result</span>) </span>&#123;</span><br><span class="line">                   alert(result)</span><br><span class="line">                   <span class="built_in">console</span>.log(result);<span class="comment">//打印服务端返回的数据(调试用)</span></span><br><span class="line">                   <span class="keyword">if</span> (result.resultCode == <span class="number">200</span>) &#123;</span><br><span class="line">                       alert(<span class="string">"SUCCESS"</span>);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;,</span><br><span class="line">               error : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                   alert(<span class="string">"异常！"</span>);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>返回200，访问成功</p>
+<p><img src="http://pyopearjz.bkt.clouddn.com/34f999b82782257c1d1530ec24207d8.png" alt=""></p>
+<p>注意：此时还是要写Content Type的，不然就会415.</p>
+<p>对于表单提交来说，当然也不是非用json传值不可，只是我觉得它比较方便，在这里也是可以直接将表单数据序列化然后传给后端的。</p>
+<p>我们将前端改成这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">           <span class="comment">//几个参数需要注意一下</span></span><br><span class="line">               type: <span class="string">"POST"</span>,<span class="comment">//方法类型</span></span><br><span class="line">               dataType: <span class="string">"text"</span>,<span class="comment">//预期服务器返回的数据类型</span></span><br><span class="line">               url: <span class="string">"/api/login"</span> ,<span class="comment">//url</span></span><br><span class="line">               data: $(<span class="string">"form"</span>).serialize(),</span><br><span class="line">               success: <span class="function"><span class="keyword">function</span> (<span class="params">result</span>) </span>&#123;</span><br><span class="line">                   alert(result)</span><br><span class="line">                   <span class="built_in">console</span>.log(result);<span class="comment">//打印服务端返回的数据(调试用)</span></span><br><span class="line">                   <span class="keyword">if</span> (result.resultCode == <span class="number">200</span>) &#123;</span><br><span class="line">                       alert(<span class="string">"SUCCESS"</span>);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;,</span><br><span class="line">               error : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                   alert(<span class="string">"异常！"</span>);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>后端改成这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@ResponseBody</span> <span class="function">String <span class="title">login</span><span class="params">(String userName,String passWord)</span></span>&#123;</span><br><span class="line">        System.out.println(userName+<span class="string">"================"</span>+passWord);</span><br><span class="line">        Administrator adm = <span class="keyword">new</span> Administrator();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"ddddddddddddddd"</span> ;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以快乐的接收数据啦</p>
+<p><img src="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7isuun7myj30d507wjrh.jpg" alt="form-nonbody.png"></p>
+<p>可以看出，因为数据格式是默认的这种模式，所以不能用RequestBody解析，只能这样挨个接收，很麻烦，所以这也是为啥我想用json的原因。</p>
+<p>下面来分析一下@RequestBody到底干了啥</p>
+<h3 id="RequestBody"><a href="#RequestBody" class="headerlink" title="RequestBody"></a>RequestBody</h3><p>讲到这里，大概能遇到的问题差不多都讲道理，然而困扰我最久的，以上都不是，而是：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7itfg38eij30h9047wed.jpg" alt="dd2e5c9651f7878f6b2ec5d9d7670e4.png"></p>
+<p>编译文件没有即使更新！我当时内心真是。。。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RequestBody/" rel="tag"># RequestBody</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/29/Java%E4%B8%AD%E7%9A%84fail-fast/" rel="next" title="Java中的fail fast">
+                <i class="fa fa-chevron-left"></i> Java中的fail fast
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/02/Spring%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/" rel="prev" title="Spring的一点思考">
+                Spring的一点思考 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题重现："><span class="nav-number">1.</span> <span class="nav-text">问题重现：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx排查"><span class="nav-number">2.</span> <span class="nav-text">nginx排查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ajax-表单提交"><span class="nav-number">3.</span> <span class="nav-text">ajax 表单提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RequestBody"><span class="nav-number">4.</span> <span class="nav-text">RequestBody</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

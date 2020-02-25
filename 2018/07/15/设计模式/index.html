@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="设计模式," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="单例模式 使用场景：有些情况下，我们只需要一个实例，比如说：点击按钮之后的弹框，应该是点击多次也只弹一次，而不是点击一次弹一次。这种情况就需要用到单例模式，从功能上讲，单例模式用于那些只需要一个实例的场景；从资源上讲，单例模式可以避免对象频繁的创建和销毁。 如何实现：构造方法私有，通过getInstance()方法来获得实例。 实现代码   懒汉式，线程不安全 所谓懒汉式，就是说并没有在定义int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式">
+<meta property="og:url" content="http://chaoquantao.github.io/2018/07/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="单例模式 使用场景：有些情况下，我们只需要一个实例，比如说：点击按钮之后的弹框，应该是点击多次也只弹一次，而不是点击一次弹一次。这种情况就需要用到单例模式，从功能上讲，单例模式用于那些只需要一个实例的场景；从资源上讲，单例模式可以避免对象频繁的创建和销毁。 如何实现：构造方法私有，通过getInstance()方法来获得实例。 实现代码   懒汉式，线程不安全 所谓懒汉式，就是说并没有在定义int">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1ftfiv04hqzj30it08hjs0.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1fw3gi3y6wyj307g09v74a.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1fwwa55sqsuj30gg092ac2.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/02/10/kUcRJg.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/31/k1jjgS.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/02/05/kYMSCn.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/02/06/kY2kLV.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005UcYzagy1ga8sj9vx0bj30k30bh0wn.jpg">
+<meta property="article:published_time" content="2018-07-15T08:07:59.000Z">
+<meta property="article:modified_time" content="2020-02-05T03:07:39.260Z">
+<meta property="article:author" content="Tau">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1ftfiv04hqzj30it08hjs0.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2018/07/15/设计模式/"/>
+
+
+
+
+
+  <title>设计模式 | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2018/07/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">设计模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-15T16:07:59+08:00">
+                2018-07-15
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-02-05T11:07:39+08:00">
+                2020-02-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><ul>
+<li>使用场景：有些情况下，我们只需要一个实例，比如说：点击按钮之后的弹框，应该是点击多次也只弹一次，而不是点击一次弹一次。这种情况就需要用到单例模式，从功能上讲，单例模式用于那些只需要一个实例的场景；从资源上讲，单例模式可以避免对象频繁的创建和销毁。</li>
+<li>如何实现：构造方法私有，通过<code>getInstance()</code>方法来获得实例。</li>
+<li>实现代码</li>
+</ul>
+<ol>
+<li><p>懒汉式，线程不安全</p>
+<p>所谓懒汉式，就是说并没有在定义<code>intance</code>的时候就给它初始化，因为懒，只有到第一次用到这个实例的时候才去初始化。懒汉模式是一种lazy-loading，只有到用的时候才会创建，从而也就会有个问题，第一次使用的时候创建可能会比较耗时。如果我们知道这个对象肯定是要被用到的，可以用饿汉模式，下面会说到。</p>
+<p>但是很显然在多线程环境下是会出问题的，如果两个线程同时执行到了<code>if(instance==null)</code>，然后发现都成立，就会new出两个实例来。</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">        instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>懒汉式，线程安全</li>
+</ol>
+<p>这种方法在第一次调用时才初始化，避免浪费内存。但是需要加锁才能保证单例，会影响效率。因为只有new的时候，也就是第一次初始化的时候才需要并发控制，其他情况下是不需要并发控制的，但是给这个<code>getInstance()</code>方法加上<code>synchronized</code>关键字，会导致每次需要获得单例的时候都会被加锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">        instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出这种方式一个问题就是，锁的粒度太大了，其实只需要在new对象的时候加锁就可以了，这就引出了下面双重校验锁。</p>
+<ol start="3">
+<li>饿汉式，线程安全</li>
+</ol>
+<p>所谓饿汉，就是说在类加载的时候就初始化。它这里其实是利用了类加载机制，类加载的时候是会用<code>synchronized</code>关键字给加锁的。未实现lazy-loading.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> classs SingleObject&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="4">
+<li>饿汉变种</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton() ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> SingletonHolder.instance ;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>同样是利用类加载机制，同样是饿汉，但是它实现了lazy-loading。类加载的时候Singleton被装载，但是instance不一定被初始化，只有调用<code>getIntance()</code>方法的时候，才会显式装载<code>SingletonHolder</code>类，从而实例化instance</p>
+<ol start="5">
+<li>双重校验锁</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> SingleObject&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">    	<span class="keyword">synchronized</span>(Singleton<span class="class">.<span class="keyword">class</span>)</span>&#123;</span><br><span class="line">    		<span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">        		instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">        	&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>double check在代码中已经体现的很明显了，这里主要解释一下<code>volatile</code>关键字。在<a href="https://chaoquantao.github.io/2019/03/04/java%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm</a>的文章中，我们已经提到<code>volatile</code>关键字可以保证可见性、禁止指令重排序。它用在这里的的主要作用也是为了保证禁止指令重排序，在初始化一个实例的时候，要经过一下几个步骤</p>
+<p>（1）申请内存空间</p>
+<p>（2）初始化默认值（注意不是构造方法的初始化）</p>
+<p>（3）执行构造方法</p>
+<p>（4）连接引用和实例</p>
+<p>其中步骤（3）对应<code>new SingleObject()</code>，步骤四对应<code>instance=new SingleObject()</code>，这四个步骤可能会进行指令重排序，变成（1）（2）（4）（3），这种情况下，上述代码执行完后可能会return一个还没有初始化完的实例，另一个线程获取时，就会获取到一个未初始化完的对象。而使用了<code>volatile</code>关键字后，可以禁止指令重排序，那么执行的顺序就是(1)(2)(3)(4)，就不会存在上述问题。</p>
+<ol start="6">
+<li>静态内部类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;  </span><br><span class="line">    	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> SingletonHolder.INSTANCE;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>枚举</li>
+<li>CAS</li>
+</ol>
+<h3 id="Iterator"><a href="#Iterator" class="headerlink" title="Iterator"></a>Iterator</h3><p>Iterator本身是个Interface,被很多集合类所实现，我们也可以自己实现。</p>
+<p>使用Iterator的一个好处就是我们可以不用去关注序列本身具体的结构，只用操作Iterator就可以实现序列的遍历。</p>
+<h4 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h4><p>在集合类内部实现一个Iterator接口，在这个实现的接口里面对集合类进行访问。而外部类想要访问集合中的元素时，只需要给它返回一个Iterator对象，然后通过Iterator的next()和hasNext()方法来访问集合元素。</p>
+<p>这样做的一个好处：可以不对外部类暴露集合内部情况。</p>
+<p><a href="https://github.com/ChaoquanTao/DesignPattern/tree/master/src/Visitor" target="_blank" rel="noopener">这里</a>是代码部分</p>
+<p>其实感觉设计模式的核心就是实现功能的解耦，让每个部分各司其职，而不是一锅大杂烩。</p>
+<h3 id="Visitor"><a href="#Visitor" class="headerlink" title="Visitor"></a>Visitor</h3><p>当对象结构对应的类很少改变，但经常需要在此结构上定义很多不同且不相关的操作，为了不让这些操作污染这些对象的类，我们将这些操作封装在另一个类中，而在被访问的类中只提供一个接待访问者的接口accept(Visitor),在Visitor()中传入被访问类的引用供访问。</p>
+<p>ComputerPart 接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">package Visitor;</span><br><span class="line"></span><br><span class="line">public interface ComputerPart &#123;</span><br><span class="line">    void accept(ComputerPartVisitor visitor) ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ComputerPart实现类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">package Visitor;</span><br><span class="line"></span><br><span class="line">public class Keyboard implements ComputerPart &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void accept(ComputerPartVisitor visitor) &#123;</span><br><span class="line">        visitor.visit(this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">package Visitor;</span><br><span class="line"></span><br><span class="line">public class Mouse implements ComputerPart &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void accept(ComputerPartVisitor visitor) &#123;</span><br><span class="line">        visitor.visit(this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">package Visitor;</span><br><span class="line"></span><br><span class="line">public class Monitor implements ComputerPart &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void accept(ComputerPartVisitor visitor) &#123;</span><br><span class="line">        visitor.visit(this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Visitor接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">package Visitor;</span><br><span class="line"></span><br><span class="line">public interface ComputerPartVisitor &#123;</span><br><span class="line">    void visit(ComputerPart computerPart) ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Visitor接口实现类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package Visitor;</span><br><span class="line"></span><br><span class="line">public class ComputerPartVisitorImp implements ComputerPartVisitor &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void visit(ComputerPart computerPart) &#123;</span><br><span class="line">        System.out.println(&quot;visit &quot;+computerPart.getClass());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们需要访问更多对象时，可以在Visitor中多重载几个visitor函数即可。</p>
+<h3 id="Composite"><a href="#Composite" class="headerlink" title="Composite"></a>Composite</h3><p>也叫做部分-整体模式，把对象组合成树形结构，将个体对象（叶子）和组合对象（树枝）统一对待。</p>
+<p>它是一种<strong>嵌套</strong>的关系，就像目录树一样，一个文件夹套一个文件夹，直到最后的叶子节点——文件；或者像一句话一样，从句子到单词再到最后的字母；还有HTML标签，等等。</p>
+<p>当我们想忽略组合对象与个体对象的不同，统一使用组合结构中的所有对象时，可以考虑这种设计模式。</p>
+<p>Implementing the composite pattern lets clients treat individual objects and compositions uniformly. </p>
+<p><strong>如何解决：</strong>树枝和叶子实现统一接口，树枝内部组合该接口。</p>
+<p><strong>关键代码：</strong>树枝内部组合该接口，并且含有内部属性 List，里面放 Component</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzagy1ftfiv04hqzj30it08hjs0.jpg" alt="结构"></p>
+<p>一般来讲，组合模式的Composite里面会有一个<code>Arraylist</code>，add方法既可以向其中添加Leaf，也可以添加composite,这里就体现了个体和组合对象的统一对待。</p>
+<p><a href="https://github.com/ChaoquanTao/DesignPattern/tree/master/src/Composite" target="_blank" rel="noopener">这里</a>是相关代码实现，代码中除了add方法能体现该思想外，<code>printList</code>方法也能体现，对于File的print,只是简单的打印，对于Directory的print则是通过迭代器，去打印其每一个item，这里其实是个递归调用，如果item是file,那么就调用了File的·printList方法，如果item是directory,则递归调用。</p>
+<h3 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h3><p>适配器模式，顾名思义，就像电源适配器一样，你需要对已有的东西进行一定的改装，使他适配于新的需求。</p>
+<p>比如说我原本就有一个现成的类，现在有一个新项目，也能用到这个类，但是需要稍作修改（旧类的接口不符合新系统的需要）。</p>
+<pre><code>再具体一点，新类A想用旧类B中的一些方法，但是得需要修改一下，因为这些方法不能完全满足现在的需求。有这么几种想法：</code></pre><ul>
+<li><p>直接修改旧类B （这个方法很暴力）</p>
+</li>
+<li><p>新类A继承旧类B （Java中类只能单继承，而且这两个类逻辑上也不是继承关系，如果继承并覆盖的话还不如重新实现）</p>
+</li>
+<li><p>适配器模式 （通过一个中间件把类A的东西转化成类B的）</p>
+</li>
+</ul>
+<pre><code>适配器模式就像生活中的电源适配器一样，能够连接两头并且进行转换。举个栗子，比如说有个Chinese类，他能speak和write，但是都是中文，后来，需求改变，又需要再写一个American,他也能speak和write,但是是英文。那么问题来了，如果重新写一个类的话，其实很多代码都是和Chinese相同的，这时候就需要适配器模式了。适配器模式有两种实现方法</code></pre><ul>
+<li>继承已有类，实现目标接口</li>
+<li>依赖已有类（将已有类作为自己的元素），实现目标接口</li>
+</ul>
+<p>这里实例一个依赖的实现</p>
+<p>Chinese类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Public class Chinese&#123;</span><br><span class="line">    public String write()&#123;</span><br><span class="line">        System.out.println(&quot;我正在写汉字&quot;);</span><br><span class="line">        return &quot;我正在写汉字&quot; ;</span><br><span class="line">    &#125;</span><br><span class="line">    public String speak()&#123;</span><br><span class="line">        System.out.println(&quot;我正在说汉语&quot;);</span><br><span class="line">        return &quot;我正在说汉语&quot; ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>American接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Public interface American&#123;</span><br><span class="line">    public void writeEnglish();</span><br><span class="line">    public void speakEnglish();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>适配器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Public class TranslatorAdapter implement American&#123;</span><br><span class="line">    Chinese chi ;</span><br><span class="line">    </span><br><span class="line">    public TranslatorAdapter(Chinese chi)&#123;</span><br><span class="line">        this.chi &#x3D; chi ;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public void writeEnglish()&#123;</span><br><span class="line">        System.out.println(translate(chi.write()));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void speakEnglish()&#123;</span><br><span class="line">        System.out.println(translate(chi.speak())) ;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public String tranlate(String sentence)&#123;</span><br><span class="line">        if(sentence.equal(&quot;我正在写汉字&quot;))</span><br><span class="line">        	return &quot;I am speak English&quot; ;</span><br><span class="line">        return &quot;I am writing English&quot; ;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Pulic class Test&#123;</span><br><span class="line">    public static void main(String[] args)&#123;</span><br><span class="line">        TranslatorAdapter adapter &#x3D; new TranslatorAdapter(new Chinese())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Template-Method-Pattern"><a href="#Template-Method-Pattern" class="headerlink" title="Template Method Pattern"></a>Template Method Pattern</h3><p>Template Method模式用到了抽象类，用一句话总结它的特点就是：父类中定义处理流程的框架，子类中实现具体的处理。模板顾名思义，就是提供了一个模板，最后的模具和它的形状相同（子类继承父类），但是但是不同的模具用的材料可能不同（继承自抽象父类的子类的实现方法不尽相同）</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzagy1fw3gi3y6wyj307g09v74a.jpg" alt=""></p>
+<p><a href="https://github.com/ChaoquanTao/DesignPattern/tree/master/src/TemplateMethod" target="_blank" rel="noopener">这里</a>是一个简单的demo,需要注意两个问题</p>
+<ol>
+<li>模板使用final关键字修饰，不可改变</li>
+<li>具体方法延迟到子类中去实现</li>
+</ol>
+<h3 id="Simple-Factory-Pattern"><a href="#Simple-Factory-Pattern" class="headerlink" title="Simple Factory Pattern"></a>Simple Factory Pattern</h3><h4 id="模式动机"><a href="#模式动机" class="headerlink" title="模式动机"></a>模式动机</h4><pre><code>假设这样一种场景：有一个父类按钮Button, 这个父类按钮底下继承了很多不同形状的子类按钮，圆形的，正方形的，三角形的。。。现在客户端程序想要用这些按钮，一种方法是你说明要哪种按钮，然后在客户端中new出来，但是显然这样耦合度比较高，因为在客户端中我们想用就完事了，而不想多余的先判断，再new.  另一种可行的办法是，我们再重新建一个类，叫做工厂类，当客户端中想要什么类型的按钮时，就跟工厂类讲，比如客户端需要一个圆形按钮，它不需要知道这个按钮的类名叫什么，它只需要告诉工厂类，我需要一个圆形按钮，工厂类造好给它就可以了。
+
+这就是简单工厂模式，就是说有一个专门的工厂类用来生产一堆大差不差的子类，外部只需要告诉它要什么类，它生产好了再交给外部。</code></pre><h4 id="UML"><a href="#UML" class="headerlink" title="UML"></a>UML</h4><p>再偷一张菜鸟教程的图嘿嘿嘿</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzagy1fwwa55sqsuj30gg092ac2.jpg" alt=""></p>
+<p>这个很容易理解，就不写代码了</p>
+<p>要说简单工厂模式和策略模式的区别，工厂模式生产的是类，而策略模式注重的是策略，也就是方法，</p>
+<p>工厂类根据不同的需求返回不同的类，策略模式根据外部传入的不同的类，给出（执行）不同的方法（策略）</p>
+<h3 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h3><pre><code>上述简单工厂模式中，有一个工厂类，客户端告诉工厂需求，它根据需求创建好对应的类并返回。这就存在一个问题，你需要在工厂类中判断当前是哪种需求，这就意味着以后要扩展时，你肯定要在工厂类中做修改，增加新的需求判断条件，这就违背了开闭原则，因为，我们提出了工厂方法模式。
+
+简单工厂模式只有一个工厂类，根据不同需求产生不同的product, 工厂方法模式有多个工厂类，不同的需求对应不同的工厂类，这些工厂类实现了共同的接口。当日后要扩展时，只需要添加product类，添加对应工厂类就可以了。这种修改同时意味着我们将需求的判断交给了客户端，也就是说，客户端需要告诉工厂类它想要什么具体产品，而不是像简单工厂模式那样这个判断是在工厂类中进行的。</code></pre><h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><p>工厂方法模式中，一个工厂生产一种特定的产品，工厂方法也具有唯一性。但是也有一种情况，一个工厂要生产多种产品，如一个海尔公司要生产海尔电视，海尔冰箱，海尔洗衣机；又如一个SqlServer工厂要生产user表，部门表等，一个Access工厂也要生产user表，部门表等。对于这种一个工厂要生产多种不同产品的情况，我们采用抽象工厂模式。</p>
+<p><img src="https://s2.ax1x.com/2019/02/10/kUcRJg.png" alt=""></p>
+<h3 id="Decorator"><a href="#Decorator" class="headerlink" title="Decorator"></a>Decorator</h3><p>​    装饰器模式，在不违背开闭原则的基础上，给一个类动态的添加功能。也就是说在不修改这个类且不影响其他类的基础上，给这个类添加功能。</p>
+<p>​    对于一个设计模式，理解它的原理是很简单的，但是要理解它为什么是这样的，应该在哪些场景中使用它，却是不容易的。下面我将试着从一个开发者的角度去思考这个问题。</p>
+<p>​    假如有一个类    A，现在需求升级，要给A添加新的功能，该怎么做？</p>
+<ol>
+<li>直接修改A，简单粗暴，但同时也有很多隐患。</li>
+<li>写一个子类继承A，在子类中添加新的功能。可以是可以，不够优雅，有新功能的A和原来的A原则上讲并没有继承关系，只是我们为了实现需求给强行继承了。</li>
+<li>使用装饰器模式。</li>
+</ol>
+<p>装饰器模式，听名字就知道，它装饰了原来的类。就像明月装饰了你的窗户，你装饰了别人的梦。抛去这些花里胡哨的名词，我们来看他的本质。</p>
+<p>既然是装饰，其实可以理解为一种“包裹”，我在原来的类的基础上再包裹一些东西。那么问题来了，怎么包裹呢？首先，为了让外人看不出我的装饰器类和原来的A类的差别，我让装饰器类和A类继承自同一父类；</p>
+<p>然后，为了实现包裹，我把原来的A类作为装饰器类的一个构造函数参数传给装饰器类，这样装饰器类既能够使用A类，又能够在A类的基础上进行一些操作了。（这个包裹说的专业点就叫做聚合）</p>
+<p>以上。 </p>
+<p><img src="https://s2.ax1x.com/2019/01/31/k1jjgS.jpg" alt=""></p>
+<p>​    从UML图可以看出，其实Decorator和<code>ConcretComponent</code>继承自同一父类，<code>Decorotor</code>它聚会了Component类，然后在复写的<code>operation</code>方法中对聚合而来的<code>component</code>类进行操作，这就是所谓的装饰。<br>​<br>​    其实装饰器模式的本质就是，在一个装饰器类中引入了原本要修改的类，然后对这个类进行装饰。要被修改的类的代码没有发生改变，只是它自己被放在另一个类中被操作了一波。<br>​<br>​    它的核心思想：1. 继承自相同的父类（这样就可以复写要修改的类中的方法） 2. <strong>聚合</strong>了要修改的类（这样就可以在原来类的基础上进行一定的装饰，而这个装饰代码是在原来的类之外的。）</p>
+<h3 id="Proxy-Pattern"><a href="#Proxy-Pattern" class="headerlink" title="Proxy Pattern"></a>Proxy Pattern</h3><pre><code>代理模式，故名思意。加入我们想访问对象A，代理模式就是在我们和对象A之间建立一个中间层，也就是代理，从而让代理替我们去访问这个对象。
+
+它的核心思想就是让代理和被访问对象实现同一接口，然后在代理中调用被访问对象中的方法来实现访问。</code></pre><h3 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h3><pre><code>Java中原型模式通过实现`Cloneable`接口来实现。所谓原型模式就是说，这个接口有个clone方法，当我们需要这个对象时，通过clone方法来获得对象，而不是通过类的构造函数来构造类，这两者的代价是很不同的。
+
+所使用的场景：当直接创建对象的代价比较大时，则采用这种模式。</code></pre><p>​    所以这里就会存在一个浅复制和深复制的问题。</p>
+<h3 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式</h3><p>假如你接手祖传代码后，使用起来肯定不容易，这时候你可以在祖传代码之上再加一个中间层，外部代码通过访问中间层来实现对祖传代码的访问，这样就避免了外部代码直接去访问祖传代码。</p>
+<p>外观模式隐藏系统的复杂性。它向现有的系统提供一个接口，来隐藏系统的复杂性。客户端不需要知道系统内部的复杂联系，整个系统只需要提供一个接待员即可。</p>
+<p><strong>关键代码：</strong>在客户端和复杂系统之间再加一层，这一层将调用顺序、依赖关系等处理好。</p>
+<h3 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h3><p>将一个复杂的构建与其表示相分离，使得同样的构建过程可以创建不同的表示。（感觉有点像模板模式）</p>
+<p>建造者模式更加关注零件装配的顺序。就是说组件不变，而这些组件之间的组合会发生变化。</p>
+<p><strong>如何实现</strong>：首先有个<code>builder</code>类，用来有构建各个组件的方法，其次有个<code>Director</code>类，用来描述各个组件之间的组合关系。</p>
+<p><img src="https://s2.ax1x.com/2019/02/05/kYMSCn.jpg" alt=""></p>
+<h3 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h3><p>一个对象的状态发生变化，给所有依赖它的对象发送通知，进行更新。</p>
+<p><img src="https://s2.ax1x.com/2019/02/06/kY2kLV.png" alt=""></p>
+<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><p>设计模式的终极目的在于解耦。</p>
+<p>加入完成一个任务，有多种方法，我们希望根据不同的环境或者不同的条件这多种方法可以随时替换。</p>
+<p>比如说现在有个计算器，有时候我们要它做加法，有时候又要它做减法，那么怎么实现呢？</p>
+<p>最直观的方法就是硬编码了，直接把这些加减乘除写成一个计算器Calculator的方法，如果这样的话后期修改也就比较麻烦。</p>
+<p>策略模式的思想就在于把这些不同的算法封装成不同的策略类，然后聚合到Calculator类中，然后再给Calculator类一个set方法，以此实现可插拔。</p>
+<p>再盗一张菜鸟教程的图。</p>
+<p><img src="http://ww1.sinaimg.cn/large/005UcYzagy1ga8sj9vx0bj30k30bh0wn.jpg" alt="chrome_yj93hjB8tG.png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/04/SpringMVC/" rel="next" title="SpringMVC">
+                <i class="fa fa-chevron-left"></i> SpringMVC
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/16/%E8%AE%BA%E6%96%87%E6%80%BB%E7%BB%93/" rel="prev" title="论文总结">
+                论文总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#单例模式"><span class="nav-number">1.</span> <span class="nav-text">单例模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Iterator"><span class="nav-number">2.</span> <span class="nav-text">Iterator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何实现"><span class="nav-number">2.1.</span> <span class="nav-text">如何实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Visitor"><span class="nav-number">3.</span> <span class="nav-text">Visitor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Composite"><span class="nav-number">4.</span> <span class="nav-text">Composite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adapter"><span class="nav-number">5.</span> <span class="nav-text">Adapter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Template-Method-Pattern"><span class="nav-number">6.</span> <span class="nav-text">Template Method Pattern</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Simple-Factory-Pattern"><span class="nav-number">7.</span> <span class="nav-text">Simple Factory Pattern</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#模式动机"><span class="nav-number">7.1.</span> <span class="nav-text">模式动机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UML"><span class="nav-number">7.2.</span> <span class="nav-text">UML</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂方法模式"><span class="nav-number">8.</span> <span class="nav-text">工厂方法模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象工厂模式"><span class="nav-number">9.</span> <span class="nav-text">抽象工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Decorator"><span class="nav-number">10.</span> <span class="nav-text">Decorator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Proxy-Pattern"><span class="nav-number">11.</span> <span class="nav-text">Proxy Pattern</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型模式"><span class="nav-number">12.</span> <span class="nav-text">原型模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外观模式"><span class="nav-number">13.</span> <span class="nav-text">外观模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建造者模式"><span class="nav-number">14.</span> <span class="nav-text">建造者模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#观察者模式"><span class="nav-number">15.</span> <span class="nav-text">观察者模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#策略模式"><span class="nav-number">16.</span> <span class="nav-text">策略模式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

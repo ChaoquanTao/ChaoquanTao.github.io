@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="IDEA搭建一个小型SpringMVC Demo用IDEA创建Spring项目，其本身就已经为我们做好了很多工作，这里需要注意的有两点：  在 dispatcher-servlet中需要做相关配置， 需要把有些jar包在编译后放到运行时环境中  标注在方法参数上的@ModelAttribute说明了该方法参数的值将由model中取得。如果model中找不到，那么该参数会先被实例化，然后被添加到mo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC">
+<meta property="og:url" content="http://chaoquantao.github.io/2018/07/04/SpringMVC/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="IDEA搭建一个小型SpringMVC Demo用IDEA创建Spring项目，其本身就已经为我们做好了很多工作，这里需要注意的有两点：  在 dispatcher-servlet中需要做相关配置， 需要把有些jar包在编译后放到运行时环境中  标注在方法参数上的@ModelAttribute说明了该方法参数的值将由model中取得。如果model中找不到，那么该参数会先被实例化，然后被添加到mo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-04T13:54:14.000Z">
+<meta property="article:modified_time" content="2020-02-05T03:07:39.235Z">
+<meta property="article:author" content="Tau">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2018/07/04/SpringMVC/"/>
+
+
+
+
+
+  <title>SpringMVC | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2018/07/04/SpringMVC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringMVC</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-04T21:54:14+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-02-05T11:07:39+08:00">
+                2020-02-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">后端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="IDEA搭建一个小型SpringMVC-Demo"><a href="#IDEA搭建一个小型SpringMVC-Demo" class="headerlink" title="IDEA搭建一个小型SpringMVC Demo"></a>IDEA搭建一个小型SpringMVC Demo</h3><p>用IDEA创建Spring项目，其本身就已经为我们做好了很多工作，这里需要注意的有两点：</p>
+<ol>
+<li>在 dispatcher-servlet中需要做相关配置，</li>
+<li>需要把有些jar包在编译后放到运行时环境中</li>
+</ol>
+<p>标注在方法参数上的@ModelAttribute说明了该方法参数的值将由model中取得。如果model中找不到，那么该参数会先被实例化，然后被添加到model中。在model中存在以后，请求中所有名称匹配的参数都会填充到该参数中。 </p>
+<p>关于复选框的传值，最好还是用数组形式，用List总是出问题（还没搞清楚原因），但是如果复选框不选的话，会有空指针错误，这个问题我们在前端或者后端加点判断就可以了。</p>
+<h3 id="JdbcTemplate-Class"><a href="#JdbcTemplate-Class" class="headerlink" title="JdbcTemplate Class"></a>JdbcTemplate Class</h3><p>JdbcTemplate Class的实例一旦被创建就是线程安全的，所以你可以配置一个JdbcTemplate类的实例然后安全的将其注入到多个DAO中。</p>
+<p>一种常见的做法就是在Spring 配置文件中配置一个DataSource,然后将这个共享的DataSource注入到你的DAO中，那么JdbcTemplate就在DataSource的setter中被创建了</p>
+<h3 id="Configuring-Data-Source"><a href="#Configuring-Data-Source" class="headerlink" title="Configuring Data Source"></a>Configuring Data Source</h3><p>首先在我们的数据库TEST中创建一个学生表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">create table Student&#123;</span><br><span class="line">    id int not null auto_increment ,</span><br><span class="line">    name varchar(20) not null ,</span><br><span class="line">    age int not null ,</span><br><span class="line">    primary key (id)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后为Jdbc Template提供一个DataSource 以便它能够将自己接入DataBase</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id &#x3D; &quot;dataSource&quot; </span><br><span class="line">   class &#x3D; &quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;</span><br><span class="line">   &lt;property name &#x3D; &quot;driverClassName&quot; value &#x3D; &quot;com.mysql.jdbc.Driver&quot;&#x2F;&gt;</span><br><span class="line">   &lt;property name &#x3D; &quot;url&quot; value &#x3D; &quot;jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;TEST&quot;&#x2F;&gt;</span><br><span class="line">   &lt;property name &#x3D; &quot;username&quot; value &#x3D; &quot;root&quot;&#x2F;&gt;</span><br><span class="line">   &lt;property name &#x3D; &quot;password&quot; value &#x3D; &quot;password&quot;&#x2F;&gt;</span><br><span class="line">&lt;&#x2F;bean&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Data-Access-Object-DAO"><a href="#Data-Access-Object-DAO" class="headerlink" title="Data Access Object(DAO)"></a>Data Access Object(DAO)</h3><p>DAO意味数据接入对象， 常用于和数据库交互。DAO提供了读写数据库的方法，应该把它置为一个接口然后让其他部分实现它。</p>
+<h3 id="Executing-SQL-statements"><a href="#Executing-SQL-statements" class="headerlink" title="Executing SQL statements"></a>Executing SQL statements</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;Quering for an integer</span><br><span class="line">String SQL &#x3D; &quot;select count(*) from Student&quot;;</span><br><span class="line">int rowCount &#x3D; jdbcTemplateObject.queryForInt( SQL );</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Qurering for a long</span><br><span class="line">String SQL &#x3D; &quot;select count(*) from Student&quot;;</span><br><span class="line">long rowCount &#x3D; jdbcTemplateObject.queryForLong( SQL );</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;A simple query using a bind variable</span><br><span class="line">String SQL &#x3D; &quot;select age from Student where id &#x3D; ?&quot;;</span><br><span class="line">int age &#x3D; jdbcTemplateObject.queryForInt(SQL, new Object[]&#123;10&#125;);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Quering for a String</span><br><span class="line">String SQL &#x3D; &quot;select name from Student where id &#x3D; ?&quot;;</span><br><span class="line">String name &#x3D; jdbcTemplateObject.queryForObject(SQL, new Object[]&#123;10&#125;, String.class);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Quering and returning an object</span><br><span class="line">String SQL &#x3D; &quot;select * from Student where id &#x3D; ?&quot;;</span><br><span class="line">Student student &#x3D; jdbcTemplateObject.queryForObject(</span><br><span class="line">   SQL, new Object[]&#123;10&#125;, new StudentMapper());</span><br><span class="line"></span><br><span class="line">public class StudentMapper implements RowMapper&lt;Student&gt; &#123;</span><br><span class="line">   public Student mapRow(ResultSet rs, int rowNum) throws SQLException &#123;</span><br><span class="line">      Student student &#x3D; new Student();</span><br><span class="line">      student.setID(rs.getInt(&quot;id&quot;));</span><br><span class="line">      student.setName(rs.getString(&quot;name&quot;));</span><br><span class="line">      student.setAge(rs.getInt(&quot;age&quot;));</span><br><span class="line">      </span><br><span class="line">      return student;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Quering and returning mutiple objects</span><br><span class="line">String SQL &#x3D; &quot;select * from Student&quot;;</span><br><span class="line">List&lt;Student&gt; students &#x3D; jdbcTemplateObject.query(</span><br><span class="line">   SQL, new StudentMapper());</span><br><span class="line"></span><br><span class="line">public class StudentMapper implements RowMapper&lt;Student&gt; &#123;</span><br><span class="line">   public Student mapRow(ResultSet rs, int rowNum) throws SQLException &#123;</span><br><span class="line">      Student student &#x3D; new Student();</span><br><span class="line">      student.setID(rs.getInt(&quot;id&quot;));</span><br><span class="line">      student.setName(rs.getString(&quot;name&quot;));</span><br><span class="line">      student.setAge(rs.getInt(&quot;age&quot;));</span><br><span class="line">      </span><br><span class="line">      return student;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Inserting a row into the table</span><br><span class="line">String SQL &#x3D; &quot;insert into Student (name, age) values (?, ?)&quot;;</span><br><span class="line">jdbcTemplateObject.update( SQL, new Object[]&#123;&quot;Zara&quot;, 11&#125; );</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Updating a row into the table</span><br><span class="line">String SQL &#x3D; &quot;update Student set name &#x3D; ? where id &#x3D; ?&quot;;</span><br><span class="line">jdbcTemplateObject.update( SQL, new Object[]&#123;&quot;Zara&quot;, 10&#125; );</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Deleting a row from the table</span><br><span class="line">String SQL &#x3D; &quot;delete Student where id &#x3D; ?&quot;;</span><br><span class="line">jdbcTemplateObject.update( SQL, new Object[]&#123;20&#125; );</span><br></pre></td></tr></table></figure>
+
+<p>完成了和数据库的连接。</p>
+<p>附上两篇参考教程</p>
+<p><a href="http://www.tutorialspoint.com/spring/spring_jdbc_framework.htm" target="_blank" rel="noopener">introduce</a></p>
+<p><a href="https://www.tutorialspoint.com/spring/calling_stored_procedure.htm" target="_blank" rel="noopener">example</a></p>
+<p>​     </p>
+<p>参考上述example，我们完成了基于Spring对数据库的增删改查，</p>
+<p>遇到的问题：</p>
+<ol>
+<li>各方面配置好后每次启动服务器页面总显示<code>The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</code></li>
+</ol>
+<p>   历经千辛万苦我发现，再dispatcher-servlet里面需要做一个关于扫面的配置<code>&lt;context:component-scan base-package=&quot;control&quot;/&gt;</code>，否则我们的Controller是不能被扫描到的。</p>
+<ol start="2">
+<li>在做表单提交时，页面报出错误<code>java.lang.IllegalStateException: Neither BindingResult nor plain target object for bean name &#39;command&#39; available as request attribute</code>，下面是我的理解</li>
+</ol>
+<p>   ​    这是个关于<code>modelattribute</code>的问题,<code>springMVC</code>的form标签会渲染成一个html的form标签，并且给内部标签暴露出一个绑定路径。它把命令对象(command object)放在<code>PageContext</code>中，这样这些表单的内部标签就能与我们的命令对象建立联系。</p>
+<p>   ​    通俗的讲，spring的表单标签能够实现与bean对象的一个绑定(通过path指定属性)，那么就有一个问题，假如bean对象很多，表单怎么知道是和哪个bean建立的联系呢，这时候就要扯出我们的command object了，<code>command object</code>也叫做<code>model attribute</code>,它的名字通过属性标签中的<code>modelAttribute</code>或<code>commandName</code>来指定的，方式如下：</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;form:form modelAttribute&#x3D;&quot;some-example-name&quot;&gt;</span><br><span class="line">&lt;form:form commandName&#x3D;&quot;some-example-name&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>   <code>commandAttribute</code>的默认名是<code>command</code>,它通常是一个对象，或者POJO对象或者POJO的集合，而我所遇见的问题原因其实有点奇怪，第一次我是这样写的</p>
+<p>   <code>return new ModelAndView(&quot;student&quot;,&quot;command&quot;,new Student()) ;</code></p>
+<p>   它报错了，其中第一个参数是<code>ViewName</code>,第二个参数是<code>ModelName</code>（也就是我们上面说的<code>command ojbect</code>的name）,第三个参数是<code>Model</code>，其实我也不知道为啥报错了。</p>
+<p>   后来我改成了这样</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">modelMap.addAttribute(&quot;command&quot;,new Student()) ;</span><br></pre></td></tr></table></figure>
+
+<p>   因为我们知道它默认的名字是command所以我们这里就没有加第一<code>attributename</code>参数，它还是错的</p>
+<p>   直到我改成最标准的形式</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">modelMap.addAttribute(&quot;command&quot;,new Student()) ;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li><code>IOException parsing XML document from class path resource [WEB-INF/applicationContext.xml]; nested exception is java.io.FileNotFoundException: class path resource [WEB-INF/applicationContext.xml] cannot be opened because it does not exist</code></li>
+</ol>
+<p>   因为<code>DataDource</code>以及<code>JDBCTemplate</code>我们是在xml文件中配置的，所以我们需要在Controller中通过引入上下文的方式来获得<code>JdbcTemplate</code>,具体见代码</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ApplicationContext context &#x3D; new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;) ;</span><br><span class="line">StudentJDBCTemplate studentJDBCTemplate &#x3D; (StudentJDBCTemplate) context.getBean(&quot;studentJDBCTemplate&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>   然后就出现了上述错误，大概意思是找不到这个applicationContext.xml文件，后来发现，它是在WEB-INF文件夹下的，而我们新生成的out文件下，其实是没有这个路径的，也就是说它和class文件不在同一目录下，所以访问不到，解决办法是将其拷贝到同一目录下。</p>
+<h3 id="一直遇到的问题"><a href="#一直遇到的问题" class="headerlink" title="一直遇到的问题"></a>一直遇到的问题</h3><ol>
+<li><p>controller不同</p>
+<p>配置时各种失误导致，没有扫描包，或者后缀检查配置有问题</p>
+</li>
+<li><p>奇怪的415错误</p>
+<p>@RequestBody</p>
+<p>该注解常用来处理Content-Type: 不是<code>application/x-www-form-urlencoded</code>编码的内容，例如application/json, application/xml等</p>
+</li>
+</ol>
+<p>​    那么表单格式的内容用什么解析？</p>
+<p>两个问题：为什么我们请求的数据成为了表单格式？表单格式如何解析？</p>
+<p>表单提交默认就是<code>application/x-www-form-urlencoded</code>格式的</p>
+<p>表单type时button还是submit提交时貌似有很大不同</p>
+<ul>
+<li>点击type=submit的按钮，触发表单的onsubmit事件，然后提交表单</li>
+<li>点击type=button的按钮，也可以提交表单</li>
+</ul>
+<p>RequestBody注解如何运作</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/04/Android%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="next" title="Android学习笔记">
+                <i class="fa fa-chevron-left"></i> Android学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="prev" title="设计模式">
+                设计模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IDEA搭建一个小型SpringMVC-Demo"><span class="nav-number">1.</span> <span class="nav-text">IDEA搭建一个小型SpringMVC Demo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JdbcTemplate-Class"><span class="nav-number">2.</span> <span class="nav-text">JdbcTemplate Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuring-Data-Source"><span class="nav-number">3.</span> <span class="nav-text">Configuring Data Source</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-Access-Object-DAO"><span class="nav-number">4.</span> <span class="nav-text">Data Access Object(DAO)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executing-SQL-statements"><span class="nav-number">5.</span> <span class="nav-text">Executing SQL statements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一直遇到的问题"><span class="nav-number">6.</span> <span class="nav-text">一直遇到的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

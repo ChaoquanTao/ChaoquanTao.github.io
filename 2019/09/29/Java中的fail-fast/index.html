@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="fail fast," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="不知道到大家在操作Java集合类的时候有没有遇到过ConcurrentModificationException异常，反正我是遇到过，今天就来聊一下这个异常的缘起缘灭。 fail fast上述异常都是由这个叫做fail fast的机制导致的，fail fast是Java集合类的一种异常检测机制，当多个线程并发修改一个集合类的结构时，就有可能触发上述异常。我们以ArrayList为例来探究一下。 A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中的fail fast">
+<meta property="og:url" content="http://chaoquantao.github.io/2019/09/29/Java%E4%B8%AD%E7%9A%84fail-fast/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="不知道到大家在操作Java集合类的时候有没有遇到过ConcurrentModificationException异常，反正我是遇到过，今天就来聊一下这个异常的缘起缘灭。 fail fast上述异常都是由这个叫做fail fast的机制导致的，fail fast是Java集合类的一种异常检测机制，当多个线程并发修改一个集合类的结构时，就有可能触发上述异常。我们以ArrayList为例来探究一下。 A">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGedJI.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGmM7Q.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGmGpq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGKhEF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGMNG9.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGMRxI.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGlP78.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uGlx5F.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uG1CvR.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uG3Eyn.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uG3tw6.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/29/uG86gJ.png">
+<meta property="article:published_time" content="2019-09-29T11:32:50.000Z">
+<meta property="article:modified_time" content="2019-09-29T11:32:50.000Z">
+<meta property="article:author" content="Tau">
+<meta property="article:tag" content="fail fast">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/29/uGedJI.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2019/09/29/Java中的fail-fast/"/>
+
+
+
+
+
+  <title>Java中的fail fast | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2019/09/29/Java%E4%B8%AD%E7%9A%84fail-fast/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java中的fail fast</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-29T19:32:50+08:00">
+                2019-09-29
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2019-09-29T19:32:50+08:00">
+                2019-09-29
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>不知道到大家在操作Java集合类的时候有没有遇到过<code>ConcurrentModificationException</code>异常，反正我是遇到过，今天就来聊一下这个异常的缘起缘灭。</p>
+<h3 id="fail-fast"><a href="#fail-fast" class="headerlink" title="fail fast"></a>fail fast</h3><p>上述异常都是由这个叫做fail fast的机制导致的，fail fast是Java集合类的一种异常检测机制，当多个线程并发修改一个集合类的结构时，就有可能触发上述异常。我们以<code>ArrayList</code>为例来探究一下。</p>
+<p><code>ArrayList</code>中有一个成员变量叫做<code>modCount</code>，jdk8文档里面是这么介绍它的：</p>
+<blockquote>
+<p>The number of times this list has been <em>structurally modified</em>. Structural modifications are those that change the size of the list, or otherwise perturb it in such a fashion that iterations in progress may yield incorrect results.</p>
+<p>This field is used by the iterator and list iterator implementation returned by the <code>iterator</code> and <code>listIterator</code> methods. If the value of this field changes unexpectedly, the iterator (or list iterator) will throw a <code>ConcurrentModificationException</code> in response to the <code>next</code>, <code>remove</code>, <code>previous</code>, <code>set</code> or <code>add</code> operations. This provides <em>fail-fast</em> behavior, rather than non-deterministic behavior in the face of concurrent modification during iteration.</p>
+</blockquote>
+<p>大概意思就是说：它是用来记录这个list被结构性修改的次数，所谓结构性修改指的是那些让它的大小发生改变的操作。并且，这个字段是被iterator使用的。</p>
+<h4 id="iterator"><a href="#iterator" class="headerlink" title="iterator"></a>iterator</h4><p>我们再来看下iterator. 我们在集合类中一般是这样使用集合类的：</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGedJI.png" alt="uGedJI.png"></p>
+<p>可以发现，它这里有两种方法，一种是iterator,还有一种是<code>listIterator</code>，有iterator方法很好理解，是因为<code>ArrayList</code>实现了<code>Iterable</code>接口，而iterator方法就是这个接口里的方法</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGmM7Q.png" alt="uGmM7Q.png"></p>
+<p><code>Iterable</code>接口</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGmGpq.png" alt="uGmGpq.png"></p>
+<p>这三个方法定义如下：</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGKhEF.png" alt="uGKhEF.png"></p>
+<p>可以看到，两个<code>listIterator()</code>方法返回的是一个<code>ListItr</code>对象，iterator方法返回的是一个<code>Itr</code>对象。我们来看下这两个对象有什么区别：</p>
+<p><code>Itr</code>对象</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGMNG9.png" alt="uGMNG9.png"></p>
+<p><code>ListItr</code>对象</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGMRxI.png" alt="uGMRxI.png"></p>
+<p>看来这两个内部类在<code>AbstractList</code>中就有了，只不过在这里进行了优化。下面这张类图就很能说说明问题了：</p>
+<img src="https://s2.ax1x.com/2019/09/29/uGlP78.png" alt="uGlP78.png" style="zoom:80%;" />
+
+<p>可以看出，<code>ListItr</code>就相当于是专门给list做的一个iterator,提供了一些下标访问的方法，但是平时用的还是比较少。</p>
+<p>好，看完了iterator,我们来正式看下<code>ConcurrentModificationException</code>是怎么肥四</p>
+<h4 id="ConcurrentModificationException"><a href="#ConcurrentModificationException" class="headerlink" title="ConcurrentModificationException"></a><code>ConcurrentModificationException</code></h4><p>fail fast出现在哪里的，根据上述问的描述，出现在发生结构性修改的地方，好，我们看一下add(),remove()的代码：</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uGlx5F.png" alt="uGlx5F.png"></p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uG1CvR.png" alt="uG1CvR.png"></p>
+<p>可以看到，发生结构性修改的地方，都会有<code>modount++</code>的操作。可是这里也没有看到抛出异常的代码呀。别急，其实都藏在Iterator里面，这里以内部类<code>Itr</code>为例：</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uG3Eyn.png" alt="uG3Eyn.png"></p>
+<p>请注意图中我圈出来的地方，这个内部类有个字段叫做<code>expectedModCount</code>，顾名思义就是期望被修改的次数，它被赋值成<code>modCount</code>，然后，对于这个内部类里面的每一个方法，都包含了一个叫做<code>checkForComodification()</code>的方法，这个方法做了什么呢？</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uG3tw6.png" alt="uG3tw6.png"></p>
+<p>可以看到，它做的事情就是比较<code>modCount</code>和<code>expectModCount</code>是否相等，不等的话就抛出这个异常。在Itr类里面，只有一个地方修改了<code>expectedModCount</code>类：</p>
+<p><img src="https://s2.ax1x.com/2019/09/29/uG86gJ.png" alt="uG86gJ.png"></p>
+<p>那么什么时候他俩才会不等呢？</p>
+<p>这个内部类里面对<code>expectedModCount</code>初始化的值就是<code>modCount</code>的值，如果说要不等，那么可能有这么两种情况：</p>
+<ul>
+<li>修改了<code>expectedModCount</code>，没有修改<code>modCount</code></li>
+<li>修改了<code>modCouont</code>，没有修改<code>expectedModCount</code></li>
+</ul>
+<p>其实看到这里，我们的疑惑大概也就解开了，在<code>Itr</code>类里面，对<code>expectedModCount</code>的修改只有上面那一处，而且还是将<code>modCount</code>赋值给他，这意味着，要发生这个异常，只能是我们在别处（Iterator以外的地方）对list进行了结构性修改，这时候只改了<code>modCount</code>，然后又使用<code>Itr</code>进行遍历操作，这时候这两个值就不相等了，这里推荐阅读H大的这篇文章，讲的很清楚：<a href="https://www.hollischuang.com/archives/3304" target="_blank" rel="noopener">为什么阿里巴巴禁止在 foreach 循环里进行元素的 remove/add 操作</a></p>
+<p>当然了，上述只是发生这个异常的一种原因啦，其实查看源代码你会发现其他地方也有这个异常，比如你使用多线程进行遍历或者修改的时候，因为数组越界也有可能触发这个异常。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/fail-fast/" rel="tag"># fail fast</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/28/KickStart/" rel="next" title="KickStart">
+                <i class="fa fa-chevron-left"></i> KickStart
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/01/%E8%AE%B0%E4%B8%80%E6%AC%A1Http-415%E7%9A%84%E7%BB%8F%E5%8E%86/" rel="prev" title="记一次Http 415的经历">
+                记一次Http 415的经历 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#fail-fast"><span class="nav-number">1.</span> <span class="nav-text">fail fast</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#iterator"><span class="nav-number">1.1.</span> <span class="nav-text">iterator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ConcurrentModificationException"><span class="nav-number">1.2.</span> <span class="nav-text">ConcurrentModificationException</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

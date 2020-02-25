@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Lock," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ReentrantLock, 从名字来看，可重入锁，今天来看下它的具体实现。  特性：排他锁，内部实现了公平锁和非公平锁。 它的继承关系如下：  以及还有三个内部类：Sync,  NonfairSync, FairSync.其中后两个都继承自Sync，而Sync又继承自AQS  可以看出，ReentryLock是在自己内部实现了公平锁和非公平锁的。 可以看到，ReentryLock继承的Loc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中的ReentrantLock">
+<meta property="og:url" content="http://chaoquantao.github.io/2019/09/17/Java%E4%B8%AD%E7%9A%84ReentrantLock/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="ReentrantLock, 从名字来看，可重入锁，今天来看下它的具体实现。  特性：排他锁，内部实现了公平锁和非公平锁。 它的继承关系如下：  以及还有三个内部类：Sync,  NonfairSync, FairSync.其中后两个都继承自Sync，而Sync又继承自AQS  可以看出，ReentryLock是在自己内部实现了公平锁和非公平锁的。 可以看到，ReentryLock继承的Loc">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/17/n5V010.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g81gruisynj30hc0iawiz.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/17/n5eNzq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/17/n5efOK.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/17/n5mJ0O.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/17/n5K039.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/11/MQzJ29.png">
+<meta property="article:published_time" content="2019-09-17T06:56:35.000Z">
+<meta property="article:modified_time" content="2019-09-17T06:56:35.000Z">
+<meta property="article:author" content="Tau">
+<meta property="article:tag" content="Lock">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/17/n5V010.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2019/09/17/Java中的ReentrantLock/"/>
+
+
+
+
+
+  <title>Java中的ReentrantLock | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2019/09/17/Java%E4%B8%AD%E7%9A%84ReentrantLock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java中的ReentrantLock</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-17T14:56:35+08:00">
+                2019-09-17
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2019-09-17T14:56:35+08:00">
+                2019-09-17
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p> ReentrantLock, 从名字来看，可重入锁，今天来看下它的具体实现。</p>
+</blockquote>
+<p>特性：排他锁，内部实现了公平锁和非公平锁。</p>
+<p>它的继承关系如下：</p>
+<p><img src="https://s2.ax1x.com/2019/09/17/n5V010.png" alt="n5V010.png"></p>
+<p>以及还有三个内部类：<code>Sync</code>,  <code>NonfairSync</code>, <code>FairSync</code>.其中后两个都继承自Sync，而Sync又继承自<a href="https://inewbie.top/2019/10/17/Java中的AQS/" target="_blank" rel="noopener">AQS</a> </p>
+<p>可以看出，<code>ReentryLock</code>是在自己内部实现了公平锁和非公平锁的。</p>
+<p>可以看到，<code>ReentryLock</code>继承的Lock接口实现了<code>lock</code>,<code>tryLock</code>, <code>unLock</code>等方法, 这也是本文讨论的重点。</p>
+<p>先来从整体上把握一下<code>ReentrantLock</code>, <strong><code>ReentrantLock</code>之所以能有锁的功能，是因为它聚合了AQS类</strong>（当然这也是AQS类设计的初衷，AQS通过模板方式模式实现，设计者希望我们自己设计的状态同步组件重写具体的细节类，然后将这个状态同步组件聚合到我们的锁里面），<code>ReentrantLock</code>也正是这么做的。</p>
+<p><code>ReentrantLock</code>的设计逻辑是这样的：</p>
+<p>在AQS中，有模板方法和需要重写的细节方法。模板方法负责搭建获取锁和释放锁的框架，细节方法延迟到子类中去实现。</p>
+<p><img src="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g81gruisynj30hc0iawiz.jpg" alt="aqs.jpg"></p>
+<p>上图AQS类中，蓝色方法为模板方法，绿色方法为可能需要覆盖的方法，即在蓝色方法中调用了绿色方法。Sync继承自AQS, 而<code>NonfairSync</code>和<code>FairSync</code>继承了Sync,相当于最终要在公平锁和非公平锁中实现细节方法。可以看到，共享式的获取锁和释放锁是没有被实现的，所以说，<code>ReentrantLock</code>是独占锁。</p>
+<p>我们来看下Sync的定义。</p>
+<p><img src="https://s2.ax1x.com/2019/09/17/n5eNzq.png" alt="n5eNzq.png"></p>
+<p><img src="https://s2.ax1x.com/2019/09/17/n5efOK.png" alt="n5efOK.png"></p>
+<p>这里<code>Sync</code>继承自AQS, 用来实现状态同步。</p>
+<p>我们看下<code>NonfairSync</code>的实现</p>
+<p><img src="https://s2.ax1x.com/2019/09/17/n5mJ0O.png" alt="n5mJ0O.png"></p>
+<p>它实现了父类的lock方法，首先通过CAS设置线程持有锁的状态，如果修改成功，则锁属于当前线程，否则，调用<code>acquire()</code>方法. <code>acquire()</code>方法在AQS类中实现，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!tryAcquire(arg) &amp;&amp;</span><br><span class="line">            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</span><br><span class="line">            selfInterrupt();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果使用<code>tryAcquire()</code>获取锁失败，则把这个线程加入等待队列中。（<code>tryAcquire()</code>又是在<code>NonFairSync</code>中实现的，有点绕，它的实现又调用了父类Sync中的<code>nonfairTryAcquire()</code>方法）</p>
+<p><img src="https://s2.ax1x.com/2019/09/17/n5K039.png" alt="n5K039.png"></p>
+<p>公平锁<code>FairSync</code></p>
+<p><img src="https://s2.ax1x.com/2019/11/11/MQzJ29.png" alt="MQzJ29.png"></p>
+<p>可以看到，相比于非公平锁的lock方法，公平锁的lock方法一开始执行就是排队，即acquire()方法，而非公平锁的lock方法上来二话不说就是先插队，即通过CAS改变自身持有该锁的状态</p>
+<p>对于<code>tryAcquire()</code>方法，公平锁的判断条件里多了一个自己是否在队列首的判断。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Lock/" rel="tag"># Lock</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/15/%E5%89%91%E6%8C%87offer%E9%A2%98%E8%A7%A3/" rel="next" title="剑指offer题解">
+                <i class="fa fa-chevron-left"></i> 剑指offer题解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/17/Java%E4%B8%AD%E7%9A%84volatile%E5%85%B3%E9%94%AE%E5%AD%97/" rel="prev" title="Java中的volatile关键字">
+                Java中的volatile关键字 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

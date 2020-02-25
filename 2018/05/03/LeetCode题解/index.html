@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Leetcode," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="###542.01 矩阵  题目描述 给定一个由 0 和 1 组成的矩阵，找出每个元素到最近的 0 的距离。 两个相邻元素间的距离为 1 。  题目分析       可用动态规划来求解，每个元素距离0最近的距离 &#x3D;  该元素邻居距离0最近的距离 + 1  为了从分利用内存空间，我们仍然用这个矩阵来表示距离  为零的元素不用处理，如果某个元素的邻居有0，那么将该元素置为1（说明它到0的距离为1）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode题解">
+<meta property="og:url" content="http://chaoquantao.github.io/2018/05/03/LeetCode%E9%A2%98%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="###542.01 矩阵  题目描述 给定一个由 0 和 1 组成的矩阵，找出每个元素到最近的 0 的距离。 两个相邻元素间的距离为 1 。  题目分析       可用动态规划来求解，每个元素距离0最近的距离 &#x3D;  该元素邻居距离0最近的距离 + 1  为了从分利用内存空间，我们仍然用这个矩阵来表示距离  为零的元素不用处理，如果某个元素的邻居有0，那么将该元素置为1（说明它到0的距离为1）">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmlb1779j30fb08zjrc.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmngbhtgj30mi089t8n.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmngbhtgj30mi089t8n.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmpv2zvcj30bi088wec.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmy9tk8sj30ba089t8k.jpg">
+<meta property="article:published_time" content="2018-05-03T03:13:20.000Z">
+<meta property="article:modified_time" content="2020-02-05T03:07:39.228Z">
+<meta property="article:author" content="Tau">
+<meta property="article:tag" content="Leetcode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmlb1779j30fb08zjrc.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2018/05/03/LeetCode题解/"/>
+
+
+
+
+
+  <title>leetcode题解 | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2018/05/03/LeetCode%E9%A2%98%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">leetcode题解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-03T11:13:20+08:00">
+                2018-05-03
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-02-05T11:07:39+08:00">
+                2020-02-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index">
+                    <span itemprop="name">题解</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>###542.01 矩阵</p>
+<ul>
+<li><p>题目描述</p>
+<p>给定一个由 0 和 1 组成的矩阵，找出每个元素到最近的 0 的距离。</p>
+<p>两个相邻元素间的距离为 1 。</p>
+</li>
+<li><p>题目分析</p>
+<ul>
+<li><img src="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmlb1779j30fb08zjrc.jpg" alt=""></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>可用动态规划来求解，每个元素距离0最近的距离 =  该元素邻居距离0最近的距离 + 1</p>
+</li>
+<li><p>为了从分利用内存空间，我们仍然用这个矩阵来表示距离</p>
+</li>
+<li><p>为零的元素不用处理，如果某个元素的邻居有0，那么将该元素置为1（说明它到0的距离为1）</p>
+</li>
+<li><p>将剩下的元素（也就是周围全是1的元素）置为无穷大，这个初始化意味着他们到零的距离为无穷大，需要在后面的动态规划中求解</p>
+</li>
+<li><p>通过上述的处理，我们可以得到，这些无穷大的值其实都被数字1或者边界所包含，通过边界值可以更新无穷大的值</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmngbhtgj30mi089t8n.jpg" alt=""></p>
+</li>
+<li><p>对矩阵进行遍历，第一顺序横向遍历，当遇见值为无穷大的元素时，更新它的值为 邻居到0最近距离+1 和无穷大 本身值的较小者</p>
+<p><code>matrix[i][j]=min(matrix[i-1][j]+1,matrix[i][j]) //如果该元素不是第一列</code></p>
+<p>第一次遍历将会和该元素的左边元素和上边元素比较</p>
+<p>第二次遍历从最后一行最后一列开始遍历，将会和该元素的右边和下边元素进行比较</p>
+</li>
+</ul>
+<ul>
+<li><p>代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">import static java.lang.Math.min;</span><br><span class="line"></span><br><span class="line">public class Matrix2&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int[][] matrix &#x3D;</span><br><span class="line">                &#x2F;&#x2F;&#123;&#123;0,0,0&#125;, &#123;0,1,0&#125;, &#123;1,1,1&#125;&#125; ;</span><br><span class="line">                &#123;   &#123;0, 0, 1, 0, 1, 1, 1, 0, 1, 1&#125;,</span><br><span class="line">                        &#123;1, 1, 1, 1, 0, 1, 1, 1, 1, 1&#125;,</span><br><span class="line">                        &#123;1, 1, 1, 1, 1, 0, 0, 0, 1, 1&#125;,</span><br><span class="line">                        &#123;1, 0, 1, 0, 1, 1, 1, 0, 1, 1&#125;,</span><br><span class="line">                        &#123;0, 0, 1, 1, 1, 0, 1, 1, 1, 1&#125;,</span><br><span class="line">                        &#123;1, 0, 1, 1, 1, 1, 1, 1, 1, 1&#125;,</span><br><span class="line">                        &#123;1, 1, 1, 1, 0, 1, 0, 1, 0, 1&#125;,</span><br><span class="line">                        &#123;0, 1, 0, 0, 0, 1, 0, 0, 1, 1&#125;,</span><br><span class="line">                        &#123;1, 1, 1, 0, 1, 1, 0, 1, 0, 1&#125;,</span><br><span class="line">                        &#123;1, 0, 1, 1, 1, 0, 1, 1, 1, 0&#125;&#125;;</span><br><span class="line"></span><br><span class="line">        int [][] matrix2 ;</span><br><span class="line">        matrix2 &#x3D; updateMatrix(matrix) ;</span><br><span class="line">        System.out.println(&quot;last&quot;);</span><br><span class="line">        for(int i&#x3D;0 ; i&lt;matrix2.length; i++)&#123;</span><br><span class="line">            for(int j&#x3D;0; j&lt;matrix2[0].length;j++)&#123;</span><br><span class="line">                System.out.print(matrix2[i][j]+&quot; &quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static int[][] updateMatrix(int[][] matrix)&#123;</span><br><span class="line">        &#x2F;&#x2F;</span><br><span class="line">        for(int i&#x3D;0; i&lt;matrix.length;i++)&#123;</span><br><span class="line">            for(int j&#x3D;0; j&lt;matrix[0].length;j++)&#123;</span><br><span class="line">                if(matrix[i][j]&#x3D;&#x3D;1)&#123;</span><br><span class="line">                    if(i&gt;0 &amp;&amp; matrix[i-1][j]&#x3D;&#x3D;0) &#123;</span><br><span class="line">                        matrix[i][j]&#x3D;1;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if(i&lt;matrix.length-1 &amp;&amp; matrix[i+1][j]&#x3D;&#x3D;0)&#123;</span><br><span class="line">                        matrix[i][j]&#x3D;1 ;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if(j&gt;0 &amp;&amp; matrix[i][j-1]&#x3D;&#x3D;0)&#123;</span><br><span class="line">                        matrix[i][j]&#x3D;1 ;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if(j&lt;matrix[0].length-1 &amp;&amp; matrix[i][j+1]&#x3D;&#x3D;0)&#123;</span><br><span class="line">                        matrix[i][j]&#x3D;1;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    matrix[i][j]&#x3D;65535 ;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;first &quot;);</span><br><span class="line">        for(int i&#x3D;0 ; i&lt;matrix.length; i++)&#123;</span><br><span class="line">            for(int j&#x3D;0; j&lt;matrix[0].length;j++)&#123;</span><br><span class="line">                System.out.printf(&quot;%-8d&quot;,matrix[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(int i&#x3D;0; i&lt;matrix.length;i++)&#123;</span><br><span class="line">            for(int j&#x3D;0; j&lt;matrix[0].length;j++)&#123;</span><br><span class="line">                if(matrix[i][j]&#x3D;&#x3D;65535)&#123;</span><br><span class="line">                    if(i&gt;0)&#123;</span><br><span class="line">                        matrix[i][j] &#x3D; min(matrix[i-1][j]+1,matrix[i][j]);</span><br><span class="line">                    &#125;</span><br><span class="line">                    if(j&gt;0)&#123;</span><br><span class="line">                        matrix[i][j] &#x3D; min(matrix[i][j-1]+1,matrix[i][j]);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;second &quot;);</span><br><span class="line">        for(int i&#x3D;0 ; i&lt;matrix.length; i++)&#123;</span><br><span class="line">            for(int j&#x3D;0; j&lt;matrix[0].length;j++)&#123;</span><br><span class="line">                System.out.printf(matrix[i][j]+&quot;\t&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println();</span><br><span class="line">        &#125;</span><br><span class="line">        for(int i&#x3D;matrix.length-1; i&gt;&#x3D;0;i--)&#123;</span><br><span class="line">            for(int j&#x3D;matrix[0].length-1;j&gt;&#x3D;0;j--)&#123;</span><br><span class="line">                if(i&lt;matrix.length-1)</span><br><span class="line">                    matrix[i][j]&#x3D;min(matrix[i+1][j]+1,matrix[i][j]);</span><br><span class="line">                if(j&lt;matrix[0].length-1)</span><br><span class="line">                    matrix[i][j]&#x3D;min(matrix[i][j+1]+1,matrix[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">        return matrix;</span><br><span class="line">  </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关于疑问</p>
+<p>可能有人会想，为什么要遍历两遍，而不是在第一次遍历时就直接和前后左右邻居相比较，继续<img src="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmngbhtgj30mi089t8n.jpg" alt="">看这张图，按照我们的思路处理后是这样的</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmpv2zvcj30bi088wec.jpg" alt=""></p>
+<p>请看第一行倒数第二个元素<code>m[0][8]</code>，如果只进行一次顺序遍历，由于它底下的值<code>m[1][8]</code>没有更新，它将会认为从左边得到的4(<code>m[0][7]+1</code>)这个值是最小值，但是事实是，当它底下这个无穷大值如果经过更新成2，那么它的4也应该更新为3。如果按照我们只遍历一次的思想，它是等不到<code>m[1][8]</code>更新的，但是如果我们先正向遍历比较左边和上边元素，得到下图</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzaly1fqlmy9tk8sj30ba089t8k.jpg" alt=""></p>
+<p>第二次反向遍历时，当<code>m[0][8]</code>和它下面的<code>m[1][8]</code>比较时，因为<code>m[1][8]</code>已经更新，所以它也会被更新。</p>
+<p>所以说，第一波遍历时本来就是从左到右从上到下的顺序，即使强行和当前元素的右边和下边比较，因为这两边还没有更新，所以并没有什么效果，所以才需要两次遍历，且方向相反</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="456-132模式"><a href="#456-132模式" class="headerlink" title="456. 132模式"></a>456. 132模式</h3><ul>
+<li><p>题目描述</p>
+<p>给定一个整数序列：a1, a2, …, an，一个132模式的子序列 a<strong>i</strong>, a<strong>j</strong>, a<strong>k</strong> 被定义为：当 <strong>i</strong> &lt; <strong>j</strong> &lt; <strong>k</strong> 时，a<strong>i</strong> &lt; a<strong>k</strong> &lt; a<strong>j</strong>。设计一个算法，当给定有 n 个数字的序列时，验证这个序列中是否含有132模式的子序列。</p>
+<p><strong>注意：</strong>n 的值小于15000。</p>
+</li>
+<li><p>分析</p>
+<p>最暴力的方法就是通过三重循环直接判断，但是运行时会超时，这里对三重循环进行优化，通过观察可知，假设三个数依次是x,y,z.如果y&lt;=x,这时可以直接用y来替代x，因为用一个更小的值来做x肯定是不会错的。同理，如果z&gt;=y，我们就用z的值来更新y。需要注意的是下标的移动。</p>
+</li>
+<li><p>代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">public boolean find132pattern(int[] nums) &#123;</span><br><span class="line">        int x,y,z ;</span><br><span class="line">        int min,max ;</span><br><span class="line">        if(nums.length&#x3D;&#x3D;0)</span><br><span class="line">            return false;</span><br><span class="line">        min&#x3D;max&#x3D;nums[0] ;</span><br><span class="line">        for(int i&#x3D;1; i&lt;nums.length;i++)&#123;</span><br><span class="line">            min &#x3D; nums[i]&lt;min ? nums[i] : min ;</span><br><span class="line">            max &#x3D; nums[i]&gt;max ? nums[i]:max ;</span><br><span class="line">        &#125;</span><br><span class="line">        if(max-min&lt;2)</span><br><span class="line">            return false ;</span><br><span class="line"></span><br><span class="line">        for(int i&#x3D;0; i&lt;nums.length;)&#123;</span><br><span class="line">            x&#x3D; nums[i];</span><br><span class="line">            for(int j&#x3D;i+1; j&lt;nums.length;)&#123;</span><br><span class="line">                y&#x3D;nums[j];</span><br><span class="line">                &#x2F;&#x2F;如果遇见比x还小的值，就更新x,同时更新下标</span><br><span class="line">                if(y&lt;&#x3D;x)&#123;</span><br><span class="line">                    x&#x3D;y;</span><br><span class="line">                    i&#x3D;j;</span><br><span class="line">                    j++;</span><br><span class="line">                    continue ;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                for(int k&#x3D;j+1; k&lt;nums.length;k++)&#123;</span><br><span class="line">                    z&#x3D;nums[k];</span><br><span class="line">                    &#x2F;&#x2F;如果遇见比y还大的值，就更新y,同时更新下标</span><br><span class="line">                    if(z&gt;&#x3D;y)&#123;</span><br><span class="line">                        y&#x3D;z ;</span><br><span class="line">                        j&#x3D;k;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    if( x&gt;&#x3D;z)&#123;</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    else</span><br><span class="line">                        return true ;</span><br><span class="line">                &#125;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        return false ;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>反思</p>
+<p>看了下里面大神解答，时间复杂度控制在O(n)也是可以解决这个问题的。先找到当前元素nums[i]前面所有元素中最小的元素min[i]，然后反向遍历，并在遍历时将元素加入集合，然后判断集合中是否存在大于当前元素nums[i]前面的最小元素min[i]的元素，如果存在且这个元素小于当前元素，则返回true.否则直到遍历结束并返回false.</p>
+</li>
+</ul>
+<h3 id="650-2-Keys-Keyboard"><a href="#650-2-Keys-Keyboard" class="headerlink" title="650.2 Keys Keyboard"></a>650.2 Keys Keyboard</h3><ul>
+<li><p>题目描述</p>
+<p>Initially on a notepad only one character ‘A’ is present. You can perform two operations on this notepad for each step:</p>
+<ol>
+<li><code>Copy All</code>: You can copy all the characters present on the notepad (partial copy is not allowed).</li>
+<li><code>Paste</code>: You can paste the characters which are copied <strong>last time</strong>.</li>
+</ol>
+<p>Given a number <code>n</code>. You have to get <strong>exactly</strong> <code>n</code> ‘A’ on the notepad by performing the minimum number of steps permitted. Output the minimum number of steps to get <code>n</code> ‘A’.</p>
+</li>
+<li><p>题目分析</p>
+<p>题目最终化简为n的素数分解，然后将质因数求和</p>
+</li>
+<li><p>代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public int minSteps(int n) &#123;</span><br><span class="line">       int sum&#x3D;0;</span><br><span class="line">       if(n&#x3D;&#x3D;1)</span><br><span class="line">           return 0 ;</span><br><span class="line">       if(n&#x3D;&#x3D;2)</span><br><span class="line">           return 2;</span><br><span class="line">       for(int i&#x3D;2; i*i&lt;&#x3D;n;i++)&#123;</span><br><span class="line">           while(n%i&#x3D;&#x3D;0)&#123;</span><br><span class="line">               sum+&#x3D;i ;</span><br><span class="line">               n&#x2F;&#x3D;i;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if(n!&#x3D;1)</span><br><span class="line">           sum+&#x3D;n;</span><br><span class="line">      return sum ;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Leetcode/" rel="tag"># Leetcode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/15/Spring/" rel="next" title="Spring">
+                <i class="fa fa-chevron-left"></i> Spring
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="prev" title="数据结构">
+                数据结构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#456-132模式"><span class="nav-number">1.</span> <span class="nav-text">456. 132模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#650-2-Keys-Keyboard"><span class="nav-number">2.</span> <span class="nav-text">650.2 Keys Keyboard</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="此文章谨用来记录我在做安卓过程中遇到的相关问题和知识点 Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这个线程的代言人，其一个用途就是多线程通信，尤其是非线程安全情况下的线程通信 Fragment为什么会出现fragment这个东西呢，举个最简单的例子，就是想把一个安卓页面划分成多个部分，每个部分显示不同的内容，而这几个部分又属于同一个activity,比如我们使用qq或者">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android学习笔记">
+<meta property="og:url" content="http://chaoquantao.github.io/2018/07/04/Android%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="此文章谨用来记录我在做安卓过程中遇到的相关问题和知识点 Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这个线程的代言人，其一个用途就是多线程通信，尤其是非线程安全情况下的线程通信 Fragment为什么会出现fragment这个东西呢，举个最简单的例子，就是想把一个安卓页面划分成多个部分，每个部分显示不同的内容，而这几个部分又属于同一个activity,比如我们使用qq或者">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1fvjqh9pivuj30fy09m3ze.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1fvjqjfvz5fj307l0kvwgd.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1fvjs01bp52j30p909840c.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/005UcYzaly1ftnlyzgz9gj30bp06674r.jpg">
+<meta property="article:published_time" content="2018-07-04T07:46:41.000Z">
+<meta property="article:modified_time" content="2020-02-05T03:07:39.203Z">
+<meta property="article:author" content="Tau">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/005UcYzagy1fvjqh9pivuj30fy09m3ze.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2018/07/04/Android学习笔记/"/>
+
+
+
+
+
+  <title>Android学习笔记 | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2018/07/04/Android%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-04T15:46:41+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-02-05T11:07:39+08:00">
+                2020-02-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91/" itemprop="url" rel="index">
+                    <span itemprop="name">移动开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>此文章谨用来记录我在做安卓过程中遇到的相关问题和知识点</p>
+<h3 id="Handler"><a href="#Handler" class="headerlink" title="Handler"></a>Handler</h3><p>handler在创建之初，会和某个线程绑定，可以认为它是这个线程的代言人，其一个用途就是多线程通信，尤其是非线程安全情况下的线程通信</p>
+<h3 id="Fragment"><a href="#Fragment" class="headerlink" title="Fragment"></a>Fragment</h3><p>为什么会出现fragment这个东西呢，举个最简单的例子，就是想把一个安卓页面划分成多个部分，每个部分显示不同的内容，而这几个部分又属于同一个activity,比如我们使用qq或者微信的时候，地下有个导航栏，无论我们是选择哪一个，只有上面的部分在变，而导航栏却一直都在，这就是fragment的应用。</p>
+<p>fragment英文叫做片段，顾名思义其实它就是activity的一个片段，一个子集，让一个activity占据整个页面很庞大，那我们就把activity分成好几个部分，让它们共享这个页面。</p>
+<p>这里我拿一张google官方的示例图，就很能说明问题了。</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzagy1fvjqh9pivuj30fy09m3ze.jpg" alt=""></p>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><p>再甩一张官方图</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzagy1fvjqjfvz5fj307l0kvwgd.jpg" alt=""></p>
+<p>上图表示在fragment所在的activity运行时fragment的生命周期</p>
+<p><code>添加Fragment</code></p>
+<p>有动态添加和静态添加两种方式，后面会讲到</p>
+<p><code>onAttach()</code></p>
+<p>该fragment被添加到activity中时被调用（两者建立关联时），且只会被调用一次</p>
+<p><code>onCreate()</code></p>
+<p>fragment被创建时调用</p>
+<p><code>onCreateView()</code></p>
+<p>绘制该fragment的view时被调用，且讲绘制的view返回</p>
+<p><code>onActivityCreate()</code></p>
+<p>fragment所在的activity启动完成后回调</p>
+<p><code>onStart()</code></p>
+<p>启动fragment时被回调</p>
+<p><code>onResume()</code></p>
+<p>恢复fragment时被调用，<code>onStart()</code>方法后一定回调<code>onResume()</code></p>
+<p>经过上述步骤，fragment就被激活了</p>
+<p><code>onPause()</code></p>
+<p>fragment被暂停时调用</p>
+<p><code>onStop()</code></p>
+<p>fragment停止时调用，停止并不意味着这个fragment被销毁，比如我们按下home键</p>
+<p><code>onDestroyView()</code></p>
+<p>销毁Fragment所包含的view</p>
+<p><code>onDestroy()</code></p>
+<p>销毁fragment</p>
+<p><code>onDetach()</code></p>
+<p>fragment被从activity中remove时调用</p>
+<p>其实它的生命周期和activity很相似，理解它们的生命周期，这样就能更好的知道应该在它们的哪个阶段进行哪些操作。</p>
+<h4 id="静-动态添加"><a href="#静-动态添加" class="headerlink" title="静/动态添加"></a>静/动态添加</h4><p>上面提到，fragment是activity的片段，所以就有个这个片段何时被添加的问题。</p>
+<p>无论动态添加还是静态添加，在此之前我们都要先定义好这个fragment的内部布局xml文件并且定义一个继承了Fragment的类和这个xml文件关联起来，有点类似于我们要定义好<code>listview</code>的每个item然后通过adapter将它们适配。</p>
+<p>下面我们定义一个<code>chart_fragment</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;LinearLayout xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">    android:layout_width&#x3D;&quot;match_parent&quot;</span><br><span class="line">    android:layout_height&#x3D;&quot;match_parent&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id&#x3D;&quot;@+id&#x2F;textView&quot;</span><br><span class="line">        android:layout_width&#x3D;&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height&#x3D;&quot;match_parent&quot;</span><br><span class="line">        android:layout_weight&#x3D;&quot;1&quot;</span><br><span class="line">        android:text&#x3D;&quot;this is chart fragment&quot;</span><br><span class="line">        android:textSize&#x3D;&quot;20dp&quot;&#x2F;&gt;</span><br><span class="line">&lt;&#x2F;LinearLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后用一个继承自Fragment的类将这个xml添加进来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) &#123;</span><br><span class="line">       return inflater.inflate(R.layout.chart_fragment,container,false);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样<code>ChartFragment</code>类就和我们的布局文件关联起来了，以后用<code>ChartFragment</code>就指的是这个fragment了</p>
+<ol>
+<li><p>静态添加</p>
+<p>直观讲就是在activity的布局文件中加入<code>fragment</code>标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;LinearLayout xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">    android:orientation&#x3D;&quot;horizontal&quot;</span><br><span class="line">    android:layout_width&#x3D;&quot;match_parent&quot;</span><br><span class="line">    android:layout_height&#x3D;&quot;match_parent&quot;&gt;</span><br><span class="line">    &lt;fragment android:name&#x3D;&quot;com.example.news.ArticleListFragment&quot;</span><br><span class="line">            android:id&#x3D;&quot;@+id&#x2F;list&quot;</span><br><span class="line">            android:layout_weight&#x3D;&quot;1&quot;</span><br><span class="line">            android:layout_width&#x3D;&quot;0dp&quot;</span><br><span class="line">            android:layout_height&#x3D;&quot;match_parent&quot; &#x2F;&gt;</span><br><span class="line">   </span><br><span class="line">&lt;&#x2F;LinearLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<p>像这样，可以发现上述fragment的name是一个类名，也就是我们上面关联的类名，这也是静态添加fragment的一个特点</p>
+</li>
+<li><p>动态添加</p>
+<p>所谓动态添加就是我们不直接把fragment标签写死在activity的布局文件中，而是在activity布局文件中给fragment留一个container,比如各种layout,然后在代码中通过<code>FragmentSupportManager</code>来进行添加。我们获得Transaction对象，用它来操作fragment,比如add,remove,hide,show,replace等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getSupportFragmentManager().beginTransaction().replace(R.id.frame2,new MapFragment()).commit();</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h4 id="Fragment-Activity交互"><a href="#Fragment-Activity交互" class="headerlink" title="Fragment Activity交互"></a>Fragment Activity交互</h4><p>这里用菜鸟教程的一张图来说明问题</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzagy1fvjs01bp52j30p909840c.jpg" alt=""></p>
+<p>这里面比较难理解的是Fragment向Activity传递数据，我个人是这样理解的：假设有这样一个场景，点击Fragment A中的某个选项需要切换到Fragment B,那么Fragment必须把这个讯息传给它所在的Activity,因为Fragment A是没有切换的能力的，这种大事必须A和B的爸爸来完成。那如何做呢？我们可以定义一个接口I，然后让Activity实现这个接口，这个接口里函数的参数就是Fragment A要向Activity传递的数据，然后我们在Fragment中获得Activity对象，调用这个接口函数，是不是就很巧妙的把Fragment A的信息（作为参数）传递给了Activity（Activity实现了这个接口，所以调用的时候自然能获得接口的参数，而这个参数来自于Fragment A）呢？</p>
+<h4 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h4><ol>
+<li>我用的是两个fragment,一个静态添加一个动态添加，一个fragment中受到点击事件去动态添加另一个fragment时，总是失败，看完了网上的各种方法，如包的版本问题，support.v4还是app包,以及fragment的name问题，都没有找到原因，后来发现，原来是这个constraintlayout搞得我没有把fragment画出来，所以以后开发还是给布局加点颜色为好。</li>
+<li>我想在Activity中先模拟一次一个fragment中的点击事件，这样一进来屏幕就不会感觉很空洞，于是我在onCreate方法中添加了button的performclick方法，但是，没反应，又经过一阵搜寻，原来在onCreate中，其实fragment布局还没有加载完，这时候贸然performclick是没有作用的，应该讲方法加到onStart中，看来学好他们的生命周期还是很有用的鸭。</li>
+</ol>
+<h3 id="信号强度"><a href="#信号强度" class="headerlink" title="信号强度"></a>信号强度</h3><ol>
+<li>有两种信号单位，dbm和asu</li>
+</ol>
+<p>asu(alone signal unit)：独立信号单元，是一种模拟信号。asu代表手机将它的位置传递给附近的信号塔的速率，它和dbm测量的是一样的东西，但是是以一种更加线性的方式来表示。</p>
+<p>dBm：是一个表示功率绝对值的值（也可以认为是以1mW功率为基准的一个比值），计算公式为：10log（功率值/1mw）。 </p>
+<ol start="2">
+<li><p>网络类型</p>
+<p><strong>电信</strong></p>
+<p>2G CDMA<br>3G CDMA2000<br>4G TD-LTE，FDD-LTE</p>
+<p><strong>移动</strong></p>
+<p>2G GSM<br>3G TD-SCDMA<br>4G TD-LTE，FDD-LTE</p>
+<p><strong>联通</strong></p>
+<p>2G GSM<br>3G WCDMA<br>4G TD-LTE，FDD-LTE</p>
+<p><strong>安卓api提供的类型</strong></p>
+</li>
+</ol>
+<h3 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h3><p>安卓的权限分正常权限和危险权限，正常权限在Manifest中添加一哈就可以了，但是危险权限自己添加后还需要一个手动申请并覆盖原来方法的过程。</p>
+<p>通过<code>ActivityCompat.requestPermissions</code>来申请我们所需的权限，它会回调<code>onRequestPermissionsResult</code>方法，所以我们还需要复写这个方法来达到我们的目的，复写方式很简单，让<code>MainActivity</code>实现<code>ActivityCompat.OnRequestPermissionsResultCallback</code>接口（因为<code>onRequestPermissionsResult</code>方法就是i这个接口中的），然后再<code>MainActivity</code>中复写该方法即可</p>
+<h3 id="Context-和-Activity-的关系"><a href="#Context-和-Activity-的关系" class="headerlink" title="Context 和 Activity 的关系"></a>Context 和 Activity 的关系</h3><p>用一张图就很能说明问题了</p>
+<p><img src="https://ws1.sinaimg.cn/large/005UcYzaly1ftnlyzgz9gj30bp06674r.jpg" alt=""></p>
+<h4 id="关于findViewById"><a href="#关于findViewById" class="headerlink" title="关于findViewById"></a>关于<code>findViewById</code></h4><p>刚刚在做一个<code>popupwindow</code>里面显示动态图表的东西,在找图表的id时总是返回空指针，后来发现，之前写的类里面总以为<code>findViewById</code>是Context的方法，所以此前在用这个方法的时候一直传递Context来调用，其实这是一个View的方法，虽然在同一个Context下，但已经是不同的视图了，所以总返回空指针。</p>
+<h3 id="setOnclickedListener"><a href="#setOnclickedListener" class="headerlink" title="setOnclickedListener"></a><code>setOnclickedListener</code></h3><p>在重写该接口的<code>onClicked</code>方法时，该方法的参数是被点击的那个视图，比如按钮等。</p>
+<h3 id="PopupWindow"><a href="#PopupWindow" class="headerlink" title="PopupWindow"></a><code>PopupWindow</code></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void showAtLocation (View parent, &#x2F;&#x2F; 该属性只要是屏幕上任意控件对象即可</span><br><span class="line">                int gravity, &#x2F;&#x2F; 屏幕位置</span><br><span class="line">                int x,  &#x2F;&#x2F; 偏移坐标</span><br><span class="line">                int y)</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意第一个参数是屏幕上的组件，但不能是<code>popupwindow</code>中的组建，否则会报错。</p>
+<h3 id="Problems"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</h3><ol>
+<li>AS视图编辑器里不能显示控件，最后解决办法，在style.xml中的parent=后面加Base.</li>
+<li></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="next" title="数据结构">
+                <i class="fa fa-chevron-left"></i> 数据结构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/04/SpringMVC/" rel="prev" title="SpringMVC">
+                SpringMVC <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Handler"><span class="nav-number">1.</span> <span class="nav-text">Handler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fragment"><span class="nav-number">2.</span> <span class="nav-text">Fragment</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生命周期"><span class="nav-number">2.1.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静-动态添加"><span class="nav-number">2.2.</span> <span class="nav-text">静&#x2F;动态添加</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fragment-Activity交互"><span class="nav-number">2.3.</span> <span class="nav-text">Fragment Activity交互</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#遇到的问题"><span class="nav-number">2.4.</span> <span class="nav-text">遇到的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信号强度"><span class="nav-number">3.</span> <span class="nav-text">信号强度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#权限管理"><span class="nav-number">4.</span> <span class="nav-text">权限管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Context-和-Activity-的关系"><span class="nav-number">5.</span> <span class="nav-text">Context 和 Activity 的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于findViewById"><span class="nav-number">5.1.</span> <span class="nav-text">关于findViewById</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setOnclickedListener"><span class="nav-number">6.</span> <span class="nav-text">setOnclickedListener</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PopupWindow"><span class="nav-number">7.</span> <span class="nav-text">PopupWindow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Problems"><span class="nav-number">8.</span> <span class="nav-text">Problems</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

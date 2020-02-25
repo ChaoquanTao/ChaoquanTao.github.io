@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SSM," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在做一个基于SSM的系统，借此记录一下如何在IDEA下搭建一个SSM项目 SSM, 即Spring, Spring MVC 和Mybaits. 所以整体来讲它还是一个基于Spring MVC的，只不过后端使用了Spring和Mybaits. 我们先来看下对于一个SpirngMVC项目，它里面的配置文件有哪些 web.xml 这个是Web工程的配置文件，看下里面的的配置：     第一部分 co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建SSM项目">
+<meta property="og:url" content="http://chaoquantao.github.io/2019/10/13/%E6%90%AD%E5%BB%BASSM%E9%A1%B9%E7%9B%AE/index.html">
+<meta property="og:site_name" content="Tau&#39;s Blog">
+<meta property="og:description" content="最近在做一个基于SSM的系统，借此记录一下如何在IDEA下搭建一个SSM项目 SSM, 即Spring, Spring MVC 和Mybaits. 所以整体来讲它还是一个基于Spring MVC的，只不过后端使用了Spring和Mybaits. 我们先来看下对于一个SpirngMVC项目，它里面的配置文件有哪些 web.xml 这个是Web工程的配置文件，看下里面的的配置：     第一部分 co">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7wmnzpzzyj30uw0c9q4o.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7wn9db33ij30wt0hg418.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7wo08yhcnj30jq0bbt9m.jpg">
+<meta property="article:published_time" content="2019-10-13T07:33:11.000Z">
+<meta property="article:modified_time" content="2019-10-13T07:33:11.000Z">
+<meta property="article:author" content="Tau">
+<meta property="article:tag" content="SSM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7wmnzpzzyj30uw0c9q4o.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ChaoquanTao.github.io/2019/10/13/搭建SSM项目/"/>
+
+
+
+
+
+  <title>搭建SSM项目 | Tau's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tau's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ChaoquanTao.github.io/2019/10/13/%E6%90%AD%E5%BB%BASSM%E9%A1%B9%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tau's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建SSM项目</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-13T15:33:11+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2019-10-13T15:33:11+08:00">
+                2019-10-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">框架</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在做一个基于SSM的系统，借此记录一下如何在IDEA下搭建一个SSM项目</p>
+<p>SSM, 即Spring, Spring MVC 和Mybaits. 所以整体来讲它还是一个基于Spring MVC的，只不过后端使用了Spring和Mybaits.</p>
+<p>我们先来看下对于一个SpirngMVC项目，它里面的配置文件有哪些</p>
+<p><code>web.xml</code></p>
+<p>这个是Web工程的配置文件，看下里面的的配置：</p>
+<img src="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7wmnzpzzyj30uw0c9q4o.jpg" alt="362b4082424544ac35702266f68bf5e.png" style="zoom: 80%;" />
+
+
+
+<p>第一部分 <code>contextConfigLocation</code>，描述Spring MVC的Spring IoC文件的位置，这里默认是同目录下的<code>applicationContext.xml</code>，可以发现里面是空的。</p>
+<p>第二部分<code>ContextLoaderListener</code>，起作用是在整个Web工程加入自定义的代码</p>
+<p>第三部分配置<code>DispatcherServlet</code>,在里面配置name是<code>dispatcher</code>，说明还有一个专门的<code>dispatcher-servlet</code>文件，在同目录下也可以找到,关于这可以了解下Spring MVC的组件以及流程。</p>
+<p>第四部分配置拦截器，这里<code>DispatcherServlet</code>会拦截所有以form结尾的请求。</p>
+<p>ok,以上就是Spring MVC里面<code>web/WEB-INF/</code>下的三个配置文件的介绍</p>
+<p>那么要建立一个SSM项目，在一个Spring MVC项目的基础上，还需要什么呢？</p>
+<p>还需要两个配置文件：桥接spring和<code>mybatis</code>的配置文件以及关于<code>mybaits</code>自身的配置文件。</p>
+<p>关于这两个文件，我们一般会在<code>src/main</code>下面创建一个resource文件夹，在里面放置<code>spring-mybaits.xml</code>和<code>mybaits-config.xml</code>.</p>
+<p>再来看下这两个配置文件里应该放些啥</p>
+<p><code>spring-mybaits.xml</code></p>
+<p><img src="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7wn9db33ij30wt0hg418.jpg" alt="4dd3ae455d1c228b43d6df10adfbb03.png"></p>
+<p>第一部分<code>dataSource</code>，配置数据源，也就是数据库相关属性</p>
+<p>第二部分配置<code>sqlSessionFactory</code>，关于这个你可能需要了解一下MyBaits的核心组件，它通过工厂模式来生产<code>sqlSession</code>, sqlSession可以获得我们下面要提到的mapper, 它里面配置它的dataSource属性和configLocation属性，其中这个configLocation属性就指向了mybaits自身的配置文件。</p>
+<p>第三部分配置<code>MapperScannerConfigurer</code>, 从名字就可以看出，是一个关于mapper扫描器的配置，那它是干啥的呢？</p>
+<p>首先说映射器mapper,它是mybaits里面很重要的一部分，它由一个接口和一个xml文件（或注解）组成，需要给出相关的SQL和映射规则。它负责发送SQL去执行，并返回结果。</p>
+<p>所以要用mapper，我得先知道有哪些mapper,这些mapper都在哪里，所以需要扫描一下，这里做的事情就是关于扫描的配置。这个配置里面，<code>basePackage</code>告诉我们要去哪个包地下扫，<code>sqlSessionFactoryBeanName</code>，就是我们第二部分说的那个，<code>annotationClass</code>告诉我们只有被这个注解标注的时候，我们才去扫描。</p>
+<p><code>mybaits-config.xml</code></p>
+<p><img src="http://ww1.sinaimg.cn/large/006ImZ0Ogy1g7wo08yhcnj30jq0bbt9m.jpg" alt="58fefb017f16bd0205251c01860ce6d.png"></p>
+<p>第一部分 相关设置，这里先不重要</p>
+<p>第二部分，给我们的pojo配置些别名，这个在写sql的时候会用到</p>
+<p>第三部分，指定映射器的路径</p>
+<p>好，讲到这里，关于配置文件的东西就介绍完了，但是！还记得我们在web里面讲的<code>contextConfigLocation</code>吗，它描述的是Spring IoC的位置，那么在这里，这个位置应该是啥呢？没错，是我们的<code>spring-mybaits.xml</code>，所以记得在<code>web.xml</code>里面记得修改一下。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SSM/" rel="tag"># SSM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/11/Java%E4%B8%AD%E7%9A%84final%E5%85%B3%E9%94%AE%E5%AD%97/" rel="next" title="Java中的final关键字">
+                <i class="fa fa-chevron-left"></i> Java中的final关键字
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/14/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="prev" title="强化学习">
+                强化学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tau</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
