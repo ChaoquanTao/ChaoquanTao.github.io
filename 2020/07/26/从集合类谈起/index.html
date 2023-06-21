@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599222" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347744995" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1626,8 +1626,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599222" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599222"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347744995" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347744995"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2447,7 +2447,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <blockquote>
 <p>LinkedHashSet或LinkedHashMap的这个特性是如何实现的呢？LinkedHashMap内部是有一个双向链表的（准确说是维护一个静态内部类Entry, 继承自Node），通过这个双向链表来维护顺序。具体体现在：</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// link at the end of list</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">linkNodeLast</span><span class="params">(LinkedHashMap.Entry&lt;K,V&gt; p)</span> </span>&#123;</span><br><span class="line">        LinkedHashMap.Entry&lt;K,V&gt; last = tail;</span><br><span class="line">        tail = p;</span><br><span class="line">        <span class="keyword">if</span> (last == <span class="keyword">null</span>)</span><br><span class="line">            head = p;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            p.before = last;</span><br><span class="line">            last.after = p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// link at the end of list</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">linkNodeLast</span><span class="params">(LinkedHashMap.Entry&lt;K,V&gt; p)</span> &#123;</span><br><span class="line">        LinkedHashMap.Entry&lt;K,V&gt; last = tail;</span><br><span class="line">        tail = p;</span><br><span class="line">        <span class="keyword">if</span> (last == <span class="literal">null</span>)</span><br><span class="line">            head = p;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            p.before = last;</span><br><span class="line">            last.after = p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2463,10 +2463,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>谈谈HashMap的扩容</p>
 </blockquote>
 <p>HashMap是数组+链表的结构，它比较有趣的地方就在于它的put和扩容了。它的构造方法有以下几种：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor)</span> </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">HashMap</span><span class="params">(<span class="type">int</span> initialCapacity, <span class="type">float</span> loadFactor)</span> </span><br><span class="line"><span class="keyword">public</span> <span class="title function_">HashMap</span><span class="params">(<span class="type">int</span> initialCapacity)</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">HashMap</span><span class="params">()</span></span><br></pre></td></tr></table></figure>
 
 <p>其中，initialCapacity是”初始容量“，loadFactor是负载因子。注意这里初始容量加了引号，意味着这并不一定是真的初始容量，它会根据传入的这个initialCapacity, 计算一个离它最近的比它的二的次幂作为真实容量。具体操作如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">tableSizeFor</span><span class="params">(<span class="keyword">int</span> cap)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = cap - <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">2</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">4</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">8</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">16</span>;</span><br><span class="line">        <span class="keyword">return</span> (n &lt; <span class="number">0</span>) ? <span class="number">1</span> : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">tableSizeFor</span><span class="params">(<span class="type">int</span> cap)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> cap - <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">2</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">4</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">8</span>;</span><br><span class="line">        n |= n &gt;&gt;&gt; <span class="number">16</span>;</span><br><span class="line">        <span class="keyword">return</span> (n &lt; <span class="number">0</span>) ? <span class="number">1</span> : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>（有一说一，这个写法有点灵性）</p>
 <p>而负载因子的意思其实就是阈值，它表示当HashMap的容量达到多少时要进行一个扩容操作。</p>
@@ -2797,8 +2797,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599222')
-      volantis.js('/js/message.js?time=1687347599222', () => {
+      volantis.css('/css/message.css?time=1687347744995')
+      volantis.js('/js/message.js?time=1687347744995', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2843,8 +2843,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599222')
-      volantis.js('/js/message.js?time=1687347599222', () => {
+      volantis.css('/css/message.css?time=1687347744995')
+      volantis.js('/js/message.js?time=1687347744995', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2903,8 +2903,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599222')
-      volantis.js('/js/message.js?time=1687347599222', () => {
+      volantis.css('/css/message.css?time=1687347744995')
+      volantis.js('/js/message.js?time=1687347744995', () => {
         hideMessage(done);
       });
     } else {
@@ -2950,19 +2950,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599222")
+        volantis.js("/js/plugins/sites.js?time=1687347744995")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599222")
+        volantis.js("/js/plugins/friends.js?time=1687347744995")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599222")
+        volantis.js("/js/plugins/contributors.js?time=1687347744995")
       }
     
   };
@@ -3051,7 +3051,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599222.js"></script>
+<script src="/js/app.js?time=1687347744995.js"></script>
 
 
 <!-- optional -->
@@ -3064,7 +3064,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599222");
+    return volantis.js("/js/search/hexo.js?time=1687347744995");
   }
 
   function loadSearchService() {
@@ -3172,7 +3172,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599222').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347744995').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

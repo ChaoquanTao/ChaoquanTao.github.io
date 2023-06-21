@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599233" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745005" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599233" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599233"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745005" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745005"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2589,17 +2589,17 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 </ol>
 <ul>
 <li><p><code>newCachedThreadPool</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">0</span>, Integer.MAX_VALUE,</span><br><span class="line">                                      <span class="number">60L</span>, TimeUnit.SECONDS,</span><br><span class="line">                                      <span class="keyword">new</span> SynchronousQueue&lt;Runnable&gt;());</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">0</span>, Integer.MAX_VALUE,</span><br><span class="line">                                      <span class="number">60L</span>, TimeUnit.SECONDS,</span><br><span class="line">                                      <span class="keyword">new</span> <span class="title class_">SynchronousQueue</span>&lt;Runnable&gt;());</span><br></pre></td></tr></table></figure>
 
 <p>核心池0，最大池<code>Integer.MAX_VALUE</code>,同步队列大小为1，所以相当于是每次都创建临时线程去工作的。</p>
 </li>
 <li><p><code>newSingleThreadExecutor</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> FinalizableDelegatedExecutorService</span><br><span class="line">            (<span class="keyword">new</span> ThreadPoolExecutor(<span class="number">1</span>, <span class="number">1</span>,</span><br><span class="line">                                    <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                    <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;()));</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">FinalizableDelegatedExecutorService</span></span><br><span class="line">            (<span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">1</span>, <span class="number">1</span>,</span><br><span class="line">                                    <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                    <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;()));</span><br></pre></td></tr></table></figure>
 
 <p>核心池1，最大池1，但是阻塞队列是无界的，<code>LinkedBlockingQueue</code>默认大小是<code>Integer.MAX_VALUE</code>,所以也容易造成OOM.</p>
 </li>
 <li><p><code>newFixedThreadPool</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(nThreads, nThreads,</span><br><span class="line">                                      <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                      <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;());</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                      <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                      <span class="keyword">new</span> <span class="title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br></pre></td></tr></table></figure>
 
 <p>道理同上。</p>
 </li>
@@ -3579,8 +3579,8 @@ RDB持久...</p>
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599233')
-      volantis.js('/js/message.js?time=1687347599233', () => {
+      volantis.css('/css/message.css?time=1687347745005')
+      volantis.js('/js/message.js?time=1687347745005', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -3625,8 +3625,8 @@ RDB持久...</p>
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599233')
-      volantis.js('/js/message.js?time=1687347599233', () => {
+      volantis.css('/css/message.css?time=1687347745005')
+      volantis.js('/js/message.js?time=1687347745005', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -3685,8 +3685,8 @@ RDB持久...</p>
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599233')
-      volantis.js('/js/message.js?time=1687347599233', () => {
+      volantis.css('/css/message.css?time=1687347745005')
+      volantis.js('/js/message.js?time=1687347745005', () => {
         hideMessage(done);
       });
     } else {
@@ -3732,19 +3732,19 @@ RDB持久...</p>
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599233")
+        volantis.js("/js/plugins/sites.js?time=1687347745005")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599233")
+        volantis.js("/js/plugins/friends.js?time=1687347745005")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599233")
+        volantis.js("/js/plugins/contributors.js?time=1687347745005")
       }
     
   };
@@ -3833,7 +3833,7 @@ RDB持久...</p>
 
 
 
-<script src="/js/app.js?time=1687347599233.js"></script>
+<script src="/js/app.js?time=1687347745005.js"></script>
 
 
 <!-- optional -->
@@ -3846,7 +3846,7 @@ RDB持久...</p>
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599233");
+    return volantis.js("/js/search/hexo.js?time=1687347745005");
   }
 
   function loadSearchService() {
@@ -3954,7 +3954,7 @@ RDB持久...</p>
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599233').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745005').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

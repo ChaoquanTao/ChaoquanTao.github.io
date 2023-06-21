@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599280" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745052" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599280" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599280"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745052" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745052"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2432,7 +2432,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <h4 id="修饰方法"><a href="#修饰方法" class="headerlink" title="修饰方法"></a>修饰方法</h4><p>方法不可被覆盖</p>
 <h4 id="修饰类"><a href="#修饰类" class="headerlink" title="修饰类"></a>修饰类</h4><p>类不可被继承</p>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>我们反编译如下代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Tiger</span>  </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name =<span class="string">&quot;tiget&quot;</span> ;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;tiger is running&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Tiger</span>  &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span><span class="string">&quot;tiget&quot;</span> ;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;tiger is running&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2770,8 +2770,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599280')
-      volantis.js('/js/message.js?time=1687347599280', () => {
+      volantis.css('/css/message.css?time=1687347745052')
+      volantis.js('/js/message.js?time=1687347745052', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2816,8 +2816,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599280')
-      volantis.js('/js/message.js?time=1687347599280', () => {
+      volantis.css('/css/message.css?time=1687347745052')
+      volantis.js('/js/message.js?time=1687347745052', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2876,8 +2876,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599280')
-      volantis.js('/js/message.js?time=1687347599280', () => {
+      volantis.css('/css/message.css?time=1687347745052')
+      volantis.js('/js/message.js?time=1687347745052', () => {
         hideMessage(done);
       });
     } else {
@@ -2923,19 +2923,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599280")
+        volantis.js("/js/plugins/sites.js?time=1687347745052")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599280")
+        volantis.js("/js/plugins/friends.js?time=1687347745052")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599280")
+        volantis.js("/js/plugins/contributors.js?time=1687347745052")
       }
     
   };
@@ -3024,7 +3024,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599280.js"></script>
+<script src="/js/app.js?time=1687347745052.js"></script>
 
 
 <!-- optional -->
@@ -3037,7 +3037,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599280");
+    return volantis.js("/js/search/hexo.js?time=1687347745052");
   }
 
   function loadSearchService() {
@@ -3145,7 +3145,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599280').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745052').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

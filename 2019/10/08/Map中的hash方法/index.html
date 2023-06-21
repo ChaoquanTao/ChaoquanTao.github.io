@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599287" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745058" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599287" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599287"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745058" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745058"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2428,39 +2428,39 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <div id="post-body" itemprop="articleBody">
     <p>在<code>HashMap</code>,<code>HashTable</code>和<code>ConcurrentHashMap</code>中，<code>hash()</code>方法主要是拿来做定位，即通过对key进行散列，从而确定这个entry的存储位置。但是为了避免发生碰撞，java中的hash方法还是有许多细节操作的。</p>
 <h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a><code>HashMap</code></h3><h4 id="jdk-7"><a href="#jdk-7" class="headerlink" title="jdk 7"></a>jdk 7</h4><p>代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h = hashSeed;</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> != h &amp;&amp; k <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">            <span class="keyword">return</span> sun.misc.Hashing.stringHash32((String) k);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        h ^= k.hashCode();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// This function ensures that hashCodes that differ only by</span></span><br><span class="line">        <span class="comment">// constant multiples at each bit position have a bounded</span></span><br><span class="line">        <span class="comment">// number of collisions (approximately 8 at default load factor).</span></span><br><span class="line">        h ^= (h &gt;&gt;&gt; <span class="number">20</span>) ^ (h &gt;&gt;&gt; <span class="number">12</span>);</span><br><span class="line">        <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">7</span>) ^ (h &gt;&gt;&gt; <span class="number">4</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object k)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> hashSeed;</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> != h &amp;&amp; k <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">            <span class="keyword">return</span> sun.misc.Hashing.stringHash32((String) k);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        h ^= k.hashCode();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// This function ensures that hashCodes that differ only by</span></span><br><span class="line">        <span class="comment">// constant multiples at each bit position have a bounded</span></span><br><span class="line">        <span class="comment">// number of collisions (approximately 8 at default load factor).</span></span><br><span class="line">        h ^= (h &gt;&gt;&gt; <span class="number">20</span>) ^ (h &gt;&gt;&gt; <span class="number">12</span>);</span><br><span class="line">        <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">7</span>) ^ (h &gt;&gt;&gt; <span class="number">4</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">indexFor</span><span class="params">(<span class="keyword">int</span> h, <span class="keyword">int</span> length)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// assert Integer.bitCount(length) == 1 : &quot;length must be a non-zero power of 2&quot;;</span></span><br><span class="line">        <span class="keyword">return</span> h &amp; (length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="type">int</span> <span class="title function_">indexFor</span><span class="params">(<span class="type">int</span> h, <span class="type">int</span> length)</span> &#123;</span><br><span class="line">        <span class="comment">// assert Integer.bitCount(length) == 1 : &quot;length must be a non-zero power of 2&quot;;</span></span><br><span class="line">        <span class="keyword">return</span> h &amp; (length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>上述代码中，<code>hash()</code>方法负责生成哈希码，<code>indexFor()</code>方法负责确定地址。可以看到，哈希码的生成主要通过随机种子和<code>hashCode</code>进行异或，后面的两行代码是为了进行混淆。因为最终索引（存储地址）是通过哈希码取模数组长度得到的，这意味着只有有限比特位（length-1 个比特位）会影响到最终结果，混淆的作用就是为了尽力让哈希码的每个位置在确定索引时都发挥作用。</p>
 <p>说到这里，请留意下<code>hashCode</code>方法，这是Object类的一个native方法，返回的是对象的地址，在<code>HashMap</code>中被重写了</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     <span class="keyword">return</span> Objects.hashCode(getKey()) ^ Objects.hashCode(getValue());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">     <span class="keyword">return</span> Objects.hashCode(getKey()) ^ Objects.hashCode(getValue());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>当然equals方法也被重写了，这里就不再赘述。</p>
 <h4 id="jdk-8"><a href="#jdk-8" class="headerlink" title="jdk 8"></a>jdk 8</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static final int hash(Object key) &#123;</span><br><span class="line">        int h;</span><br><span class="line">        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>直接拿hashCode和高16位异或。</p>
 <h3 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h3><h4 id="jdk-7-1"><a href="#jdk-7-1" class="headerlink" title="jdk 7"></a>jdk 7</h4><p>相比于HashMap，HashTable是线程安全的，而且它的hash方法也显得很朴实无华，没有添加扰动，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object k)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// hashSeed will be zero if alternative hashing is disabled.</span></span><br><span class="line">        <span class="keyword">return</span> hashSeed ^ k.hashCode();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object k)</span> &#123;</span><br><span class="line">        <span class="comment">// hashSeed will be zero if alternative hashing is disabled.</span></span><br><span class="line">        <span class="keyword">return</span> hashSeed ^ k.hashCode();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>它没有indexFor方法，取而代之的是一句代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> index = (hash &amp; <span class="number">0x7FFFFFFF</span>) % tab.length;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> (hash &amp; <span class="number">0x7FFFFFFF</span>) % tab.length;</span><br></pre></td></tr></table></figure>
 
 <p>为什么没加扰动呢，我是这么考虑的。</p>
 <blockquote>
 <p>从性能角度考虑，<code>HashMap</code>采用2的次幂作为容量有一部分是出于性能考虑，使用2的次幂后，无论是扩容还是<code>indexFor</code>,都可以通过位运算加快运算速度。</p>
 <p>而<code>HashTable</code>通过<code>synchronized</code>关键字来保证线程安全，它在性能上已经落后<code>HashMap</code>了，所以对2的次幂要求不是很高。再者，<code>HashTable</code>初始容量为11，按照$2n+1$扩容，容量一直是素数，而这个素数恰好能使得在取模的过程中让key分散均匀一些，所以也就没有加扰动。</p>
 </blockquote>
-<h4 id="jdk-8-1"><a href="#jdk-8-1" class="headerlink" title="jdk 8"></a>jdk 8</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> hash = key.hashCode();</span><br><span class="line"><span class="keyword">int</span> index = (hash &amp; <span class="number">0x7FFFFFFF</span>) % tab.length;</span><br></pre></td></tr></table></figure>
+<h4 id="jdk-8-1"><a href="#jdk-8-1" class="headerlink" title="jdk 8"></a>jdk 8</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> key.hashCode();</span><br><span class="line"><span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> (hash &amp; <span class="number">0x7FFFFFFF</span>) % tab.length;</span><br></pre></td></tr></table></figure>
 
 <p>分别将hash方法和indexFor方法变成了两句话。（可以看到1.8中HashMap和HashTable都摒弃了hashSeed.</p>
-<h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a><code>ConcurrentHashMap</code></h3><h4 id="jdk-7-2"><a href="#jdk-7-2" class="headerlink" title="jdk 7"></a>jdk 7</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> h = hashSeed;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((<span class="number">0</span> != h) &amp;&amp; (k <span class="keyword">instanceof</span> String)) &#123;</span><br><span class="line">            <span class="keyword">return</span> sun.misc.Hashing.stringHash32((String) k);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        h ^= k.hashCode();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Spread bits to regularize both segment and index locations,</span></span><br><span class="line">        <span class="comment">// using variant of single-word Wang/Jenkins hash.</span></span><br><span class="line">        h += (h &lt;&lt;  <span class="number">15</span>) ^ <span class="number">0xffffcd7d</span>;</span><br><span class="line">        h ^= (h &gt;&gt;&gt; <span class="number">10</span>);</span><br><span class="line">        h += (h &lt;&lt;   <span class="number">3</span>);</span><br><span class="line">        h ^= (h &gt;&gt;&gt;  <span class="number">6</span>);</span><br><span class="line">        h += (h &lt;&lt;   <span class="number">2</span>) + (h &lt;&lt; <span class="number">14</span>);</span><br><span class="line">        <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a><code>ConcurrentHashMap</code></h3><h4 id="jdk-7-2"><a href="#jdk-7-2" class="headerlink" title="jdk 7"></a>jdk 7</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object k)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> hashSeed;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((<span class="number">0</span> != h) &amp;&amp; (k <span class="keyword">instanceof</span> String)) &#123;</span><br><span class="line">            <span class="keyword">return</span> sun.misc.Hashing.stringHash32((String) k);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        h ^= k.hashCode();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Spread bits to regularize both segment and index locations,</span></span><br><span class="line">        <span class="comment">// using variant of single-word Wang/Jenkins hash.</span></span><br><span class="line">        h += (h &lt;&lt;  <span class="number">15</span>) ^ <span class="number">0xffffcd7d</span>;</span><br><span class="line">        h ^= (h &gt;&gt;&gt; <span class="number">10</span>);</span><br><span class="line">        h += (h &lt;&lt;   <span class="number">3</span>);</span><br><span class="line">        h ^= (h &gt;&gt;&gt;  <span class="number">6</span>);</span><br><span class="line">        h += (h &lt;&lt;   <span class="number">2</span>) + (h &lt;&lt; <span class="number">14</span>);</span><br><span class="line">        <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>和<code>HashMap</code>中做法差不多，只不过加的不是同一种扰动。</p>
-<h4 id="jdk-8-2"><a href="#jdk-8-2" class="headerlink" title="jdk 8"></a>jdk 8</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">spread</span><span class="params">(<span class="keyword">int</span> h)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (h ^ (h &gt;&gt;&gt; <span class="number">16</span>)) &amp; HASH_BITS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="jdk-8-2"><a href="#jdk-8-2" class="headerlink" title="jdk 8"></a>jdk 8</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">spread</span><span class="params">(<span class="type">int</span> h)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (h ^ (h &gt;&gt;&gt; <span class="number">16</span>)) &amp; HASH_BITS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>愈发简洁，参考1.8中的HashMap,和高16位异或，然后与了HASH_BITS,主要是为了防止出现负数。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HASH_BITS = <span class="number">0x7fffffff</span>; <span class="comment">// usable bits of normal node hash</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">HASH_BITS</span> <span class="operator">=</span> <span class="number">0x7fffffff</span>; <span class="comment">// usable bits of normal node hash</span></span><br></pre></td></tr></table></figure>
 
 
 
@@ -2795,8 +2795,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599287')
-      volantis.js('/js/message.js?time=1687347599287', () => {
+      volantis.css('/css/message.css?time=1687347745058')
+      volantis.js('/js/message.js?time=1687347745058', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2841,8 +2841,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599287')
-      volantis.js('/js/message.js?time=1687347599287', () => {
+      volantis.css('/css/message.css?time=1687347745058')
+      volantis.js('/js/message.js?time=1687347745058', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2901,8 +2901,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599287')
-      volantis.js('/js/message.js?time=1687347599287', () => {
+      volantis.css('/css/message.css?time=1687347745058')
+      volantis.js('/js/message.js?time=1687347745058', () => {
         hideMessage(done);
       });
     } else {
@@ -2948,19 +2948,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599287")
+        volantis.js("/js/plugins/sites.js?time=1687347745058")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599287")
+        volantis.js("/js/plugins/friends.js?time=1687347745058")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599287")
+        volantis.js("/js/plugins/contributors.js?time=1687347745058")
       }
     
   };
@@ -3049,7 +3049,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599287.js"></script>
+<script src="/js/app.js?time=1687347745058.js"></script>
 
 
 <!-- optional -->
@@ -3062,7 +3062,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599287");
+    return volantis.js("/js/search/hexo.js?time=1687347745058");
   }
 
   function loadSearchService() {
@@ -3170,7 +3170,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599287').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745058').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599224" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347744997" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599224" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599224"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347744997" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347744997"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2434,17 +2434,17 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>众所周知（不知道也没关系），创建代理对象有一种专门的类叫<code>ProxyCreator</code>, 那么如果是基于注解创建的话，这个类叫做<code>AnnotationAwareAspectJAutoProxyCreator</code>, 如果去看它的继承关系你会发现，它实现了<code>BeanPostProcessor</code>接口，这个接口我们在上篇文章中也提到了：<code>Bean</code>的实例化主要经过三个方法：<code>createBeanInstance</code>,<code>populateBean</code>,<code>initializeBean</code>.其中最后一个方法就是用来处理各种回调，其中就包括<code>BeanPostProcessor</code>,那我们就接着上一节讲的<code>BeanPostProcessor</code>的回调来继续讲。</p>
 <h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><p>先到<code>BeanPostProcessor</code>的后置处理这里，</p>
 <p><code>AbstractAutowireCapableBeanFactory</code>  1633行</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mbd == <span class="keyword">null</span> || !mbd.isSynthetic()) &#123;</span><br><span class="line">			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mbd == <span class="literal">null</span> || !mbd.isSynthetic()) &#123;</span><br><span class="line">			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 <p><code>applyBeanPostProcessorsAfterInitialization</code>:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">applyBeanPostProcessorsAfterInitialization</span><span class="params">(Object existingBean, String beanName)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line"></span><br><span class="line">		Object result = existingBean;</span><br><span class="line">		<span class="keyword">for</span> (BeanPostProcessor beanProcessor : getBeanPostProcessors()) &#123;</span><br><span class="line">			result = beanProcessor.postProcessAfterInitialization(result, beanName);</span><br><span class="line">			<span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> result;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">applyBeanPostProcessorsAfterInitialization</span><span class="params">(Object existingBean, String beanName)</span></span><br><span class="line">			<span class="keyword">throws</span> BeansException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> existingBean;</span><br><span class="line">		<span class="keyword">for</span> (BeanPostProcessor beanProcessor : getBeanPostProcessors()) &#123;</span><br><span class="line">			result = beanProcessor.postProcessAfterInitialization(result, beanName);</span><br><span class="line">			<span class="keyword">if</span> (result == <span class="literal">null</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> result;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 <p>进入到<code>AbstactAutoProxyCreator</code>,已经发现了<code>ProxyCreator</code>的影子了有木有？：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (bean != <span class="keyword">null</span>) &#123;</span><br><span class="line">			Object cacheKey = getCacheKey(bean.getClass(), beanName);</span><br><span class="line">			<span class="keyword">if</span> (!<span class="keyword">this</span>.earlyProxyReferences.contains(cacheKey)) &#123;</span><br><span class="line">				<span class="keyword">return</span> wrapIfNecessary(bean, beanName, cacheKey);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> bean;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">		<span class="keyword">if</span> (bean != <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="type">Object</span> <span class="variable">cacheKey</span> <span class="operator">=</span> getCacheKey(bean.getClass(), beanName);</span><br><span class="line">			<span class="keyword">if</span> (!<span class="built_in">this</span>.earlyProxyReferences.contains(cacheKey)) &#123;</span><br><span class="line">				<span class="keyword">return</span> wrapIfNecessary(bean, beanName, cacheKey);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> bean;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2459,11 +2459,11 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 <p>来到Class <code>ProxyFactory</code>:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">(ClassLoader classLoader)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> createAopProxy().getProxy(classLoader);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">getProxy</span><span class="params">(ClassLoader classLoader)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> createAopProxy().getProxy(classLoader);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>从名字就可以看出来，创建<code>AopProxy</code></p>
 <p><code>createAopProxy()</code>:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">synchronized</span> AopProxy <span class="title">createAopProxy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (!<span class="keyword">this</span>.active) &#123;</span><br><span class="line">			activate();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> getAopProxyFactory().createAopProxy(<span class="keyword">this</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">synchronized</span> AopProxy <span class="title function_">createAopProxy</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (!<span class="built_in">this</span>.active) &#123;</span><br><span class="line">			activate();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> getAopProxyFactory().createAopProxy(<span class="built_in">this</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2471,7 +2471,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p><img src="https://s1.ax1x.com/2020/03/21/8WNJTs.png" alt="8WNJTs.png"></p>
 <p>从这里就可以看出，根据<code>targetClass</code>有没有接口之类的，决定用Jdk动态代理还是<code>Cglib</code>.</p>
 <p>至此，<code>createProxy()</code>已经完成，我们再回到上面<code>ProxyFactory</code>的<code>getProxy()</code>方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">(ClassLoader classLoader)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> createAopProxy().getProxy(classLoader);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">getProxy</span><span class="params">(ClassLoader classLoader)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> createAopProxy().getProxy(classLoader);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>继续看下<code>jdk</code>代理的<code>getProxy()</code>做了什么：</p>
 <p><img src="https://s1.ax1x.com/2020/03/21/8WjNLt.png" alt="8WjNLt.png"></p>
@@ -2817,8 +2817,8 @@ List底下有Vector, ArrayList, LinkedList. V...</p>
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599224')
-      volantis.js('/js/message.js?time=1687347599224', () => {
+      volantis.css('/css/message.css?time=1687347744997')
+      volantis.js('/js/message.js?time=1687347744997', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2863,8 +2863,8 @@ List底下有Vector, ArrayList, LinkedList. V...</p>
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599224')
-      volantis.js('/js/message.js?time=1687347599224', () => {
+      volantis.css('/css/message.css?time=1687347744997')
+      volantis.js('/js/message.js?time=1687347744997', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2923,8 +2923,8 @@ List底下有Vector, ArrayList, LinkedList. V...</p>
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599224')
-      volantis.js('/js/message.js?time=1687347599224', () => {
+      volantis.css('/css/message.css?time=1687347744997')
+      volantis.js('/js/message.js?time=1687347744997', () => {
         hideMessage(done);
       });
     } else {
@@ -2970,19 +2970,19 @@ List底下有Vector, ArrayList, LinkedList. V...</p>
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599224")
+        volantis.js("/js/plugins/sites.js?time=1687347744997")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599224")
+        volantis.js("/js/plugins/friends.js?time=1687347744997")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599224")
+        volantis.js("/js/plugins/contributors.js?time=1687347744997")
       }
     
   };
@@ -3071,7 +3071,7 @@ List底下有Vector, ArrayList, LinkedList. V...</p>
 
 
 
-<script src="/js/app.js?time=1687347599224.js"></script>
+<script src="/js/app.js?time=1687347744997.js"></script>
 
 
 <!-- optional -->
@@ -3084,7 +3084,7 @@ List底下有Vector, ArrayList, LinkedList. V...</p>
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599224");
+    return volantis.js("/js/search/hexo.js?time=1687347744997");
   }
 
   function loadSearchService() {
@@ -3192,7 +3192,7 @@ List底下有Vector, ArrayList, LinkedList. V...</p>
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599224').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347744997').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

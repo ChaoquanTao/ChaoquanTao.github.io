@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599260" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745032" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599260" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599260"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745032" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745032"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2430,11 +2430,11 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>关于Spring容器，有一个最基本的接口，叫做<code>BeanFacotory</code>, 它提供了容器最基本的一些特性。所有的容器都是基于它的。还有一个较为高级一点的容器接口，叫做<code>ApplicationContext</code>，它在<code>BeanFactory</code>的基础上，又提供了其他一些高级特性，比如访问资源。        </p>
 <p>本文以<code>ApplicationContext</code>的一个具体实现类<code>FileSystemXmlApplicationContext</code>为例，探究spring容器的初始化过程。先来看下它的主要代码。</p>
 <p>显示构造函数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileSystemXmlApplicationContext</span><span class="params">(String[] configLocations, <span class="keyword">boolean</span> refresh, ApplicationContext parent)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">super</span>(parent);</span><br><span class="line">		setConfigLocations(configLocations);</span><br><span class="line">		<span class="keyword">if</span> (refresh) &#123;</span><br><span class="line">			refresh();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">FileSystemXmlApplicationContext</span><span class="params">(String[] configLocations, <span class="type">boolean</span> refresh, ApplicationContext parent)</span></span><br><span class="line">			<span class="keyword">throws</span> BeansException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">super</span>(parent);</span><br><span class="line">		setConfigLocations(configLocations);</span><br><span class="line">		<span class="keyword">if</span> (refresh) &#123;</span><br><span class="line">			refresh();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这里的<code>refresh()</code>方法标志着容器初始化的启动，也是我们后面分析的重点。</p>
 <p>还有一个方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Resource <span class="title">getResourceByPath</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (path != <span class="keyword">null</span> &amp;&amp; path.startsWith(<span class="string">&quot;/&quot;</span>)) &#123;</span><br><span class="line">			path = path.substring(<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> FileSystemResource(path);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Resource <span class="title function_">getResourceByPath</span><span class="params">(String path)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (path != <span class="literal">null</span> &amp;&amp; path.startsWith(<span class="string">&quot;/&quot;</span>)) &#123;</span><br><span class="line">			path = path.substring(<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">FileSystemResource</span>(path);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>它会在启动容器的过程中调用。</p>
 <p>先看下<code>FileSystemXmlApplicationContext</code>的继承关系</p>
@@ -2448,7 +2448,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p><strong><code>AbstractRefreshableApplicationContext</code></strong></p>
 <p><img src="https://s2.ax1x.com/2019/11/02/KLhRSS.png" alt="KLhRSS.png"></p>
 <p>继续来看<code>createBeanFactory()</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> DefaultListableBeanFactory <span class="title">createBeanFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> DefaultListableBeanFactory(getInternalParentBeanFactory());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> DefaultListableBeanFactory <span class="title function_">createBeanFactory</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DefaultListableBeanFactory</span>(getInternalParentBeanFactory());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>返回一个<code>DefaultListableBeanFactory</code>容器</p>
 <p>再看<code>loadBeanDefinitions()</code>, 它同样是个抽象方法，它在<code>AbstractXmlApplicationContext</code>中实现</p>
@@ -2471,7 +2471,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>总的来说，做了两件事。目的是初始化容器，首先你得有个容器，比如桶，其次你得有水，那么就得找到水在哪，上面主要描述的就是一个找水的过程。</p>
 <p>起源于refresh,但是要找到水，还需要靠<code>Reader</code></p>
 <p>相当于下面这个过程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassPahtResource res = <span class="keyword">new</span> ClassPathResouce(<span class="string">&quot;bean.xml&quot;</span>) ;</span><br><span class="line">DefaultListableBeanFactory factory = <span class="keyword">new</span> DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader = <span class="keyword">new</span> XmlBeanDefinionReader(factory);</span><br><span class="line">reader.loadBeanDifinition(res) ;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ClassPahtResource</span> <span class="variable">res</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassPathResouce</span>(<span class="string">&quot;bean.xml&quot;</span>) ;</span><br><span class="line"><span class="type">DefaultListableBeanFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefaultListableBeanFactory</span>();</span><br><span class="line"><span class="type">XmlBeanDefinitionReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">XmlBeanDefinionReader</span>(factory);</span><br><span class="line">reader.loadBeanDifinition(res) ;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2814,8 +2814,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599260')
-      volantis.js('/js/message.js?time=1687347599260', () => {
+      volantis.css('/css/message.css?time=1687347745032')
+      volantis.js('/js/message.js?time=1687347745032', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2860,8 +2860,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599260')
-      volantis.js('/js/message.js?time=1687347599260', () => {
+      volantis.css('/css/message.css?time=1687347745032')
+      volantis.js('/js/message.js?time=1687347745032', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2920,8 +2920,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599260')
-      volantis.js('/js/message.js?time=1687347599260', () => {
+      volantis.css('/css/message.css?time=1687347745032')
+      volantis.js('/js/message.js?time=1687347745032', () => {
         hideMessage(done);
       });
     } else {
@@ -2967,19 +2967,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599260")
+        volantis.js("/js/plugins/sites.js?time=1687347745032")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599260")
+        volantis.js("/js/plugins/friends.js?time=1687347745032")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599260")
+        volantis.js("/js/plugins/contributors.js?time=1687347745032")
       }
     
   };
@@ -3068,7 +3068,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599260.js"></script>
+<script src="/js/app.js?time=1687347745032.js"></script>
 
 
 <!-- optional -->
@@ -3081,7 +3081,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599260");
+    return volantis.js("/js/search/hexo.js?time=1687347745032");
   }
 
   function loadSearchService() {
@@ -3189,7 +3189,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599260').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745032').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

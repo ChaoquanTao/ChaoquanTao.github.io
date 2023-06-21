@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599183" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347744955" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1626,8 +1626,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599183" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599183"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347744955" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347744955"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2478,7 +2478,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <li><code>handle 1:0</code>: 指定队列的处理标识符（handle），这里是1:0。该标识符用于唯一标识该队列，第一个数字可以随意指定，第二个数字为0表示队列，也可以简写为1:。</li>
 <li><code>htb</code>: 指定队列调度器的类型为”Hierarchical Token Bucket”（层次令牌桶）类型，它是一种流量调度算法。</li>
 </ol>
-<h3 id="case-2-添加一个简单class"><a href="#case-2-添加一个简单class" class="headerlink" title="case 2: 添加一个简单class"></a>case 2: 添加一个简单class</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tc class add    \     ①</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">    dev eth0     \   ②</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">    parent 1:1   \   ③</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">    classid 1:6  \   ④</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">    htb          \   ⑤</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">    rate 256kbit \   ⑥</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">    ceil 512kbit     :seven</span></span><br></pre></td></tr></table></figure>
+<h3 id="case-2-添加一个简单class"><a href="#case-2-添加一个简单class" class="headerlink" title="case 2: 添加一个简单class"></a>case 2: 添加一个简单class</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tc class add    \     ①</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">   dev eth0     \   ②</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">   parent 1:1   \   ③</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">   classid 1:6  \   ④</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">   htb          \   ⑤</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">   rate 256kbit \   ⑥</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">   ceil 512kbit     :seven</span></span><br></pre></td></tr></table></figure>
 
 <ol>
 <li><code>tc class add</code>: 添加一个类别规则。</li>
@@ -2505,7 +2505,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>   (3) 添加了另一个过滤器规则，也应用于根队列的子类别10:1。它使用prio优先级为1，并使用u32分类器来检查源端口是否为80的IP数据包。如果匹配成功，该数据包将被发送到flowid为10:1的子类别进行进一步处理</p>
 <p> （4）添加了第三个过滤器规则，应用于根队列的子类别10:2。它使用prio优先级为2，并将所有不符合第二条和第三条过滤器郭泽的数据包发送到flowid为10:2的子类别中进行处理。</p>
 <p>上面的prio 1或prio 2决定了数据包被过滤器处理的顺序，因为prio 1的优先级高于prio 2, 所以当数据包来临时，prio 1的过滤器会先对数据包进行匹配，如果匹配不上，才会轮到prio 2所指的过滤器进行处理。</p>
-<h3 id="case-5-为队列添加filter-policer方式"><a href="#case-5-为队列添加filter-policer方式" class="headerlink" title="case 5: 为队列添加filter (policer方式)"></a>case 5: 为队列添加filter (policer方式)</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> tc filter add               \ 							  (1)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  dev eth0                 \  （2）</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  parent 1:0               \   (3)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  protocol ip              \  (4)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  prio 5                   \  (5)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  u32                      \  (6)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  match ip port 22 0xffff  \  (7)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  match ip tos 0x10 0xff   \  (8)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  flowid 1:6               \  (9)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  police                   \  (10)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  rate 32000bps            \  (11)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  burst 10240              \  (12)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  mpu 0                    \  (13)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">                  action drop/<span class="built_in">continue</span>        (14)</span></span><br><span class="line">      </span><br></pre></td></tr></table></figure>
+<h3 id="case-5-为队列添加filter-policer方式"><a href="#case-5-为队列添加filter-policer方式" class="headerlink" title="case 5: 为队列添加filter (policer方式)"></a>case 5: 为队列添加filter (policer方式)</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">tc filter add               \ 							  (1)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 dev eth0                 \  （2）</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 parent 1:0               \   (3)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 protocol ip              \  (4)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 prio 5                   \  (5)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 u32                      \  (6)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 match ip port 22 0xffff  \  (7)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 match ip tos 0x10 0xff   \  (8)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 flowid 1:6               \  (9)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 police                   \  (10)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 rate 32000bps            \  (11)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 burst 10240              \  (12)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 mpu 0                    \  (13)</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">                 action drop/continue        (14)</span></span><br><span class="line">      </span><br></pre></td></tr></table></figure>
 
 <ol>
 <li><code>tc filter add</code>: 添加一个过滤器规则。</li>
@@ -2844,8 +2844,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599183')
-      volantis.js('/js/message.js?time=1687347599184', () => {
+      volantis.css('/css/message.css?time=1687347744955')
+      volantis.js('/js/message.js?time=1687347744955', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2890,8 +2890,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599183')
-      volantis.js('/js/message.js?time=1687347599184', () => {
+      volantis.css('/css/message.css?time=1687347744955')
+      volantis.js('/js/message.js?time=1687347744955', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2950,8 +2950,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599183')
-      volantis.js('/js/message.js?time=1687347599184', () => {
+      volantis.css('/css/message.css?time=1687347744955')
+      volantis.js('/js/message.js?time=1687347744955', () => {
         hideMessage(done);
       });
     } else {
@@ -2997,19 +2997,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599184")
+        volantis.js("/js/plugins/sites.js?time=1687347744955")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599184")
+        volantis.js("/js/plugins/friends.js?time=1687347744955")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599184")
+        volantis.js("/js/plugins/contributors.js?time=1687347744955")
       }
     
   };
@@ -3098,7 +3098,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599183.js"></script>
+<script src="/js/app.js?time=1687347744955.js"></script>
 
 
 <!-- optional -->
@@ -3111,7 +3111,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599184");
+    return volantis.js("/js/search/hexo.js?time=1687347744955");
   }
 
   function loadSearchService() {
@@ -3219,7 +3219,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599184').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347744955').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

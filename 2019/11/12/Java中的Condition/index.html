@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599252" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745025" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599252" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599252"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745025" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745025"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2436,7 +2436,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>是不是和<code>Object</code>中定义的方法很类似。</p>
 <h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p><code>ConditionObject</code>类实现了<code>Condition</code>接口，作为一个AQS的内部类，所以它的创建依靠于<code>Lock</code>对象，通过<code>newCondition()</code>方法创建它。</p>
 <p>使用也十分简单，但是记得使用时要加锁。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock() ;</span><br><span class="line">Condition condition = lock.newCondition();</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程A</span></span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    condition.await();</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程B</span></span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    condition.signal();</span><br><span class="line">&#125;<span class="keyword">catch</span>(InterruptedException e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>() ;</span><br><span class="line"><span class="type">Condition</span> <span class="variable">condition</span> <span class="operator">=</span> lock.newCondition();</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程A</span></span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    condition.await();</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程B</span></span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    condition.signal();</span><br><span class="line">&#125;<span class="keyword">catch</span>(InterruptedException e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">    lock.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2782,8 +2782,8 @@ Object的wait()和notify()这个算是比较原始的一种等待/唤醒机制�
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599252')
-      volantis.js('/js/message.js?time=1687347599252', () => {
+      volantis.css('/css/message.css?time=1687347745025')
+      volantis.js('/js/message.js?time=1687347745025', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2828,8 +2828,8 @@ Object的wait()和notify()这个算是比较原始的一种等待/唤醒机制�
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599252')
-      volantis.js('/js/message.js?time=1687347599252', () => {
+      volantis.css('/css/message.css?time=1687347745025')
+      volantis.js('/js/message.js?time=1687347745025', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2888,8 +2888,8 @@ Object的wait()和notify()这个算是比较原始的一种等待/唤醒机制�
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599252')
-      volantis.js('/js/message.js?time=1687347599252', () => {
+      volantis.css('/css/message.css?time=1687347745025')
+      volantis.js('/js/message.js?time=1687347745025', () => {
         hideMessage(done);
       });
     } else {
@@ -2935,19 +2935,19 @@ Object的wait()和notify()这个算是比较原始的一种等待/唤醒机制�
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599252")
+        volantis.js("/js/plugins/sites.js?time=1687347745025")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599252")
+        volantis.js("/js/plugins/friends.js?time=1687347745025")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599252")
+        volantis.js("/js/plugins/contributors.js?time=1687347745025")
       }
     
   };
@@ -3036,7 +3036,7 @@ Object的wait()和notify()这个算是比较原始的一种等待/唤醒机制�
 
 
 
-<script src="/js/app.js?time=1687347599252.js"></script>
+<script src="/js/app.js?time=1687347745025.js"></script>
 
 
 <!-- optional -->
@@ -3049,7 +3049,7 @@ Object的wait()和notify()这个算是比较原始的一种等待/唤醒机制�
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599252");
+    return volantis.js("/js/search/hexo.js?time=1687347745025");
   }
 
   function loadSearchService() {
@@ -3157,7 +3157,7 @@ Object的wait()和notify()这个算是比较原始的一种等待/唤醒机制�
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599252').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745025').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599205" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347744979" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599205" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599205"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347744979" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347744979"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2427,44 +2427,44 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <div id="layoutHelper-page-plugins"></div>
   <div id="post-body" itemprop="articleBody">
     <h3 id="前菜"><a href="#前菜" class="headerlink" title="前菜"></a>前菜</h3><p>众所周知，java的内部类是可以访问到外部类的field的，如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Fruit</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Origin <span class="title">origin</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Origin();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Origin</span></span>&#123;</span><br><span class="line">        String province;</span><br><span class="line">        String county;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">()</span></span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;fruit from &quot;</span>+ province + <span class="string">&quot; &quot;</span>+county+<span class="string">&quot; name:&quot;</span>+name); <span class="comment">//可以访问到外部类的name属性</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Fruit</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Origin <span class="title function_">origin</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Origin</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Origin</span>&#123;</span><br><span class="line">        String province;</span><br><span class="line">        String county;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">info</span><span class="params">()</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;fruit from &quot;</span>+ province + <span class="string">&quot; &quot;</span>+county+<span class="string">&quot; name:&quot;</span>+name); <span class="comment">//可以访问到外部类的name属性</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>但是为什么呢？我们打印下origin对象的字段</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Fruit fruit = <span class="keyword">new</span> Fruit();</span><br><span class="line">        Origin origin = fruit.origin();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Field field : origin.getClass().getDeclaredFields()) &#123;</span><br><span class="line">            System.out.println(field);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Fruit</span> <span class="variable">fruit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Fruit</span>();</span><br><span class="line">        <span class="type">Origin</span> <span class="variable">origin</span> <span class="operator">=</span> fruit.origin();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Field field : origin.getClass().getDeclaredFields()) &#123;</span><br><span class="line">            System.out.println(field);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>输出：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java.lang.String innerclass.Fruit$Origin.province</span><br><span class="line">java.lang.String innerclass.Fruit$Origin.county</span><br><span class="line"><span class="keyword">final</span> innerclass.Fruit innerclass.Fruit$Origin.<span class="keyword">this</span>$<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java.lang.String innerclass.Fruit$Origin.province</span><br><span class="line">java.lang.String innerclass.Fruit$Origin.county</span><br><span class="line"><span class="keyword">final</span> innerclass.Fruit innerclass.Fruit$Origin.<span class="built_in">this</span>$<span class="number">0</span></span><br></pre></td></tr></table></figure>
 
 <p>可以看到，除了Origin类自有的province和county字段外，编译时会生成一个<code>this$0</code>字段，由final修饰，类型是Fruit.</p>
 <p>所以，内部类之所以能够访问到外部类的field,是因为它持有了一个外部类的引用<code>this$0</code></p>
 <h3 id="稍微复杂的情况"><a href="#稍微复杂的情况" class="headerlink" title="稍微复杂的情况"></a>稍微复杂的情况</h3><p>当匿名类加上抽象类，会碰撞出怎样的火花呢？</p>
 <p>定义一个抽象类Parent，它含有一个抽象内部类Child，同时有一个child1方法，返回一个Child对象：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Child</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Child <span class="title">child1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Child() &#123;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Parent</span> &#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Child</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">protected</span> Child <span class="title function_">child1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Child</span>() &#123;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>再定义一个ParentImpl类，继承自Parent, 同时有一个child2方法，也返回一个Child对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParentImpl</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Parent.<span class="function">Child <span class="title">child2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Child() &#123;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ParentImpl</span> <span class="keyword">extends</span> <span class="title class_">Parent</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Parent.Child <span class="title function_">child2</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Child</span>() &#123;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 <p>我们定义一个ParentImpl对象，那么这个对象应该有两个可操作的方法，child1()和child2(), child1()是来自父类的方法，child2()是实现类自己的方法，这两个方法都是Child类型，但是会不会有什么不同呢？答案就在<code>this$0</code>.</p>
 <p>我们分别去打印这两个返回对象的<code>this$0</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IllegalAccessException </span>&#123;</span><br><span class="line">    ParentImpl parentImpl = <span class="keyword">new</span> ParentImpl();</span><br><span class="line">    Parent.Child child2 = parentImpl.child2(); <span class="comment">//实现自子类的child</span></span><br><span class="line">    Field outField2 = getField(child2.getClass(),<span class="string">&quot;this$0&quot;</span>); <span class="comment">//子类内部类的this$0</span></span><br><span class="line">    System.out.println(<span class="string">&quot;子类new Child()的this$0:&quot;</span>+outField2);</span><br><span class="line"></span><br><span class="line">    Parent.Child child1 = parentImpl.child1(); <span class="comment">//父类里实现的child</span></span><br><span class="line">    Field outField1 = getField(child1.getClass(),<span class="string">&quot;this$0&quot;</span>); <span class="comment">//父类内部类的this$0</span></span><br><span class="line">    System.out.println(<span class="string">&quot;父类new Child()的this$0:&quot;</span>+outField1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IllegalAccessException &#123;</span><br><span class="line">    <span class="type">ParentImpl</span> <span class="variable">parentImpl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ParentImpl</span>();</span><br><span class="line">    Parent.<span class="type">Child</span> <span class="variable">child2</span> <span class="operator">=</span> parentImpl.child2(); <span class="comment">//实现自子类的child</span></span><br><span class="line">    <span class="type">Field</span> <span class="variable">outField2</span> <span class="operator">=</span> getField(child2.getClass(),<span class="string">&quot;this$0&quot;</span>); <span class="comment">//子类内部类的this$0</span></span><br><span class="line">    System.out.println(<span class="string">&quot;子类new Child()的this$0:&quot;</span>+outField2);</span><br><span class="line"></span><br><span class="line">    Parent.<span class="type">Child</span> <span class="variable">child1</span> <span class="operator">=</span> parentImpl.child1(); <span class="comment">//父类里实现的child</span></span><br><span class="line">    <span class="type">Field</span> <span class="variable">outField1</span> <span class="operator">=</span> getField(child1.getClass(),<span class="string">&quot;this$0&quot;</span>); <span class="comment">//父类内部类的this$0</span></span><br><span class="line">    System.out.println(<span class="string">&quot;父类new Child()的this$0:&quot;</span>+outField1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>输出：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">子类<span class="keyword">new</span> Child()的<span class="keyword">this</span>$<span class="number">0</span>:<span class="keyword">final</span> ParentImpl ParentImpl$<span class="number">1.</span><span class="keyword">this</span>$<span class="number">0</span></span><br><span class="line">父类<span class="keyword">new</span> Child()的<span class="keyword">this</span>$<span class="number">0</span>:<span class="keyword">final</span> Parent Parent$<span class="number">1.</span><span class="keyword">this</span>$<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">子类<span class="keyword">new</span> <span class="title class_">Child</span>()的<span class="built_in">this</span>$<span class="number">0</span>:<span class="keyword">final</span> ParentImpl ParentImpl$<span class="number">1.</span><span class="built_in">this</span>$<span class="number">0</span></span><br><span class="line">父类<span class="keyword">new</span> <span class="title class_">Child</span>()的<span class="built_in">this</span>$<span class="number">0</span>:<span class="keyword">final</span> Parent Parent$<span class="number">1.</span><span class="built_in">this</span>$<span class="number">0</span></span><br></pre></td></tr></table></figure>
 
 <p>可以看到，两个对象的this$0有所不同，子类new的Child的this$0是ParentImpl类型，父类new的Child的this$0是Parent类型，倒也合情合理。</p>
 <p>那这个时候，假如说，我拿到了子类里的内部类对象，即child2, 同时我又有父类内部类的this$0,outField1, 我能否从child2利用反射拿到父对象呢？即</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outField1.get(child2);</span><br></pre></td></tr></table></figure>
 
 <p>抛异常了：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.IllegalArgumentException: Can not set <span class="keyword">final</span> Parent field Parent$<span class="number">1.</span><span class="keyword">this</span>$<span class="number">0</span> to ParentImpl$<span class="number">1</span></span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">167</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">171</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.ensureObj(UnsafeFieldAccessorImpl.java:<span class="number">58</span>)</span><br><span class="line">	at sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl.get(UnsafeQualifiedObjectFieldAccessorImpl.java:<span class="number">38</span>)</span><br><span class="line">	at java.lang.reflect.Field.get(Field.java:<span class="number">393</span>)</span><br><span class="line">	at Main.main(Main.java:<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.IllegalArgumentException: Can not set <span class="keyword">final</span> Parent field Parent$<span class="number">1.</span><span class="built_in">this</span>$<span class="number">0</span> to ParentImpl$<span class="number">1</span></span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">167</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">171</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.ensureObj(UnsafeFieldAccessorImpl.java:<span class="number">58</span>)</span><br><span class="line">	at sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl.get(UnsafeQualifiedObjectFieldAccessorImpl.java:<span class="number">38</span>)</span><br><span class="line">	at java.lang.reflect.Field.get(Field.java:<span class="number">393</span>)</span><br><span class="line">	at Main.main(Main.java:<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
 
 <p>那换一下呢？</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outField2.get(child1);</span><br></pre></td></tr></table></figure>
 
 <p>也不行</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.IllegalArgumentException: Can not set <span class="keyword">final</span> ParentImpl field ParentImpl$<span class="number">1.</span><span class="keyword">this</span>$<span class="number">0</span> to Parent$<span class="number">1</span></span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">167</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">171</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.ensureObj(UnsafeFieldAccessorImpl.java:<span class="number">58</span>)</span><br><span class="line">	at sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl.get(UnsafeQualifiedObjectFieldAccessorImpl.java:<span class="number">38</span>)</span><br><span class="line">	at java.lang.reflect.Field.get(Field.java:<span class="number">393</span>)</span><br><span class="line">	at Main.main(Main.java:<span class="number">12</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.IllegalArgumentException: Can not set <span class="keyword">final</span> ParentImpl field ParentImpl$<span class="number">1.</span><span class="built_in">this</span>$<span class="number">0</span> to Parent$<span class="number">1</span></span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">167</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.throwSetIllegalArgumentException(UnsafeFieldAccessorImpl.java:<span class="number">171</span>)</span><br><span class="line">	at sun.reflect.UnsafeFieldAccessorImpl.ensureObj(UnsafeFieldAccessorImpl.java:<span class="number">58</span>)</span><br><span class="line">	at sun.reflect.UnsafeQualifiedObjectFieldAccessorImpl.get(UnsafeQualifiedObjectFieldAccessorImpl.java:<span class="number">38</span>)</span><br><span class="line">	at java.lang.reflect.Field.get(Field.java:<span class="number">393</span>)</span><br><span class="line">	at Main.main(Main.java:<span class="number">12</span>)</span><br></pre></td></tr></table></figure>
 
 <p>说白了就是，child2里面没有final Parent Parent$1.this$0这个field,你想get,就会抛异常，同理child1里面也没有<code>final ParentImpl ParentImpl$1.this$0</code>这个field，你想get,也会抛异常。</p>
 <h3 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h3><p>上面说到的匿名内部类的问题，说白了是它的作用域的问题，父类里的抽象内部类，在父类里new,和在子类里new, this$0的指向是不同的。</p>
@@ -2801,8 +2801,8 @@ docker run -p 8888:80 -tid blog-20220502 /bin/bas...</p>
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599205')
-      volantis.js('/js/message.js?time=1687347599205', () => {
+      volantis.css('/css/message.css?time=1687347744979')
+      volantis.js('/js/message.js?time=1687347744979', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2847,8 +2847,8 @@ docker run -p 8888:80 -tid blog-20220502 /bin/bas...</p>
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599205')
-      volantis.js('/js/message.js?time=1687347599205', () => {
+      volantis.css('/css/message.css?time=1687347744979')
+      volantis.js('/js/message.js?time=1687347744979', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2907,8 +2907,8 @@ docker run -p 8888:80 -tid blog-20220502 /bin/bas...</p>
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599205')
-      volantis.js('/js/message.js?time=1687347599205', () => {
+      volantis.css('/css/message.css?time=1687347744979')
+      volantis.js('/js/message.js?time=1687347744979', () => {
         hideMessage(done);
       });
     } else {
@@ -2954,19 +2954,19 @@ docker run -p 8888:80 -tid blog-20220502 /bin/bas...</p>
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599205")
+        volantis.js("/js/plugins/sites.js?time=1687347744979")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599205")
+        volantis.js("/js/plugins/friends.js?time=1687347744979")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599205")
+        volantis.js("/js/plugins/contributors.js?time=1687347744979")
       }
     
   };
@@ -3055,7 +3055,7 @@ docker run -p 8888:80 -tid blog-20220502 /bin/bas...</p>
 
 
 
-<script src="/js/app.js?time=1687347599205.js"></script>
+<script src="/js/app.js?time=1687347744979.js"></script>
 
 
 <!-- optional -->
@@ -3068,7 +3068,7 @@ docker run -p 8888:80 -tid blog-20220502 /bin/bas...</p>
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599205");
+    return volantis.js("/js/search/hexo.js?time=1687347744979");
   }
 
   function loadSearchService() {
@@ -3176,7 +3176,7 @@ docker run -p 8888:80 -tid blog-20220502 /bin/bas...</p>
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599205').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347744979').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599185" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347744959" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599185" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599185"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347744959" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347744959"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2449,16 +2449,16 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 <p><strong>2、尽量使异常堆栈简短</strong></p>
 <p>​        异常堆栈的解析有一定的性能损耗，过长的异常栈也会给日志打印带来压力，所以，在明确知道你的异常会发生在什么位置时，应当使异常栈尽可能的浅，而对应的做法就是应当将捕获的异常重新定义再抛出：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//代码一，直接抛出原异常，会使异常栈比较深</span></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  <span class="comment">//biz code</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(Exeception e)&#123;</span><br><span class="line">  <span class="keyword">throw</span> e;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//代码二，捕获并重新定义异常，异常栈会从重新定义的地方开始计算</span></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  <span class="comment">//biz code</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;error msg here&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//代码一，直接抛出原异常，会使异常栈比较深</span></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  <span class="comment">//biz code</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(Exeception e)&#123;</span><br><span class="line">  <span class="keyword">throw</span> e;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//代码二，捕获并重新定义异常，异常栈会从重新定义的地方开始计算</span></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  <span class="comment">//biz code</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;error msg here&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 <p><strong>3、将异常定义为静态成员变量，避免重复创建对象</strong></p>
 <p>异常本身也是一个对象，既然是对象，那创建和回收就会有性能损耗，试想一下，在高并发情况下，刚好有一段代码有bug, 频繁地抛出异常，频繁地创建<code>Exception</code>新对象就有可能造成频繁地<code>young GC</code>.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> Exception(); <span class="comment">//在这里频繁地创建并抛出异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Exception</span>(); <span class="comment">//在这里频繁地创建并抛出异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>所以，<strong>在明确知道当前逻辑会抛出或应当抛出什么异常的情况下，</strong>将异常定义为静态变量，可以帮助降低系统性能开销。举个🌰：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="comment">/**不是会员**/</span>)&#123;</span><br><span class="line">  <span class="keyword">throw</span> BizException.ExceptionA;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> BizException&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> BizException ExceptionA = <span class="keyword">new</span> BizException(<span class="string">&quot;不是会员!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="comment">/**不是会员**/</span>)&#123;</span><br><span class="line">  <span class="keyword">throw</span> BizException.ExceptionA;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> BizException&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">BizException</span> <span class="variable">ExceptionA</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BizException</span>(<span class="string">&quot;不是会员!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2790,8 +2790,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599185')
-      volantis.js('/js/message.js?time=1687347599185', () => {
+      volantis.css('/css/message.css?time=1687347744959')
+      volantis.js('/js/message.js?time=1687347744959', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2836,8 +2836,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599185')
-      volantis.js('/js/message.js?time=1687347599185', () => {
+      volantis.css('/css/message.css?time=1687347744959')
+      volantis.js('/js/message.js?time=1687347744959', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2896,8 +2896,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599185')
-      volantis.js('/js/message.js?time=1687347599185', () => {
+      volantis.css('/css/message.css?time=1687347744959')
+      volantis.js('/js/message.js?time=1687347744959', () => {
         hideMessage(done);
       });
     } else {
@@ -2943,19 +2943,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599185")
+        volantis.js("/js/plugins/sites.js?time=1687347744959")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599185")
+        volantis.js("/js/plugins/friends.js?time=1687347744959")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599185")
+        volantis.js("/js/plugins/contributors.js?time=1687347744959")
       }
     
   };
@@ -3044,7 +3044,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599185.js"></script>
+<script src="/js/app.js?time=1687347744959.js"></script>
 
 
 <!-- optional -->
@@ -3057,7 +3057,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599185");
+    return volantis.js("/js/search/hexo.js?time=1687347744959");
   }
 
   function loadSearchService() {
@@ -3165,7 +3165,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599185').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347744959').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

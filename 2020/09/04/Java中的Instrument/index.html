@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599216" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347744990" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599216" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599216"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347744990" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347744990"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2437,19 +2437,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p><img src="https://s1.ax1x.com/2020/09/19/wIERNF.png" alt="wIERNF.png"></p>
 <p>这里我也框出来了常用的几个方法，可以看到这几个方法基本都和<code>ClassFileTransformer</code>这个接口有关，那我们继续看下<code>ClassFileTransformer</code>的介绍。</p>
 <p>其实从名字可以大概看出，<code>ClassFileTransformer</code>是对class文件进行转换的，再通俗点，就是用来修改字节码的。<code>ClassFileTransformer</code>这个接口只有一个方法<code>transform</code>:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[]</span><br><span class="line">    transform(  ClassLoader         loader,</span><br><span class="line">                String              className,</span><br><span class="line">                Class&lt;?&gt;            classBeingRedefined,</span><br><span class="line">                ProtectionDomain    protectionDomain,</span><br><span class="line">                <span class="keyword">byte</span>[]              classfileBuffer)</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">byte</span>[]</span><br><span class="line">    transform(  ClassLoader         loader,</span><br><span class="line">                String              className,</span><br><span class="line">                Class&lt;?&gt;            classBeingRedefined,</span><br><span class="line">                ProtectionDomain    protectionDomain,</span><br><span class="line">                <span class="type">byte</span>[]              classfileBuffer)</span><br></pre></td></tr></table></figure>
 
 <p>其中<code>loader</code>参数是加载这个类的类加载器，<code>classfileBuffer</code>就是载入内存中的class文件。可以看到这个方法返回值是个字节数组，如果返回null, 则表示对class文件不做处理，否则就用返回的字节数组代替原来的类。</p>
 <p>当我们使用<code>addTransformer</code>给<code>instrumentation</code>添加<code>ClassFileTransformer</code>后，后续所有JVM加载类的时候都会被<code>ClassFileTransformer</code>的<code>transform</code>方法拦截。</p>
 <p>上面大概介绍了<code>instrumentation</code>和<code>ClassFileTransformer</code>，下面的部分会介绍这两个东西如何结合起来使用。如上文所说，<code>instrumentation</code>的原理大概是：<strong>把我们的修改代码封装成一个Jar包（即agent），然后想办法让目标jvm进程加载。</strong>那就涉及到一个问题：目标jvm何时加载？java agent提供了两种手段，分别是在jvm启动时加载和jvm运行时加载。</p>
 <h5 id="JVM启动时加载instrument-agent"><a href="#JVM启动时加载instrument-agent" class="headerlink" title="JVM启动时加载instrument agent"></a>JVM启动时加载instrument agent</h5><p>主要用到了<code>premain()</code>方法， 从名字也可以看出，premain其实就是在main函数之前执行，所以也就是会在main函数执行之前拦截类的加载，并做一些改造，premain函数如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span></span><br></pre></td></tr></table></figure>
 
 <p>其中第一个参数agentArgs是agent启动时的参数，第二个参数就是我们的主角，instrumentation. 一般的一个操作流程是使用instrumentation的addTransformer方法添加一个<code>ClassFileTransformer</code>, 而这个<code>ClassFileTransformer</code>里面的<code>transform</code>方法一般就是我们施展拳脚的地方，在这里可以对字节码进行修改等操作。下面的代码实现了一个简单的Agent</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.instrument.ClassFileTransformer;</span><br><span class="line"><span class="keyword">import</span> java.lang.instrument.IllegalClassFormatException;</span><br><span class="line"><span class="keyword">import</span> java.lang.instrument.Instrumentation;</span><br><span class="line"><span class="keyword">import</span> java.security.ProtectionDomain;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PreMainAgent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;agent args: &quot;</span>+agentArgs);</span><br><span class="line">        inst.addTransformer(<span class="keyword">new</span> MyTransformer(),<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTransformer</span> <span class="keyword">implements</span> <span class="title">ClassFileTransformer</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">byte</span>[] transform(ClassLoader loader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, <span class="keyword">byte</span>[] classfileBuffer) <span class="keyword">throws</span> IllegalClassFormatException &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;premain load class: &quot;</span>+className);</span><br><span class="line">            <span class="keyword">return</span> classfileBuffer;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.instrument.ClassFileTransformer;</span><br><span class="line"><span class="keyword">import</span> java.lang.instrument.IllegalClassFormatException;</span><br><span class="line"><span class="keyword">import</span> java.lang.instrument.Instrumentation;</span><br><span class="line"><span class="keyword">import</span> java.security.ProtectionDomain;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PreMainAgent</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;agent args: &quot;</span>+agentArgs);</span><br><span class="line">        inst.addTransformer(<span class="keyword">new</span> <span class="title class_">MyTransformer</span>(),<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">MyTransformer</span> <span class="keyword">implements</span> <span class="title class_">ClassFileTransformer</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">byte</span>[] transform(ClassLoader loader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, <span class="type">byte</span>[] classfileBuffer) <span class="keyword">throws</span> IllegalClassFormatException &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;premain load class: &quot;</span>+className);</span><br><span class="line">            <span class="keyword">return</span> classfileBuffer;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>然后我们需要把这个agent打包成jar包，这里我使用maven打包，通过配置pom.xml文件，核心内容如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">       &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">       &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;</span><br><span class="line">       &lt;version&gt;<span class="number">3.1</span><span class="number">.0</span>&lt;/version&gt;</span><br><span class="line">       &lt;configuration&gt;</span><br><span class="line">           &lt;archive&gt;</span><br><span class="line">               &lt;!--自动添加META-INF/MANIFEST.MF --&gt;</span><br><span class="line">               &lt;manifest&gt;</span><br><span class="line">                   &lt;addClasspath&gt;<span class="keyword">true</span>&lt;/addClasspath&gt;</span><br><span class="line">               &lt;/manifest&gt;</span><br><span class="line">               &lt;manifestEntries&gt;</span><br><span class="line">                   &lt;Premain-Class&gt;PreMainAgent&lt;/Premain-Class&gt;</span><br><span class="line">                   &lt;Agent-Class&gt;PreMainAgent&lt;/Agent-Class&gt;</span><br><span class="line">                   &lt;Can-Redefine-Classes&gt;<span class="keyword">true</span>&lt;/Can-Redefine-Classes&gt;</span><br><span class="line">                   &lt;Can-Retransform-Classes&gt;<span class="keyword">true</span>&lt;/Can-Retransform-Classes&gt;</span><br><span class="line">               &lt;/manifestEntries&gt;</span><br><span class="line">           &lt;/archive&gt;</span><br><span class="line">       &lt;/configuration&gt;</span><br><span class="line">   &lt;/plugin&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">       &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">       &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;</span><br><span class="line">       &lt;version&gt;<span class="number">3.1</span><span class="number">.0</span>&lt;/version&gt;</span><br><span class="line">       &lt;configuration&gt;</span><br><span class="line">           &lt;archive&gt;</span><br><span class="line">               &lt;!--自动添加META-INF/MANIFEST.MF --&gt;</span><br><span class="line">               &lt;manifest&gt;</span><br><span class="line">                   &lt;addClasspath&gt;<span class="literal">true</span>&lt;/addClasspath&gt;</span><br><span class="line">               &lt;/manifest&gt;</span><br><span class="line">               &lt;manifestEntries&gt;</span><br><span class="line">                   &lt;Premain-Class&gt;PreMainAgent&lt;/Premain-Class&gt;</span><br><span class="line">                   &lt;Agent-Class&gt;PreMainAgent&lt;/Agent-Class&gt;</span><br><span class="line">                   &lt;Can-Redefine-Classes&gt;<span class="literal">true</span>&lt;/Can-Redefine-Classes&gt;</span><br><span class="line">                   &lt;Can-Retransform-Classes&gt;<span class="literal">true</span>&lt;/Can-Retransform-Classes&gt;</span><br><span class="line">               &lt;/manifestEntries&gt;</span><br><span class="line">           &lt;/archive&gt;</span><br><span class="line">       &lt;/configuration&gt;</span><br><span class="line">   &lt;/plugin&gt;</span><br></pre></td></tr></table></figure>
 
 <p>使用<code>mvn package</code>打包成Jar包，打包后的文件在/target目录下。</p>
 <p>完成上述操作后，我们再单独建一个项目，来测试我们的agent,</p>
@@ -2458,7 +2458,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>如果是在idea里运行的话，我们需要在<code>add configuration</code>里面配置一下：</p>
 <p><img src="https://s1.ax1x.com/2020/09/19/wIK6xg.png" alt="wIK6xg.png"></p>
 <p>主要就是关注下这个javaagent参数就行，然后运行，走起，输出如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">agent args: <span class="keyword">null</span></span><br><span class="line">premain load <span class="class"><span class="keyword">class</span>: <span class="title">java</span>/<span class="title">util</span>/<span class="title">concurrent</span>/<span class="title">ConcurrentHashMap</span>$<span class="title">ForwardingNode</span></span></span><br><span class="line"><span class="class"><span class="title">premain</span> <span class="title">load</span> <span class="title">class</span>: <span class="title">java</span>/<span class="title">util</span>/<span class="title">jar</span>/<span class="title">Attributes</span></span></span><br><span class="line"><span class="class"><span class="title">premain</span> <span class="title">load</span> <span class="title">class</span>: <span class="title">java</span>/<span class="title">util</span>/<span class="title">jar</span>/<span class="title">Manifest</span>$<span class="title">FastInputStream</span></span></span><br><span class="line"><span class="class">...(此处省略若干)</span></span><br><span class="line"><span class="class"><span class="title">main</span> <span class="title">start</span></span></span><br><span class="line"><span class="class"><span class="title">premain</span> <span class="title">load</span> <span class="title">class</span>: <span class="title">java</span>/<span class="title">net</span>/<span class="title">URI</span></span></span><br><span class="line"><span class="class">...（此处省略若干）</span></span><br><span class="line"><span class="class"><span class="title">premain</span> <span class="title">load</span> <span class="title">class</span>: <span class="title">sun</span>/<span class="title">nio</span>/<span class="title">cs</span>/<span class="title">US_ASCII</span>$<span class="title">Decoder</span></span></span><br><span class="line"><span class="class"><span class="title">main</span> <span class="title">end</span></span></span><br><span class="line"><span class="class"><span class="title">premain</span> <span class="title">load</span> <span class="title">class</span>: <span class="title">java</span>/<span class="title">lang</span>/<span class="title">Shutdown</span></span></span><br><span class="line"><span class="class"><span class="title">premain</span> <span class="title">load</span> <span class="title">class</span>: <span class="title">java</span>/<span class="title">lang</span>/<span class="title">Shutdown</span>$<span class="title">Lock</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">Process</span> <span class="title">finished</span> <span class="title">with</span> <span class="title">exit</span> <span class="title">code</span> 0</span></span><br><span class="line"><span class="class"></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">agent args: <span class="literal">null</span></span><br><span class="line">premain load class: java/util/concurrent/ConcurrentHashMap$ForwardingNode</span><br><span class="line">premain load class: java/util/jar/Attributes</span><br><span class="line">premain load class: java/util/jar/Manifest$FastInputStream</span><br><span class="line">...(此处省略若干)</span><br><span class="line">main start</span><br><span class="line">premain load class: java/net/URI</span><br><span class="line">...（此处省略若干）</span><br><span class="line">premain load class: sun/nio/cs/US_ASCII$Decoder</span><br><span class="line">main end</span><br><span class="line">premain load class: java/lang/Shutdown</span><br><span class="line">premain load class: java/lang/Shutdown$Lock</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>至此，流程走通。</p>
 <p>那么这种jvm启动时就加载agent的方式有没有什么问题呢？首先好处肯定是有的，因为此时agent加载的时候大部分类还没加载，这个时候可以实现对新加载的类的进行字节码修改。但是！如果premain方法执行失败或者抛异常，那么jvm进程会被终止，这就有点难以接受了。（这段话摘自占小狼的博客）</p>
@@ -2801,8 +2801,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599216')
-      volantis.js('/js/message.js?time=1687347599216', () => {
+      volantis.css('/css/message.css?time=1687347744990')
+      volantis.js('/js/message.js?time=1687347744990', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2847,8 +2847,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599216')
-      volantis.js('/js/message.js?time=1687347599216', () => {
+      volantis.css('/css/message.css?time=1687347744990')
+      volantis.js('/js/message.js?time=1687347744990', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2907,8 +2907,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599216')
-      volantis.js('/js/message.js?time=1687347599216', () => {
+      volantis.css('/css/message.css?time=1687347744990')
+      volantis.js('/js/message.js?time=1687347744990', () => {
         hideMessage(done);
       });
     } else {
@@ -2954,19 +2954,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599216")
+        volantis.js("/js/plugins/sites.js?time=1687347744990")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599216")
+        volantis.js("/js/plugins/friends.js?time=1687347744990")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599216")
+        volantis.js("/js/plugins/contributors.js?time=1687347744990")
       }
     
   };
@@ -3055,7 +3055,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599216.js"></script>
+<script src="/js/app.js?time=1687347744990.js"></script>
 
 
 <!-- optional -->
@@ -3068,7 +3068,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599216");
+    return volantis.js("/js/search/hexo.js?time=1687347744990");
   }
 
   function loadSearchService() {
@@ -3176,7 +3176,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599216').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347744990').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

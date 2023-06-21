@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599229" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745000" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1626,8 +1626,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599229" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599229"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745000" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745000"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2422,7 +2422,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>以<code>ClassPathXmlApplicationContext</code>为例，容器初始化的入口方法在哪里呢？<code>refresh()</code>方法。</p>
 <p><code>refresh()</code>进来后有几处核心方法，我们来一一看下。</p>
 <p>第一处 <code>obtainFreshBeanFactory()</code>: 这个方法又调用了<code>refreshBeanFactory()</code>,主要做了两件事情：创建容器，加载<code>BeanDefinition</code>，也就是我们常说的容器初始化三步走的第一步。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DefaultListableBeanFactory beanFactory = createBeanFactory();</span><br><span class="line">loadBeanDefinitions(beanFactory);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DefaultListableBeanFactory</span> <span class="variable">beanFactory</span> <span class="operator">=</span> createBeanFactory();</span><br><span class="line">loadBeanDefinitions(beanFactory);</span><br></pre></td></tr></table></figure>
 
 <p>继续看下这个<code>loadBeanDefinition()</code>：</p>
 <p><img src="https://s1.ax1x.com/2020/03/19/8sGH7F.png" alt="8sGH7F.png"></p>
@@ -2431,7 +2431,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>这里的代码也是很言简意赅，主要就是看我们的资源文件是以什么形式存在的，从而决定加载的是Resource还是String. 调试了一手发现我们这个走的是第一种类型，好，继续看：</p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/8sUp2d"><img src="https://s1.ax1x.com/2020/03/19/8sUp2d.png" alt="8sUp2d.png"></a></p>
 <p>代码依旧简单，我们来看最核心的这一行干了啥：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">loadBeanDefinitions</span><span class="params">(Resource resource)</span> <span class="keyword">throws</span> BeanDefinitionStoreException </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> loadBeanDefinitions(<span class="keyword">new</span> EncodedResource(resource));</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">int</span> <span class="title function_">loadBeanDefinitions</span><span class="params">(Resource resource)</span> <span class="keyword">throws</span> BeanDefinitionStoreException &#123;</span><br><span class="line">		<span class="keyword">return</span> loadBeanDefinitions(<span class="keyword">new</span> <span class="title class_">EncodedResource</span>(resource));</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>继续深入<code>loadBeanDefinitions()</code>：</p>
 <p>这个代码比较长，我就只截取最重要的部分进行说明了</p>
@@ -2463,7 +2463,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p><code>return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);</code></p>
 <p>可以看到里面封装了<code>beanName</code>,<code>alias</code>以及<code>beanDefinition</code>,那么<code>beanDefinition</code>又是在哪里定义的?</p>
 <p>这个方法里有这么一句代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">AbstractBeanDefinition</span> <span class="variable">beanDefinition</span> <span class="operator">=</span> parseBeanDefinitionElement(ele, beanName, containingBean);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
@@ -2781,8 +2781,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599229')
-      volantis.js('/js/message.js?time=1687347599229', () => {
+      volantis.css('/css/message.css?time=1687347745000')
+      volantis.js('/js/message.js?time=1687347745000', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2827,8 +2827,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599229')
-      volantis.js('/js/message.js?time=1687347599229', () => {
+      volantis.css('/css/message.css?time=1687347745000')
+      volantis.js('/js/message.js?time=1687347745000', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -2887,8 +2887,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599229')
-      volantis.js('/js/message.js?time=1687347599229', () => {
+      volantis.css('/css/message.css?time=1687347745000')
+      volantis.js('/js/message.js?time=1687347745000', () => {
         hideMessage(done);
       });
     } else {
@@ -2934,19 +2934,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599229")
+        volantis.js("/js/plugins/sites.js?time=1687347745000")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599229")
+        volantis.js("/js/plugins/friends.js?time=1687347745000")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599229")
+        volantis.js("/js/plugins/contributors.js?time=1687347745000")
       }
     
   };
@@ -3035,7 +3035,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599229.js"></script>
+<script src="/js/app.js?time=1687347745000.js"></script>
 
 
 <!-- optional -->
@@ -3048,7 +3048,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599229");
+    return volantis.js("/js/search/hexo.js?time=1687347745000");
   }
 
   function loadSearchService() {
@@ -3156,7 +3156,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599229').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745000').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

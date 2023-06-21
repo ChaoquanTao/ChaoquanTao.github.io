@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599321" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745093" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599321" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599321"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745093" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745093"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2501,7 +2501,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>正如loadClass方法所展示的，当类加载请求到来时，先从缓存中查找该类对象，如果存在直接返回，如果不存在则交给该类加载去的父加载器去加载，倘若没有父加载则交给顶级启动类加载器去加载，最后倘若仍没有找到，则使用findClass()方法去加载（关于findClass()稍后会进一步介绍）。从loadClass实现也可以知道如果不想重新定义加载类的规则，也没有复杂的逻辑，只想在运行时加载自己指定的类，那么我们可以直接使用<code>this.getClass().getClassLoder.loadClass(&quot;className&quot;)</code>，这样就可以直接调用ClassLoader的loadClass方法获取到class对象。</p>
 </li>
 <li><p>findClass(String)<br>在JDK1.2之前，在自定义类加载时，总会去继承ClassLoader类并重写loadClass方法，从而实现自定义的类加载类，但是在JDK1.2之后已不再建议用户去覆盖loadClass()方法，而是建议把自定义的类加载逻辑写在findClass()方法中，从前面的分析可知，findClass()方法是在loadClass()方法中被调用的，当loadClass()方法中父加载器加载失败后，则会调用自己的findClass()方法来完成类加载，这样就可以保证自定义的类加载器也符合双亲委托模式。需要注意的是ClassLoader类中并没有实现findClass()方法的具体代码逻辑，取而代之的是抛出ClassNotFoundException异常，同时应该知道的是findClass方法通常是和defineClass方法一起使用的(稍后会分析)，ClassLoader类中findClass()方法源码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//直接抛出异常</span></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">&#125;<span class="number">1234</span></span><br></pre></td></tr></table></figure></li>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//直接抛出异常</span></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ClassNotFoundException</span>(name);</span><br><span class="line">&#125;<span class="number">1234</span></span><br></pre></td></tr></table></figure></li>
 <li><p>defineClass(byte[] b, int off, int len)<br>defineClass()方法是用来将byte字节流解析成JVM能够识别的Class对象(ClassLoader中已实现该方法逻辑)，通过这个方法不仅能够通过class文件实例化class对象，也可以通过其他方式实例化class对象，如通过网络接收一个类的字节码，然后转换为byte字节流创建对应的Class对象，defineClass()方法通常与findClass()方法一起使用，一般情况下，在自定义类加载器时，会直接覆盖ClassLoader的findClass()方法并编写加载规则，取得要加载类的字节码后转换成流，然后调用defineClass()方法生成类的Class对象，简单例子如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException &#123;</span><br><span class="line">      // 获取类的字节数组</span><br><span class="line">      byte[] classData = getClassData(name);  </span><br><span class="line">      if (classData == null) &#123;</span><br><span class="line">          throw new ClassNotFoundException();</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">          //使用defineClass生成class对象</span><br><span class="line">          return defineClass(name, classData, 0, classData.length);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;12345678910</span><br></pre></td></tr></table></figure>
 
@@ -2579,10 +2579,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Driver extends com.mysql.cj.jdbc.Driver &#123;</span><br><span class="line">    public Driver() throws SQLException &#123;</span><br><span class="line">        super();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        System.err.println(&quot;Loading class `com.mysql.jdbc.Driver&#x27;. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver&#x27;. &quot;</span><br><span class="line">                + &quot;The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;12345678910</span><br></pre></td></tr></table></figure>
 
 <p>从注释可以看出平常我们使用<code>com.mysql.jdbc.Driver</code>已被丢弃了，取而代之的是<code>com.mysql.cj.jdbc.Driver</code>，也就是说官方不再建议我们使用如下代码注册mysql驱动</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//不建议使用该方式注册驱动类</span></span><br><span class="line">Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">String url = <span class="string">&quot;jdbc:mysql://localhost:3306/cm-storylocker?characterEncoding=UTF-8&quot;</span>;</span><br><span class="line"><span class="comment">// 通过java库获取数据库连接</span></span><br><span class="line">Connection conn = java.sql.DriverManager.getConnection(url, <span class="string">&quot;root&quot;</span>, <span class="string">&quot;root@555&quot;</span>);</span><br><span class="line"><span class="number">123456</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//不建议使用该方式注册驱动类</span></span><br><span class="line">Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost:3306/cm-storylocker?characterEncoding=UTF-8&quot;</span>;</span><br><span class="line"><span class="comment">// 通过java库获取数据库连接</span></span><br><span class="line"><span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> java.sql.DriverManager.getConnection(url, <span class="string">&quot;root&quot;</span>, <span class="string">&quot;root@555&quot;</span>);</span><br><span class="line"><span class="number">123456</span></span><br></pre></td></tr></table></figure>
 
 <p>而是直接去掉注册步骤，如下即可</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String url = <span class="string">&quot;jdbc:mysql://localhost:3306/cm-storylocker?characterEncoding=UTF-8&quot;</span>;</span><br><span class="line"><span class="comment">// 通过java库获取数据库连接</span></span><br><span class="line">Connection conn = java.sql.DriverManager.getConnection(url, <span class="string">&quot;root&quot;</span>, <span class="string">&quot;root@555&quot;</span>);</span><br><span class="line"><span class="number">1234</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost:3306/cm-storylocker?characterEncoding=UTF-8&quot;</span>;</span><br><span class="line"><span class="comment">// 通过java库获取数据库连接</span></span><br><span class="line"><span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> java.sql.DriverManager.getConnection(url, <span class="string">&quot;root&quot;</span>, <span class="string">&quot;root@555&quot;</span>);</span><br><span class="line"><span class="number">1234</span></span><br></pre></td></tr></table></figure>
 
 <p>这样ServiceLoader会帮助我们处理一切，并最终通过load()方法加载，看看load()方法实现</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static &lt;S&gt; ServiceLoader&lt;S&gt; load(Class&lt;S&gt; service) &#123;</span><br><span class="line">     //通过线程上下文类加载器加载</span><br><span class="line">      ClassLoader cl = Thread.currentThread().getContextClassLoader();</span><br><span class="line">      return ServiceLoader.load(service, cl);</span><br><span class="line">  &#125;12345</span><br></pre></td></tr></table></figure>
@@ -2921,8 +2921,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599321')
-      volantis.js('/js/message.js?time=1687347599321', () => {
+      volantis.css('/css/message.css?time=1687347745093')
+      volantis.js('/js/message.js?time=1687347745093', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2967,8 +2967,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599321')
-      volantis.js('/js/message.js?time=1687347599321', () => {
+      volantis.css('/css/message.css?time=1687347745093')
+      volantis.js('/js/message.js?time=1687347745093', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -3027,8 +3027,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599321')
-      volantis.js('/js/message.js?time=1687347599321', () => {
+      volantis.css('/css/message.css?time=1687347745093')
+      volantis.js('/js/message.js?time=1687347745093', () => {
         hideMessage(done);
       });
     } else {
@@ -3074,19 +3074,19 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599321")
+        volantis.js("/js/plugins/sites.js?time=1687347745093")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599321")
+        volantis.js("/js/plugins/friends.js?time=1687347745093")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599321")
+        volantis.js("/js/plugins/contributors.js?time=1687347745093")
       }
     
   };
@@ -3175,7 +3175,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
 
-<script src="/js/app.js?time=1687347599321.js"></script>
+<script src="/js/app.js?time=1687347745093.js"></script>
 
 
 <!-- optional -->
@@ -3188,7 +3188,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599321");
+    return volantis.js("/js/search/hexo.js?time=1687347745093");
   }
 
   function loadSearchService() {
@@ -3296,7 +3296,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599321').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745093').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{

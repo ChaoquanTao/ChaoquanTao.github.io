@@ -20,7 +20,7 @@
   <meta content="Tau&#39;s Blog" name="apple-mobile-web-app-title">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
-  <link rel="preload" href="/css/style.css?time=1687347599335" as="style">
+  <link rel="preload" href="/css/style.css?time=1687347745107" as="style">
   <link rel="preload" href="volantis-static/media/fonts/VarelaRound/VarelaRound-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" href="volantis-static/media/fonts/UbuntuMono/UbuntuMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
@@ -1627,8 +1627,8 @@ ul.list-v >li>a:hover {
 }
 
   </style>
-  <link rel="stylesheet" href="/css/style.css?time=1687347599335" media="print" onload="this.media='all';this.onload=null">
-  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347599335"></noscript>
+  <link rel="stylesheet" href="/css/style.css?time=1687347745107" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1687347745107"></noscript>
   
 <script>
 if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
@@ -2437,7 +2437,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <p>但是很显然在多线程环境下是会出问题的，如果两个线程同时执行到了<code>if(instance==null)</code>，然后发现都成立，就会new出两个实例来。</p>
 </li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">        instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SingleObject</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">SingleObject</span><span class="params">()</span>&#123;&#125;;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="literal">null</span>)&#123;</span><br><span class="line">        instance = <span class="keyword">new</span> <span class="title class_">SingleObject</span>() ;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2445,21 +2445,21 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <li>懒汉式，线程安全</li>
 </ol>
 <p>这种方法在第一次调用时才初始化，避免浪费内存。但是需要加锁才能保证单例，会影响效率。因为只有new的时候，也就是第一次初始化的时候才需要并发控制，其他情况下是不需要并发控制的，但是给这个<code>getInstance()</code>方法加上<code>synchronized</code>关键字，会导致每次需要获得单例的时候都会被加锁。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">        instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SingleObject</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">SingleObject</span><span class="params">()</span>&#123;&#125;;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> SingleObject <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="literal">null</span>)&#123;</span><br><span class="line">        instance = <span class="keyword">new</span> <span class="title class_">SingleObject</span>() ;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看出这种方式一个问题就是，锁的粒度太大了，其实只需要在new对象的时候加锁就可以了，这就引出了下面双重校验锁。</p>
 <ol start="3">
 <li>饿汉式，线程安全</li>
 </ol>
 <p>所谓饿汉，就是说在类加载的时候就初始化。它这里其实是利用了类加载机制，类加载的时候是会用<code>synchronized</code>关键字给加锁的。未实现lazy-loading.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> classs SingleObject&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> classs SingleObject&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">SingleObject</span> <span class="variable">instance</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SingleObject</span>() ;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">SingleObject</span><span class="params">()</span>&#123;&#125;;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 <ol start="4">
 <li>饿汉变种</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton() ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> SingletonHolder.instance ;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">SingletonHolder</span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Singleton</span> <span class="variable">instance</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>() ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> SingletonHolder.instance ;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2467,7 +2467,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <ol start="5">
 <li>双重校验锁</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> SingleObject&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleObject</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">    	<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">    		<span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line">        		instance = <span class="keyword">new</span> SingleObject() ;</span><br><span class="line">        	&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> SingleObject&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> SingleObject instance ;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">SingleObject</span><span class="params">()</span>&#123;&#125;;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleObject <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(instance == <span class="literal">null</span>)&#123;</span><br><span class="line">    	<span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">    		<span class="keyword">if</span>(instance==<span class="literal">null</span>)&#123;</span><br><span class="line">        		instance = <span class="keyword">new</span> <span class="title class_">SingleObject</span>() ;</span><br><span class="line">        	&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> instance ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>double check在代码中已经体现的很明显了，这里主要解释一下<code>volatile</code>关键字。在<a target="_blank" rel="noopener" href="https://chaoquantao.github.io/2019/03/04/java%E8%99%9A%E6%8B%9F%E6%9C%BA/">jvm</a>的文章中，我们已经提到<code>volatile</code>关键字可以保证可见性、禁止指令重排序。它用在这里的的主要作用也是为了保证禁止指令重排序，在初始化一个实例的时候，要经过一下几个步骤</p>
 <p>（1）申请内存空间</p>
@@ -2478,7 +2478,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 <ol start="6">
 <li>静态内部类</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;  </span><br><span class="line">    	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span> <span class="params">()</span></span>&#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> SingletonHolder.INSTANCE;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">SingletonHolder</span> &#123;  </span><br><span class="line">    	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Singleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span> <span class="params">()</span>&#123;&#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> SingletonHolder.INSTANCE;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol start="7">
 <li>枚举</li>
@@ -2941,8 +2941,8 @@ Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这
   <script>
   volantis.message = (title, message, option = {}, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599335')
-      volantis.js('/js/message.js?time=1687347599335', () => {
+      volantis.css('/css/message.css?time=1687347745107')
+      volantis.js('/js/message.js?time=1687347745107', () => {
         tozashMessage(title, message, option, done);
       });
     } else {
@@ -2987,8 +2987,8 @@ Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这
 
   volantis.question = (title, message, option = {}, success = null, cancel = null, done = null) => {
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599335')
-      volantis.js('/js/message.js?time=1687347599335', () => {
+      volantis.css('/css/message.css?time=1687347745107')
+      volantis.js('/js/message.js?time=1687347745107', () => {
         tozashQuestion(title, message, option, success, cancel, done);
       });
     } else {
@@ -3047,8 +3047,8 @@ Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这
     }
     
     if (typeof iziToast === "undefined") {
-      volantis.css('/css/message.css?time=1687347599335')
-      volantis.js('/js/message.js?time=1687347599335', () => {
+      volantis.css('/css/message.css?time=1687347745107')
+      volantis.js('/js/message.js?time=1687347745107', () => {
         hideMessage(done);
       });
     } else {
@@ -3094,19 +3094,19 @@ Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这
     
       const sites_api = document.getElementById('sites-api');
       if (sites_api != undefined && typeof SitesJS === 'undefined') {
-        volantis.js("/js/plugins/sites.js?time=1687347599335")
+        volantis.js("/js/plugins/sites.js?time=1687347745107")
       }
     
     
       const friends_api = document.getElementById('friends-api');
       if (friends_api != undefined && typeof FriendsJS === 'undefined') {
-        volantis.js("/js/plugins/friends.js?time=1687347599335")
+        volantis.js("/js/plugins/friends.js?time=1687347745107")
       }
     
     
       const contributors_api = document.getElementById('contributors-api');
       if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
-        volantis.js("/js/plugins/contributors.js?time=1687347599335")
+        volantis.js("/js/plugins/contributors.js?time=1687347745107")
       }
     
   };
@@ -3195,7 +3195,7 @@ Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这
 
 
 
-<script src="/js/app.js?time=1687347599335.js"></script>
+<script src="/js/app.js?time=1687347745107.js"></script>
 
 
 <!-- optional -->
@@ -3208,7 +3208,7 @@ Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这
 
   function loadSearchScript() {
     // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
-    return volantis.js("/js/search/hexo.js?time=1687347599335");
+    return volantis.js("/js/search/hexo.js?time=1687347745107");
   }
 
   function loadSearchService() {
@@ -3316,7 +3316,7 @@ Handlerhandler在创建之初，会和某个线程绑定，可以认为它是这
   var runningOnBrowser = typeof window !== "undefined";
   var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
   if (!isBot) {
-    volantis.js('/js/parallax.js?time=1687347599335').then(()=>{
+    volantis.js('/js/parallax.js?time=1687347745107').then(()=>{
       parallax()
     })
     volantis.pjax.send(()=>{
